@@ -1,0 +1,93 @@
+<template>
+  <div class="page">
+    <text style="position: absolute; color: rgba(0,0,0,0)">{{anims.splashimg.margin_top_str}}</text>
+    <image class="splashlogo" src="/common/logo.png"
+      style="margin-top: {{ anims.splashimg.margin_top_str.value }}px; margin-left: {{ anims.splashimg.margin_left_str.value }}px">
+    </image>
+  </div>
+</template>
+
+<script>
+import router from "@system.router"
+import storage from "@system.storage"
+export default {
+  private: {
+    anims: {
+      splash: null,
+      splash_out: null,
+      splashimg: {
+        margin_top_str: {
+          value: "800"
+        },
+        margin_left_str: {
+          value: "0"
+        }
+      }
+    }
+  },
+  async JumpCheck(){
+    storage.get({
+      key: "bilibili_account",
+      success: async(bilibili_account) => {
+        if(bilibili_account.length < 1){
+          router.replace({
+            uri: "pages/login"
+          })
+        }
+        else{
+          await this.$app.$def.biliclient.login(false, null)
+          router.replace({
+            uri: "pages/main"
+          })
+        }
+      }
+    })
+  },
+  onShow() {
+    this.anims.splash = new this.$app.$def.animengine.DomAnim(
+      "splashPage",
+      this.anims.splashimg.margin_top_str,
+      this.anims.splashimg.margin_left_str,
+      0,
+      0,
+      100
+    )
+    this.anims.splash_out = new this.$app.$def.animengine.DomAnim(
+      "splashPage",
+      this.anims.splashimg.margin_top_str,
+      this.anims.splashimg.margin_left_str,
+      800,
+      0,
+      100
+    )
+    this.anims.splash.start()
+    setTimeout(() => {
+      this.anims.splash_out.start()
+      setTimeout(() => {
+        this.JumpCheck()
+      }, 500)
+    }, 2000)
+  },
+  onDestroy() {
+    this.$app.$def.animengine.clearPageAnims("splashPage")
+  }
+}
+</script>
+
+<style>
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+
+.splashlogo {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+</style>
