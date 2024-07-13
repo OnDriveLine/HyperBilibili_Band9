@@ -1,9 +1,13 @@
 <script>
 import * as animengine from "./animengine"
 import { BilibiliClient }  from "./bilibiliclient"
+import * as tools from "./tools"
+import * as funnytips from "./funnytips"
 export default {
   animengine: animengine,
   biliclient: new BilibiliClient(),
+  tools: tools,
+  funnytips: funnytips,
   onCreate() {
     console.log("app created")
   },

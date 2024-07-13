@@ -128,6 +128,13 @@ class BilibiliClient {
         return response.data.data.item
     }
 
+    async getVideoInfoByBVID(bvid: string): Promise<any> {
+        const url = `https://api.bilibili.com/x/web-interface/view?bvid=${bvid}`;
+        const response = await this.getRequest(url);
+
+        return response.data.data
+    }
+
     // 辅助函数，用于解析cookie字符串
     private parseCookie(cookie: string, name: string): string | null {
         const match = cookie.match(new RegExp(`${name}=([^;]+)`));

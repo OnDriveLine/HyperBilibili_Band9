@@ -4,19 +4,25 @@
       <image src="/common/switch.png"></image>
       <text style="font-weight: 600; font-size: 30px; margin-left: 5px">首页</text>
     </div>
-    <text class="tip">你所热爱的,就是你热爱的</text>
+    <text class="tip">{{funnytip}}</text>
     <image style="position: absolute; margin-top: 265px" if="{{show_loading}}" src="{{anims.loading_src.value}}"></image>
     <div class="recommend_div" if="{{show_recommend_div}}">
       <list class="recommend_list">
-        <list-item type="recommend_videos" for="{{recommend_vids}}" class="recommend_listitem" style="height: {{calcSpace($item.title, true)}}">
+        <list-item type="recommend_videos" for="{{recommend_vids}}" class="recommend_listitem"
+          style="height: {{calcSpace($item.title, true)}}" onclick="OpenVideo({{$item.bvid}})">
           <div class="recommend_list_vid">
             <div class="vidinfo">
               <div class="vidpicture">
-                <image class="vidpicture_img" src="{{$item.pic}}@160w_100h"></image>
+                <image class="vidpicture_img" src="{{$item.pic}}@160w_100h" alt="/common/icons8-loading-100.png"></image>
               </div>
               <text class="vidtitle">{{ $item.title }}</text>
             </div>
-            <text class="upinfo">UP主：{{ $item.owner.name }}</text>
+            <div class="vidstat">
+              <text class="upinfo">UP：{{ $item.owner.name }}</text>
+              <text class="stat_view">
+                {{ this.$app.$def.tools.formatNumber($item.stat.view) }}
+              </text>
+            </div>
           </div>
           <text style="margin-top: {{calcSpace($item.title, false)}}; height: 0px"></text>
         </list-item>
@@ -26,15 +32,26 @@
 </template>
 
 <script>
+import router from "@system.router"
 export default {
   private: {
     recommend_vids: [],
     show_loading: true,
     show_recommend_div: false,
+    funnytip: "",
     anims: {
       loading: null,
       loading_src: {value: "/common/seqanims/loadingWhite/icons8-loading_颜色反转-1.png"}
     }
+  },
+  OpenVideo(bvid){
+    console.log("openvid: " + bvid)
+    router.push({
+      uri: "pages/videodetail",
+      params: {
+        bvid: bvid
+      }
+    })
   },
   async GetVids() {
     this.recommend_vids = await this.$app.$def.biliclient.getMainPageRecommendVideos(3, 10)
@@ -46,18 +63,19 @@ export default {
     // 如果传入的视频标题是最后一个视频 就让占位文本占据20px的高度可供用户下滑
     // 这样算是较为硬核的一种针对圆形屏幕的适配
     if (vid_title == this.recommend_vids[this.recommend_vids.length - 1].title) {
-      if(isListItem){
+      if (isListItem) {
         return "270px"
       }
       return "80px"
     }
-    if(isListItem){
+    if (isListItem) {
       return "170px"
     }
     return "0px"
   },
   onInit() {
     this.GetVids()
+    this.funnytip = this.$app.$def.funnytips.getTips()
   },
   onReady() {
     this.anims.loading = new this.$app.$def.animengine.SequenceAnim(
@@ -163,10 +181,20 @@ export default {
   text-overflow: ellipsis;
 }
 
+.vidstat{
+  flex-direction: row;
+  margin-left: 30px;
+}
+
 .upinfo {
-  margin-top: -5px;
   font-size: 14px;
   font-weight: 600;
-  margin-left: 30px;
+}
+
+.stat_view {
+  font-size: 14px;
+  font-weight: 600;
+  position: absolute;
+  margin-left: 250px;
 }
 </style>

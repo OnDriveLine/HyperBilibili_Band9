@@ -1,0 +1,192 @@
+<template>
+    <div class="page">
+        <div class="titlebar" @click="RouterBack()">
+            <div style="width: 40px; height: 40px">
+                <image src="/common/icons8-back-100.png" style="width: 40px; height: 40px"></image>
+            </div>
+            <div class="titlebar-text">
+                <text style="font-size: 40px; font-weight: bold">视频</text>
+            </div>
+        </div>
+        <div class="maindiv">
+            <image src="{{vid.pic}}@319w_150h" alt="/common/fullgray.png" class="vidpic"></image>
+            <text class="vidtitle">{{ vid.title }}</text>
+            <div class="statbar">
+                <div class="stat">
+                    <image src="/common/playcounticon.png" style="width: 23px; height: 25px; margin-top: 2px"></image>
+                    <text class="statext">{{ this.$app.$def.tools.formatNumber(vid.stat.view) }}</text>
+                </div>
+                <div class="stat" style="margin-left: 6px">
+                    <image src="/common/uploadericon.png" style="width: 27px; height: 29px"></image>
+                    <text class="statext">{{ vid.owner.name }}</text>
+                </div>
+            </div>
+            <div class="vidtoolbar" style="margin-top: 25px">
+                <div class="vidtool" style="margin-left: 0px">
+                    <image class="vidtoolimg" src={{GetToolBarIconSrc("like")}}></image>
+                    <text class="vidtooltext">{{this.$app.$def.tools.formatNumber(vid.stat.like)}}</text>
+                </div>
+                <div class="vidtool">
+                    <image class="vidtoolimg" src={{GetToolBarIconSrc("coin")}}></image>
+                    <text class="vidtooltext">{{this.$app.$def.tools.formatNumber(vid.stat.coin)}}</text>
+                </div>
+                <div class="vidtool">
+                    <image class="vidtoolimg" src={{GetToolBarIconSrc("star")}}></image>
+                    <text class="vidtooltext">{{this.$app.$def.tools.formatNumber(vid.stat.favorite)}}</text>
+                </div>
+                <div class="vidtool">
+                    <image class="vidtoolimg" src="/common/vidtool_aisummary.png"></image>
+                    <text class="vidtooltext">视频总结</text>
+                </div>
+            </div>
+            <div class="featurebtn" style="margin-top: 20px">
+                <text class="featurebtn_text">生成视频清单</text>
+            </div>
+            <image src="/common/featurebtn_replyarea.png" style="margin-top: 15px"></image>
+        </div>
+    </div>
+</template>
+
+<script>
+import router from "@system.router"
+export default {
+  public: {
+    bvid: 1 // 视频AID
+  },
+  private: {
+    vid: {},
+    liked: false,
+    coined: false,
+    stared: false
+  },
+  RouterBack() {
+    router.back()
+  },
+  GetToolBarIconSrc(imgName){
+    switch(imgName){
+        case "like": 
+            if(this.liked){
+                return "/common/vidtool_liked.png"
+            }
+            return "/common/vidtool_like.png"
+        case "coin":
+            if(this.coined){
+                return "/common/vidtool_coined.png"
+            }
+            return "/common/vidtool_coin.png"
+        case "star":
+            if(this.stared){
+                return "/common/vidtool_stared.png"
+            }
+            return "/common/vidtool_star.png"
+        default: 
+            return ""
+    }
+  },
+  async GetVideoDetail(){
+    this.vid = await this.$app.$def.biliclient.getVideoInfoByBVID(this.bvid)
+  },
+  onInit(){
+    this.GetVideoDetail()
+  }
+}
+</script>
+
+<style>
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+
+.maindiv {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.titlebar {
+    width: 55%;
+    margin-top: 45px;
+    align-items: center;
+}
+
+.titlebar-text {
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.vidpic {
+    border-radius: 20px;
+    width: 320px;
+    height: 150px;
+    margin-top: 31px;
+}
+
+.vidtitle {
+    font-size: 20px;
+    font-weight: 600;
+    color: #9e9e9e;
+    margin-top: 10px;
+    width: 281px;
+}
+
+.statbar {
+    flex-direction: row;
+    margin-top: 10px;
+    width: 281px;
+}
+
+.stat {
+    flex-direction: row;
+}
+
+.statext {
+    font-size: 20px;
+    font-weight: 600;
+    color: #9e9e9e;
+    margin-left: 5px;
+}
+
+.vidtoolbar {
+    flex-direction: row;
+    width: 374px;
+}
+
+.vidtool {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-left: 15px;
+    width: 85px;
+}
+
+.vidtooltext {
+    margin-top: 10px;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.vidtoolimg {
+    width: 62px;
+}
+
+.featurebtn {
+    width: 322px;
+    height: 81px;
+    border-radius: 90px;
+    background-color: #262626;
+    justify-content: center;
+    align-items: center;
+}
+
+.featurebtn_text {
+    font-size: 40px;
+    font-weight: 600;
+}
+</style>

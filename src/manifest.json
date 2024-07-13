@@ -28,6 +28,9 @@
       },
       "pages/main": {
         "component": "main"
+      },
+      "pages/videodetail": {
+        "component": "videodetail"
       }
     }
   }
