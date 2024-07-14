@@ -31,6 +31,9 @@
       },
       "pages/videodetail": {
         "component": "videodetail"
+      },
+      "pages/arealist": {
+        "component": "arealist"
       }
     }
   }

@@ -1,0 +1,116 @@
+<template>
+    <div class="page">
+        <text class="time">{{time}}</text>
+        <div class="btnline" style="margin-top: 15px;">
+            <div class="btn" onclick="GoPage({{pages[0]}})">
+                <div class="btnbase">
+                    <image src="/common/arealist_home.png" class="btnimg"></image>
+                </div>
+                <text class="btntext">首页</text>
+            </div>
+            <div class="btn" style="margin-left: 35px;" onclick="GoPage({{pages[1]}})">
+                <div class="btnbase">
+                    <image src="/common/arealist_updates.png" class="btnimg"></image>
+                </div>
+                <text class="btntext">动态</text>
+            </div>
+        </div>
+        <div class="btnline" style="margin-top: 15px;">
+            <div class="btn" onclick="GoPage({{pages[2]}})">
+                <div class="btnbase">
+                    <image src="/common/arealist_my.png" class="btnimg"></image>
+                </div>
+                <text class="btntext">我的</text>
+            </div>
+            <div class="btn" style="margin-left: 35px;" onclick="GoPage({{pages[3]}})">
+                <div class="btnbase">
+                    <image src="/common/arealist_settings.png" class="btnimg"></image>
+                </div>
+                <text class="btntext">设置</text>
+            </div>
+        </div>
+        <text style="margin-top: 30px;"></text>
+    </div>
+</template>
+
+<script>
+import router from "@system.router"
+import prompt from "@system.prompt"
+export default {
+    private: {
+        time: "",
+        pages: [
+            "main",
+            "dynamic",
+            "mypage",
+            "settings"
+        ]
+    },
+    onInit(){
+        this.time = this.$app.$def.tools.getCurrentTime()
+        setInterval(() => {
+            this.time = this.$app.$def.tools.getCurrentTime()
+        }, 1000)
+    },
+    GoPage(pagename){
+        if(pagename == "dynamic" || pagename == "mypage"){
+            prompt.showToast({
+                message: "该功能还在开发中"
+            })
+            return
+        }
+        router.replace({
+            uri: "pages/" + pagename
+        })
+    }
+}
+</script>
+
+<style>
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+
+.time {
+    font-size: 50px;
+    font-weight: 600;
+    margin-top: 20px;
+}
+
+.btnbase {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    background-color: #222222;
+    align-items: center;
+    justify-content: center;
+}
+
+.btntext {
+    font-size: 30px;
+    font-weight: 600;
+    margin-top: 5px;
+}
+
+.btnimg {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+}
+
+.btn {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.btnline {
+    flex-direction: row;
+    width: 300px;
+}
+</style>

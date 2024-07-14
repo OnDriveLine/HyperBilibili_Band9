@@ -1,8 +1,8 @@
 <template>
   <div class="page">
-    <div class="bar">
+    <div class="bar" @click="SwitchPage()">
       <image src="/common/switch.png"></image>
-      <text style="font-weight: 600; font-size: 30px; margin-left: 5px">首页</text>
+      <text style="font-weight: 600; font-size: 30px; margin-left: 15px">首页</text>
     </div>
     <text class="tip">{{funnytip}}</text>
     <image style="position: absolute; margin-top: 265px" if="{{show_loading}}" src="{{anims.loading_src.value}}"></image>
@@ -44,6 +44,11 @@ export default {
       loading_src: {value: "/common/seqanims/loadingWhite/icons8-loading_颜色反转-1.png"}
     }
   },
+  SwitchPage(){
+    router.replace({
+      uri: "pages/arealist"
+    })
+  },
   OpenVideo(bvid){
     console.log("openvid: " + bvid)
     router.push({
@@ -54,7 +59,7 @@ export default {
     })
   },
   async GetVids() {
-    this.recommend_vids = await this.$app.$def.biliclient.getMainPageRecommendVideos(3, 10)
+    this.recommend_vids = await this.$app.$def.biliclient.getMainPageRecommendVideos(this.$app.$def.settings.SETTINGS.fresh_type, this.$app.$def.settings.SETTINGS.home_vid_count)
     this.anims.loading.stop()
     this.show_loading = false
     this.show_recommend_div = true

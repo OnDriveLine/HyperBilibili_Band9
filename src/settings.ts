@@ -1,0 +1,47 @@
+import { storage } from "./tsimports"
+
+interface SettingsInterface {
+  fresh_type: number;
+  home_vid_count: number;
+}
+
+export let SETTINGS: SettingsInterface = {
+  fresh_type: 1,
+  home_vid_count: 10,
+};
+
+export function loadSettings(): void {
+  storage.get({
+    key: 'settings',
+    success: function (data) {
+      if (data) {
+        const storedSettings = JSON.parse(data);
+        SETTINGS = {
+          ...SETTINGS,
+          ...storedSettings
+        };
+      }
+      console.log('Settings loaded:', SETTINGS);
+    },
+    fail: function (data, code) {
+      console.log(`Failed to load settings, code = ${code}`);
+    }
+  });
+}
+
+export function saveSettings(params: Partial<SettingsInterface>): void {
+  SETTINGS = {
+    ...SETTINGS,
+    ...params
+  };
+  storage.set({
+    key: 'settings',
+    value: JSON.stringify(SETTINGS),
+    success: function () {
+      console.log('Settings saved successfully');
+    },
+    fail: function (data, code) {
+      console.log(`Failed to save settings, code = ${code}`);
+    }
+  });
+}

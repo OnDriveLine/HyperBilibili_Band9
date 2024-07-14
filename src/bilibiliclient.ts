@@ -40,7 +40,7 @@ class BilibiliClient {
                 responseType: 'json',
                 header: this.getHeaders()
             });
-            console.log(response.data);
+            //console.log(response.data);
             return response.data;
         } catch (error) {
             console.error(`请求失败，错误码 = ${error.code}`);

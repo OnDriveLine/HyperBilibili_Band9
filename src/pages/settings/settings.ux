@@ -1,0 +1,68 @@
+<template>
+    <div class="page">
+        <div class="bar" @click="SwitchPage()">
+            <image src="/common/switch.png"></image>
+            <text style="font-weight: 600; font-size: 30px; margin-left: 15px">设置</text>
+        </div>
+        <div class="setbase">
+            <image class="seticon" src="/common/settings_freshtype.png"></image>
+            <text class="setext_small" style="margin-left: 12px">视频推荐相关性</text>
+        </div>
+    </div>
+</template>
+
+<script>
+import router from "@system.router"
+export default {
+  SwitchPage() {
+    router.replace({
+      uri: "pages/arealist"
+    })
+  }
+}
+</script>
+
+<style>
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+
+.bar {
+    flex-direction: row;
+    margin-top: 30px;
+}
+
+.setbase {
+    width: 291px;
+    height: 81px;
+    border-radius: 30px;
+    background-color: #262626;
+    align-items: center;
+    flex-direction: row;
+}
+
+.seticon {
+    margin-left: 25px;
+}
+
+.setext_small {
+    font-size: 22px;
+    font-weight: 600;
+}
+
+.setext {
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.countset_num {
+    font-size: 20px;
+    font-weight: 600;
+    color: #4785FF;
+}
+</style>

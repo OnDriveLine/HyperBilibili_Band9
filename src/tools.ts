@@ -9,3 +9,17 @@ export function formatNumber(num: number): string{
         return (num / 10000).toFixed(1) + 'w'
     }
 }
+
+export function getCurrentTime(): string {
+    const now: Date = new Date();
+
+    let hours: number = now.getHours();
+    let minutes: number = now.getMinutes();
+
+    const formattedHours: string = hours < 10 ? '0' + hours : hours.toString();
+    const formattedMinutes: string = minutes < 10 ? '0' + minutes : minutes.toString();
+
+    const timeString: string = `${formattedHours}:${formattedMinutes}`;
+
+    return timeString;
+}

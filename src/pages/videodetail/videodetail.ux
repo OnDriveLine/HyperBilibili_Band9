@@ -9,7 +9,7 @@
             </div>
         </div>
         <div class="maindiv">
-            <image src="{{vid.pic}}@319w_150h" alt="/common/fullgray.png" class="vidpic"></image>
+            <image src="{{vid.pic}}@319w_150h" alt="/common/grayloading_cn.png" class="vidpic"></image>
             <text class="vidtitle">{{ vid.title }}</text>
             <div class="statbar">
                 <div class="stat">

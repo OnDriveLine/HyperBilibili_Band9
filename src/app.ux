@@ -3,13 +3,16 @@ import * as animengine from "./animengine"
 import { BilibiliClient }  from "./bilibiliclient"
 import * as tools from "./tools"
 import * as funnytips from "./funnytips"
+import * as settings from "./settings"
 export default {
   animengine: animengine,
   biliclient: new BilibiliClient(),
   tools: tools,
   funnytips: funnytips,
+  settings: settings,
   onCreate() {
     console.log("app created")
+    settings.loadSettings()
   },
   onDestroy() {
     console.log("app destroyed")
