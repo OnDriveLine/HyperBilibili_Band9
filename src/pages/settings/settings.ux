@@ -147,7 +147,7 @@ export default {
     margin-left: 25px;
     width: 42px;
     height: 42px;
-    object-fit: contain;
+    object-fit: scale-down;
 }
 
 .setext_small {

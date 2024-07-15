@@ -13,7 +13,7 @@
                 <image src="/common/aboutpage_code.png" style="width: 52px; height: 53px; object-fit: none"></image>
                 <text class="text" style="margin-left: 22px">@Searchstars</text>
             </div>
-            <div class="developer" style="margin-top: 17px; margin-left: 24px">
+            <div class="developer" style="margin-top: 15px; margin-left: 24px">
                 <image src="/common/aboutpage_brush.png" style="width: 52px; height: 53px; object-fit: none"></image>
                 <text class="text" style="margin-left: 22px">@RX79XT</text>
             </div>
