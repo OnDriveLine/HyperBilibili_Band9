@@ -135,6 +135,18 @@ class BilibiliClient {
         return response.data.data
     }
 
+    logOut(): any {
+        storage.delete({
+            key: "bilibili_account",
+            success: (data) => {
+                return true;
+            },
+            fail: (data, code) => {
+                return false;
+            }
+        })
+    }
+
     // 辅助函数，用于解析cookie字符串
     private parseCookie(cookie: string, name: string): string | null {
         const match = cookie.match(new RegExp(`${name}=([^;]+)`));

@@ -4,7 +4,7 @@
     <div class="page" style="margin-top: {{ anims.pagediv_mgt.value }}px">
       <text style="font-weight: bold; margin-top: 35px">扫码登录</text>
       <div class="qr_code">
-        <qrcode value="{{qr_value}}" show="{{show_qr}}" style="width: 90%; height: 90%"></qrcode>
+        <qrcode value="{{qr_value}}" show="{{show_qr}}" style="width: 210px; height: 210px"></qrcode>
         <image style="position: absolute" show="{{show_loading}}" src="{{anims.loading_img_src.value}}"></image>
       </div>
       <text style="margin-top: 20px; font-size: 26px; font-weight: bold">请前往官方客户端</text>
@@ -58,7 +58,7 @@ export default {
       await this.PollQR()
     }, 1500);
   },
-  onShow() {
+  onReady() {
     this.anims.pagediv = new this.$app.$def.animengine.DomAnim(
       "loginPage",
       {value: "0"},
@@ -95,8 +95,8 @@ export default {
 
 .qr_code {
   margin-top: 30px;
-  width: 50%;
-  height: 50%;
+  width: 233px;
+  height: 233px;
   align-items: center;
   justify-content: center;
   border-radius: 5%;

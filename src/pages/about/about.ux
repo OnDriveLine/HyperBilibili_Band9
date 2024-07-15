@@ -1,0 +1,74 @@
+<template>
+    <div class="page">
+        <image src="/common/settings_about.png" style="margin-top: 22px"></image>
+        <text class="text" style="margin-top: 5px">关于应用</text>
+        <div class="appbar" style="margin-top: 22px">
+            <image src="/common/logo.png" style="border-radius: 50%; margin-left: 15px; width: 60px; height: 60px"></image>
+            <text class="text" style="margin-left: 20px">HyperBili</text>
+            <text class="text" style="color: #9E9E9E; margin-left: 15px">{{version}}</text>
+        </div>
+        <text class="text" style="margin-top: 30px">参与开发的人员</text>
+        <div class="developersbar" style="margin-top:  15px">
+            <div class="developer" style="margin-top: 20px; margin-left: 24px">
+                <image src="/common/aboutpage_code.png" style="width: 52px; height: 53px; object-fit: none"></image>
+                <text class="text" style="margin-left: 22px">@Searchstars</text>
+            </div>
+            <div class="developer" style="margin-top: 17px; margin-left: 24px">
+                <image src="/common/aboutpage_brush.png" style="width: 52px; height: 53px; object-fit: none"></image>
+                <text class="text" style="margin-left: 22px">@RX79XT</text>
+            </div>
+        </div>
+        <text class="text" style="color: #9E9E9E; margin-top: 12px">更多资源请访问</text>
+        <text class="text" style="margin-top: 5px">bandbbs.cn</text>
+        <text style="margin-top: 25px"></text>
+    </div>
+</template>
+
+<script>
+export default {
+    private: {
+        version: ""
+    },
+    onInit(){
+        this.version = this.$app.$def.versionStr
+    }
+}
+</script>
+
+<style>
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+
+.text {
+    font-size: 35px;
+    font-weight: 600;
+}
+
+.appbar {
+    width: 376px;
+    height: 84px;
+    border-radius: 60px;
+    background-color: #262626;
+    flex-direction: row;
+    align-items: center;
+}
+
+.developersbar {
+    width: 376px;
+    height: 155px;
+    border-radius: 50px;
+    background-color: #262626;
+    flex-direction: column;
+}
+
+.developer {
+    width: 320px;
+    flex-direction: row;
+}
+</style>
