@@ -13,6 +13,7 @@ class BilibiliClient {
     private biliJct: string | null = null;
     private dedeUserID: string | null = null;
     private sid: string | null = null;
+    private accountInfo: any | null = null;
 
     // 获取请求头
     private getHeaders(): { [key: string]: string } {
@@ -65,6 +66,16 @@ class BilibiliClient {
         }
     }
 
+    // 更新账号信息
+    async updateAccountInfo(): Promise<boolean> {
+        const accoutInfo = await this.getRequest("https://api.bilibili.com/x/web-interface/nav");
+        this.accountInfo = accoutInfo.data.data;
+        if(this.accountInfo){
+            return true;
+        }
+        return false;
+    }
+
     // 登录函数，使用本地存储的账号数据或通过二维码登录
     async login(send_req: boolean, interval: NodeJS.Timeout | null = null): Promise<{ success: boolean, message: string }> {
         const accountData = await this.getStoredAccountData();
@@ -74,6 +85,7 @@ class BilibiliClient {
             this.dedeUserID = accountData.dedeUserID;
             this.sid = accountData.sid;
             console.log('使用存储的账号数据登录成功');
+            await this.updateAccountInfo()
             return {
                 success: true,
                 message: "登录成功"
@@ -107,6 +119,7 @@ class BilibiliClient {
 
                 await this.storeAccountData();
                 console.log('使用二维码登录并存储账号数据成功');
+                await this.updateAccountInfo()
                 return {
                     success: true,
                     message: "登录成功"

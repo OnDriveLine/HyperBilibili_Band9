@@ -1,0 +1,140 @@
+<template>
+  <div class="page">
+    <div class="bar" @click="SwitchPage()">
+      <image src="/common/switch.png"></image>
+      <text style="font-weight: 600; font-size: 30px; margin-left: 15px">我的</text>
+    </div>
+    <image src="{{accountInfo.face}}" alt="/common/default_profile_img.png" class="profimg" style="margin-top: 30px">
+    </image>
+    <text class="{{name_text_class}}" style="margin-top: 15px">{{ accountInfo.uname }}</text>
+    <div class="tagbar" style="margin-top: 5px">
+      <image class="tagimg" src="/common/bililevel/lv{{accountInfo.level_info.current_level}}.png" style="height: 20px">
+      </image>
+      <image class="tagimg" if="{{is_vip}}" style="margin-left: 10px"
+        src="/common/bilivip/{{accountInfo.vip_label.label_theme}}.png"></image>
+      <image class="tagimg" if="{{is_senior_member}}" style="margin-left: 10px" src="/common/senior_member.png"></image>
+    </div>
+    <div class="btnbase" style="margin-top: 40px">
+      <image class="btnimg" src="/common/mypage_star.png"></image>
+      <text class="btntext">我的收藏</text>
+      <image src="/common/arrow_right.png"></image>
+    </div>
+    <div class="btnbase" style="margin-top: 10px">
+      <image class="btnimg" src="/common/mypage_history.png"></image>
+      <text class="btntext">历史记录</text>
+      <image src="/common/arrow_right.png"></image>
+    </div>
+    <div class="btnbase" style="margin-top: 10px">
+      <image class="btnimg" src="/common/mypage_watchlater.png"></image>
+      <text class="btntext">稍后再看</text>
+      <image src="/common/arrow_right.png"></image>
+    </div>
+    <text style="margin-top: 25px"></text>
+  </div>
+</template>
+
+<script>
+import router from "@system.router"
+export default {
+  private: {
+    name_text_class: "name",
+    is_vip: false,
+    is_senior_member: false,
+    accountInfo: {
+      uname: "测试用户",
+      vip_pay_type: 1,
+      level_info: {
+        current_level: 7
+      },
+      vip_label: {
+        label_theme: "annual_vip"
+      },
+      is_senior_member: 1
+    }
+  },
+  SwitchPage() {
+    router.replace({
+      uri: "pages/arealist"
+    })
+  },
+  UpdateShow() {
+    if (this.accountInfo.vip_pay_type) {
+      this.is_vip = true
+      this.name_text_class = "vipname"
+    }
+    if (this.accountInfo.is_senior_member) {
+      this.is_senior_member = true
+    }
+  },
+  onInit() {
+    this.UpdateShow()
+  }
+}
+</script>
+
+<style>
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+
+.bar {
+  flex-direction: row;
+  margin-top: 30px;
+}
+
+.profimg {
+  width: 106px;
+  height: 106px;
+  border-radius: 50%;
+}
+
+.name {
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.vipname {
+  font-size: 30px;
+  font-weight: 600;
+  color: #ff7da8;
+}
+
+.tagbar {
+  flex-direction: row;
+  width: 40%;
+  align-items: center;
+  justify-content: center;
+}
+
+.tagimg {
+  height: 30px;
+  object-fit: contain;
+}
+
+.btnbase {
+  width: 314px;
+  height: 93px;
+  border-radius: 30px;
+  background-color: #262626;
+  align-items: center;
+}
+
+.btnimg {
+  margin-left: 22px;
+  width: 43px;
+  height: 43px;
+  object-fit: contain;
+}
+
+.btntext {
+  margin-left: 22px;
+  width: 190px;
+  font-size: 35px;
+  font-weight: 600;
+}
+</style>
