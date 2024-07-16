@@ -18,7 +18,7 @@
     "designWidth": 466
   },
   "router": {
-    "entry": "pages/mypage",
+    "entry": "pages/splash",
     "pages": {
       "pages/splash":{
         "component": "splash"
