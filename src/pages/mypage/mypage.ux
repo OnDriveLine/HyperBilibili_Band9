@@ -4,7 +4,7 @@
       <image src="/common/switch.png"></image>
       <text style="font-weight: 600; font-size: 30px; margin-left: 15px">我的</text>
     </div>
-    <image src="{{accountInfo.face}}@106w_106h" alt="/common/default_profile_img.png" class="profimg" style="margin-top: 30px">
+    <image src="{{accountInfo.face}}@106w_106h" alt="/common/fullgray.png" class="profimg" style="margin-top: 30px">
     </image>
     <text class="{{name_text_class}}" style="margin-top: 15px">{{ accountInfo.uname }}</text>
     <div class="tagbar" style="margin-top: 5px">
@@ -14,7 +14,7 @@
         src="/common/bilivip/{{accountInfo.vip_label.label_theme}}.png"></image>
       <image class="tagimg" if="{{is_senior_member}}" style="margin-left: 10px" src="/common/senior_member.png"></image>
     </div>
-    <div class="btnbase" style="margin-top: 40px" @click="WIPTips()">
+    <div class="btnbase" style="margin-top: 40px" @click="GoMyFavFolders()">
       <image class="btnimg" src="/common/mypage_star.png"></image>
       <text class="btntext">我的收藏</text>
       <image src="/common/arrow_right.png"></image>
@@ -46,6 +46,14 @@ export default {
   SwitchPage() {
     router.replace({
       uri: "pages/arealist"
+    })
+  },
+  GoMyFavFolders(){
+    router.push({
+      uri: "pages/favfolders",
+      params: {
+        user_mid: this.$app.$def.biliclient.accountInfo.mid
+      }
     })
   },
   WIPTips() {

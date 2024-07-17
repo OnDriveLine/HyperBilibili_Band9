@@ -13,4 +13,9 @@ module.exports = {
             ],
         },
     },
+    /*
+    cli: {
+        "enable-custom-component": true
+    }
+    */
 };

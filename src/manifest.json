@@ -17,6 +17,9 @@
     "logLevel": "log",
     "designWidth": 466
   },
+  "display": {
+    "backgroundColor": "#000000"
+  },
   "router": {
     "entry": "pages/splash",
     "pages": {
@@ -43,6 +46,9 @@
       },
       "pages/mypage": {
         "component": "mypage"
+      },
+      "pages/favfolders": {
+        "component": "favfolders"
       }
     }
   }

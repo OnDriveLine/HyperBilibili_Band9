@@ -141,6 +141,7 @@ class BilibiliClient {
         return response.data.data.item
     }
 
+    // 根据视频BV号获取视频详情信息
     async getVideoInfoByBVID(bvid: string): Promise<any> {
         const url = `https://api.bilibili.com/x/web-interface/view?bvid=${bvid}`;
         const response = await this.getRequest(url);
@@ -148,6 +149,37 @@ class BilibiliClient {
         return response.data.data
     }
 
+    // 获取目标用户创建的所有收藏夹的基本信息
+    async getUserFavouriteFolders(mid: string, type: number = 0, rid: string = null): Promise<any>{
+        let url = `https://api.bilibili.com/x/v3/fav/folder/created/list-all?up_mid=${mid}&type=${type}`;
+        if(rid){
+            url += `&rid=${rid}`;
+        }
+        const response = await this.getRequest(url);
+
+        return response.data.data
+    }
+
+    // 获取目标收藏夹元数据
+    async getFavouriteFolderMetadata(mlid: string): Promise<any>{
+        const url = `https://api.bilibili.com/x/v3/fav/folder/info?media_id=${mlid}`;
+        const response = await this.getRequest(url);
+
+        return response.data.data
+    }
+
+    // 获取目标收藏夹内容
+    async getFavouriteFolderContent(mlid: string, keyword: string = null, ps: number = 10, pn: number): Promise<any>{
+        let url = `https://api.bilibili.com/x/v3/fav/resource/list?media_id=${mlid}&ps=${ps}&pn=${pn}`;
+        if(keyword){
+            url += `&keyword=${keyword}`
+        }
+        const response = await this.getRequest(url);
+
+        return response.data.data
+    }
+
+    // 退出登录（指在手表上删除存储的账号数据）
     logOut(): any {
         storage.delete({
             key: "bilibili_account",

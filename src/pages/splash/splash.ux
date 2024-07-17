@@ -1,6 +1,8 @@
 <template>
   <div class="page">
-    <text style="position: absolute; color: rgba(0,0,0,0)">{{anims.splashimg.margin_top_str}}</text>
+    <text style="position: absolute; color: rgba(0, 0, 0, 0)">
+      {{ anims.splashimg.margin_top_str }}
+    </text>
     <image class="splashlogo" src="/common/logo.png"
       style="margin-top: {{ anims.splashimg.margin_top_str.value }}px; margin-left: {{ anims.splashimg.margin_left_str.value }}px">
     </image>
@@ -25,16 +27,15 @@ export default {
       }
     }
   },
-  async JumpCheck(){
+  async JumpCheck() {
     storage.get({
       key: "bilibili_account",
-      success: async(bilibili_account) => {
-        if(bilibili_account.length < 1){
+      success: async (bilibili_account) => {
+        if (bilibili_account.length < 1) {
           router.replace({
             uri: "pages/login"
           })
-        }
-        else{
+        } else {
           await this.$app.$def.biliclient.login(false, null)
           router.replace({
             uri: "pages/main"
@@ -76,18 +77,19 @@ export default {
 
 <style>
 .page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-    position: absolute;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  background-color: rgb(0, 0, 0);
 }
 
 .splashlogo {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 </style>
