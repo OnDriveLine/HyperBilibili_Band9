@@ -57,9 +57,9 @@ export default {
     liked: false,
     coined: false,
     stared: false,
-    likesrc: "",
-    coinsrc: "",
-    starsrc: ""
+    likesrc: "/common/vidtool_like.png",
+    coinsrc: "/common/vidtool_coin.png",
+    starsrc: "/common/vidtool_star.png"
   },
   RouterBack() {
     router.back()
@@ -71,14 +71,15 @@ export default {
         prompt.showToast({
             message: "收藏成功"
         })
-        this.UpdateVideoToolbarStatus()
     }
     else{
         prompt.showToast({
             message: "收藏失败，请重试，或重新登录后再试"
         })
     }
-    this.UpdateVideoToolbarStatus()
+    setTimeout(() => {
+        this.UpdateVideoToolbarStatus()
+    }, 1000)
   },
   async UpdateVideoToolbarStatus(){
     this.stared = await this.$app.$def.biliclient.isVideoStaredByBVID(this.bvid)
