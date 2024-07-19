@@ -49,6 +49,9 @@
       },
       "pages/favfolders": {
         "component": "favfolders"
+      },
+      "pages/foldervideos": {
+        "component": "foldervideos"
       }
     }
   }

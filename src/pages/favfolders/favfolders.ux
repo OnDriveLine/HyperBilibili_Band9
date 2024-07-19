@@ -1,17 +1,22 @@
 <template>
     <div class="page">
         <div class="titlebar" @click="RouterBack()">
-            <div style="width: 40px; height: 40px">
+            <div style="width: 40px; height: 40px; position: absolute; left: 0px">
                 <image src="/common/icons8-back-100.png" style="width: 40px; height: 40px"></image>
             </div>
-            <div class="titlebar-text">
-                <text style="font-size: 40px; font-weight: bold">收藏</text>
-            </div>
+            <text style="font-size: 40px; font-weight: bold">收藏</text>
         </div>
+        <image style="position: absolute; margin-top: 245px" if="{{show_loading}}" src="{{anims.loading_src.value}}"></image>
         <list style="margin-top: 20px; width: 77%; height: 100%" class="folderlist">
-            <list-item type="folders" class="folder" for="{{folders}}">
-                <image src="{{$item.cover}}@171w_118h" alt="/common/fullblack.png" class="folderimg"></image>
-                <text class="foldername">{{$item.title}}</text>
+            <list-item type="folders" class="folder" for="{{folders}}" onclick="GoFolderVideosPage({{$item.id}}, {{$item.media_count}})">
+                <image src="{{$item.cover}}@121w_68h" alt="/common/fullblack.png" class="folderimg"></image>
+                <div style="flex-direction: column">
+                    <div class="foldername">
+                        <text class="foldername_text">{{$item.title}}</text>
+                    </div>
+                    <text class="foldercount">数量：{{$item.media_count}}</text>
+                </div>
+                <image src="/common/arrow_right.png" style="margin-left: 30px"></image>
             </list-item>
         </list>
     </div>
@@ -21,7 +26,12 @@
 import router from "@system.router"
 export default {
   private: {
-    folders: []
+    folders: [],
+    show_loading: true,
+    anims: {
+        loading: null,
+        loading_src: {value: "/common/seqanims/loadingWhite/icons8-loading_颜色反转-1.png"}
+    }
   },
   public: {
     user_mid: null
@@ -29,15 +39,40 @@ export default {
   RouterBack() {
     router.back()
   },
+  GoFolderVideosPage(mlid, vidcount){
+    router.push({
+        uri: "pages/foldervideos",
+        params: {
+            mlid: mlid,
+            vidcount: vidcount
+        }
+    })
+  },
   async LoadFolders(){
     let folderlist = await this.$app.$def.biliclient.getUserFavouriteFolders(this.user_mid);
     folderlist.list.forEach(async(folder) => {
         console.log(folder)
         this.folders.push(await this.$app.$def.biliclient.getFavouriteFolderMetadata(folder.id))
+        this.show_loading = false
+        this.anims.loading.stop()
     });
   },
   onInit(){
+    this.anims.loading = new this.$app.$def.animengine.SequenceAnim(
+      "favfoldersPage",
+      this.anims.loading_src,
+      28,
+      "/common/seqanims/loadingWhite/icons8-loading_颜色反转-*.png",
+      1000,
+      true
+    )
+
+    this.anims.loading.start()
+
     this.LoadFolders()
+  },
+  onDestroy(){
+    this.$app.$def.animengine.clearPageAnims("favfoldersPage")
   }
 }
 </script>
@@ -56,20 +91,15 @@ export default {
     width: 55%;
     margin-top: 45px;
     align-items: center;
-}
-
-.titlebar-text {
-    align-items: center;
     justify-content: center;
-    width: 100%;
 }
 
 .folder {
     margin-top: 10px;
     width: 340px;
-    height: 190px;
+    height: 120px;
     background-color: #262626;
-    border-radius: 50px;
+    border-radius: 40px;
     flex-direction: row;
     align-items: center;
 }
@@ -82,19 +112,31 @@ export default {
 .folderimg {
     margin-left: 15px;
     border-radius: 30px;
-    max-width: 171px;
-    max-height: 118px;
-    min-width: 171px;
-    min-height: 118px;
+    max-width: 121px;
+    max-height: 68px;
+    min-width: 121px;
+    min-height: 68px;
     object-fit: contain;
 }
 
 .foldername {
-    font-weight: 600;
-    font-size: 20px;
     margin-left: 10px;
-    height: 110px;
-    text-overflow: ellipsis;
+    height: 60px;
     width: 130px;
+    margin-top: 10px;
+    align-items: flex-start;
+}
+
+.foldername_text {
+    text-overflow: ellipsis;
+    font-weight: 600;
+    font-size: 24px;
+}
+
+.foldercount {
+    font-weight: 600;
+    font-size: 18px;
+    margin-left: 10px;
+    margin-bottom: 5px;
 }
 </style>

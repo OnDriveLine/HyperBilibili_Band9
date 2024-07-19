@@ -169,7 +169,7 @@ class BilibiliClient {
     }
 
     // 获取目标收藏夹内容
-    async getFavouriteFolderContent(mlid: string, keyword: string = null, ps: number = 10, pn: number): Promise<any>{
+    async getFavouriteFolderContent(mlid: string, pn: number, ps: number = 10, keyword: string = null): Promise<any>{
         let url = `https://api.bilibili.com/x/v3/fav/resource/list?media_id=${mlid}&ps=${ps}&pn=${pn}`;
         if(keyword){
             url += `&keyword=${keyword}`

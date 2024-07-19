@@ -13,7 +13,7 @@
           <div class="recommend_list_vid">
             <div class="vidinfo">
               <div class="vidpicture">
-                <image class="vidpicture_img" src="{{$item.pic}}@160w_100h" alt="/common/icons8-loading-100.png"></image>
+                <image class="vidpicture_img" src="{{$item.pic}}@160w_100h" alt="/common/fullgray.png"></image>
               </div>
               <text class="vidtitle">{{ $item.title }}</text>
             </div>
@@ -96,6 +96,9 @@ export default {
     )
 
     this.anims.loading.start()
+  },
+  onDestroy(){
+    this.$app.$def.animengine.clearPageAnims("mainPage")
   }
 }
 </script>
