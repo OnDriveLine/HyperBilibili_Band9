@@ -21,15 +21,15 @@
             </div>
             <div class="vidtoolbar" style="margin-top: 25px">
                 <div class="vidtool" style="margin-left: 0px">
-                    <image class="vidtoolimg" src={{GetToolBarIconSrc("like")}}></image>
+                    <image class="vidtoolimg" src={{likesrc}}></image>
                     <text class="vidtooltext">{{this.$app.$def.tools.formatNumber(vid.stat.like)}}</text>
                 </div>
                 <div class="vidtool">
-                    <image class="vidtoolimg" src={{GetToolBarIconSrc("coin")}}></image>
+                    <image class="vidtoolimg" src={{coinsrc}}></image>
                     <text class="vidtooltext">{{this.$app.$def.tools.formatNumber(vid.stat.coin)}}</text>
                 </div>
-                <div class="vidtool">
-                    <image class="vidtoolimg" src={{GetToolBarIconSrc("star")}}></image>
+                <div class="vidtool" @click="AddToFav()">
+                    <image class="vidtoolimg" src={{starsrc}}></image>
                     <text class="vidtooltext">{{this.$app.$def.tools.formatNumber(vid.stat.favorite)}}</text>
                 </div>
                 <div class="vidtool">
@@ -47,6 +47,7 @@
 
 <script>
 import router from "@system.router"
+import prompt from "@system.prompt"
 export default {
   public: {
     bvid: 1 // 视频AID
@@ -55,30 +56,47 @@ export default {
     vid: {},
     liked: false,
     coined: false,
-    stared: false
+    stared: false,
+    likesrc: "",
+    coinsrc: "",
+    starsrc: ""
   },
   RouterBack() {
     router.back()
   },
-  GetToolBarIconSrc(imgName){
-    switch(imgName){
-        case "like": 
-            if(this.liked){
-                return "/common/vidtool_liked.png"
-            }
-            return "/common/vidtool_like.png"
-        case "coin":
-            if(this.coined){
-                return "/common/vidtool_coined.png"
-            }
-            return "/common/vidtool_coin.png"
-        case "star":
-            if(this.stared){
-                return "/common/vidtool_stared.png"
-            }
-            return "/common/vidtool_star.png"
-        default: 
-            return ""
+  async AddToFav(){
+    var result = await this.$app.$def.biliclient.starVideoToDefaultFavFolderByBVID(this.bvid)
+    console.log(result)
+    if(!result){
+        prompt.showToast({
+            message: "收藏成功"
+        })
+        this.UpdateVideoToolbarStatus()
+    }
+    else{
+        prompt.showToast({
+            message: "收藏失败，请重试，或重新登录后再试"
+        })
+    }
+    this.UpdateVideoToolbarStatus()
+  },
+  async UpdateVideoToolbarStatus(){
+    this.stared = await this.$app.$def.biliclient.isVideoStaredByBVID(this.bvid)
+
+    this.UpdateToolBarIconSrc()
+  },
+  UpdateToolBarIconSrc(){
+    this.likesrc = "/common/vidtool_like.png"
+    if(this.liked){
+        this.likesrc = "/common/vidtool_liked.png"
+    }
+    this.coinsrc = "/common/vidtool_coin.png"
+    if(this.coined){
+        this.coinsrc = "/common/vidtool_coined.png"
+    }
+    this.starsrc = "/common/vidtool_star.png"
+    if(this.stared){
+        this.starsrc = "/common/vidtool_stared.png"
     }
   },
   async GetVideoDetail(){
@@ -86,6 +104,7 @@ export default {
   },
   onInit(){
     this.GetVideoDetail()
+    this.UpdateVideoToolbarStatus()
   }
 }
 </script>
