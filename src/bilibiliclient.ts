@@ -212,6 +212,7 @@ class BilibiliClient {
         return response.data.data
     }
 
+    // 使用视频bvid检测视频是否被收藏
     async isVideoStaredByBVID(bvid: string): Promise<boolean> {
         const url = `https://api.bilibili.com/x/v2/fav/video/favoured?aid=${bvid}`
         const response = await this.getRequest(url);
@@ -219,6 +220,15 @@ class BilibiliClient {
         return response.data.data.favoured
     }
 
+    // 获取评论区内容
+    async getReplies(type: string, oid: string, pn: number = 1, ps: number = 10, sort: number = 1) {
+        const url = `https://api.bilibili.com/x/v2/reply?type=${type}&oid=${oid}&pn=${pn}&ps=${ps}&sort=${sort}`
+        const response = await this.getRequest(url);
+
+        return response.data.data
+    }
+
+    // 收藏视频至默认收藏夹
     async starVideoToDefaultFavFolderByBVID(bvid: string): Promise<any> {
         let defaultFolderID = 0
         const folders = await this.getUserFavouriteFolders(this.accountInfo.mid)

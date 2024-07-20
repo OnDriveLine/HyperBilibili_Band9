@@ -107,15 +107,7 @@ export default {
   async LoadVideos() {
     this.show_loading = true
     this.foldervid_vids.length = 0 // Clear Array
-
-    this.anims.loading = new this.$app.$def.animengine.SequenceAnim(
-      "folderVideosPage",
-      this.anims.loading_src,
-      28,
-      "/common/seqanims/loadingWhite/icons8-loading_颜色反转-*.png",
-      1000,
-      true
-    )
+    
     this.anims.loading.start()
 
     let medialist = await this.$app.$def.biliclient.getFavouriteFolderContent(
@@ -125,10 +117,10 @@ export default {
     )
     medialist.medias.forEach(async (media) => {
       var mediainfo = await this.$app.$def.biliclient.getVideoInfoByBVID(media.bvid)
+      this.show_loading = false
+      this.anims.loading.stop()
       this.foldervid_vids.push(mediainfo)
     })
-    this.show_loading = false
-    this.anims.loading.stop()
   },
   onInit() {
     this.maxpn = Math.ceil(this.vidcount / 5)

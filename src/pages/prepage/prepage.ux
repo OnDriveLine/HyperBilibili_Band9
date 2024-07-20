@@ -1,0 +1,50 @@
+<template>
+    <div class="page">
+        <image src="{{anims.loginsrc.value}}" style="width: 45px; height: 45px; object-fit: contain"></image>
+        <text style="font-weight: 600; font-size: 24px; margin-top: 10px">正在加载账号数据...</text>
+    </div>
+</template>
+
+<script>
+import router from "@system.router"
+export default {
+  private: {
+    anims: {
+      login: null,
+      loginsrc: {value: "/common/seqanims/loginWhite/icons8-login-1.png"}
+    }
+  },
+  async PreLogin() {
+    await this.$app.$def.biliclient.login(false, null)
+    router.replace({
+      uri: "pages/main"
+    })
+  },
+  onInit() {
+    this.anims.login = new this.$app.$def.animengine.SequenceAnim(
+      "prePage",
+      this.anims.loginsrc,
+      28,
+      "/common/seqanims/loginWhite/icons8-login-*.png",
+      1000,
+      true
+    )
+
+    this.anims.login.start()
+
+    this.PreLogin()
+  }
+}
+</script>
+
+<style>
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+  justify-content: center;
+}
+</style>

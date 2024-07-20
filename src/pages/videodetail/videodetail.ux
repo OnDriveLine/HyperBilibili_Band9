@@ -40,7 +40,7 @@
             <div class="featurebtn" style="margin-top: 20px">
                 <text class="featurebtn_text">生成视频清单</text>
             </div>
-            <image src="/common/featurebtn_replyarea.png" style="margin-top: 15px"></image>
+            <image src="/common/featurebtn_replyarea.png" style="margin-top: 15px" @click="GoReplyArea()"></image>
         </div>
     </div>
 </template>
@@ -79,7 +79,17 @@ export default {
     }
     setTimeout(() => {
         this.UpdateVideoToolbarStatus()
-    }, 1000)
+    }, 200)
+  },
+  GoReplyArea(){
+    router.push({
+        uri: "pages/replys",
+        params: {
+            type: 1,
+            oid: this.vid.aid,
+            replycount: this.vid.stat.reply
+        }
+    })
   },
   async UpdateVideoToolbarStatus(){
     this.stared = await this.$app.$def.biliclient.isVideoStaredByBVID(this.bvid)

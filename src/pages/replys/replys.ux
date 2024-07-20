@@ -1,0 +1,245 @@
+<template>
+    <div class="page">
+        <div class="titlebar" @click="RouterBack()">
+            <div style="width: 40px; height: 40px; position: absolute; left: 0px">
+                <image src="/common/icons8-back-100.png" style="width: 40px; height: 40px"></image>
+            </div>
+            <text style="font-size: 40px; font-weight: bold">评论区</text>
+        </div>
+        <image style="position: absolute; margin-top: 245px" if="{{show_loading}}" src="{{anims.loading_src.value}}"></image>
+        <list style="margin-top: 15px" class="replylist">
+            <list-item type="replies"
+                style="width: 100%; justify-content: center; margin-top: 10px; height: {{PlaceHolderShowCheck($item.rpid, true)}}"
+                for="{{replies}}">
+                <div class="reply">
+                    <div class="userinfo">
+                        <image class="userimg" src="{{$item.member.avatar}}@44w_44h" alt="/common/fullgray.png"></image>
+                        <text class="username" style="margin-left: 10px">{{ $item.member.uname }}</text>
+                        <image style="width: 24px; height: 14px; object-fit: contain; margin-left: 6px"
+                            src="/common/bililevel/lv{{$item.member.level_info.current_level}}.png"></image>
+                    </div>
+                    <div class="replycontentdiv">
+                        <text class="replycontent">{{ $item.content.message }}</text>
+                    </div>
+                    <text class="replycontent_showmore">查看详情</text>
+                    <div class="reply_toolbar">
+                        <div class="toolbar_item">
+                            <image class="toolbar_img" src="/common/reply_like.png"></image>
+                            <text class="toolbar_text" style="margin-top: 2px">
+                                {{ this.$app.$def.tools.formatNumber($item.like) }}
+                            </text>
+                        </div>
+                        <div class="toolbar_item" style="margin-left: 18px">
+                            <image class="toolbar_img" src="/common/reply_messages.png"></image>
+                            <text class="toolbar_text" style="margin-top: 2px">
+                                {{ this.$app.$def.tools.formatNumber($item.rcount) }}
+                            </text>
+                        </div>
+                    </div>
+                </div>
+            </list-item>
+        </list>
+        <div style="flex-direction: row; align-items: center; margin-top: -5px">
+            <div @click="BackPN()" style="width: 40px; height: 40px; align-items: center; justify-content: center">
+                <image src="/common/changepage_left.png"></image>
+            </div>
+            <text style="margin-left: 17px; font-size: 25px; font-weight: 600; color: #9e9e9e">
+                第{{ current_pn }}页
+            </text>
+            <div style="
+          margin-left: 17px;
+          width: 40px;
+          height: 40px;
+          align-items: center;
+          justify-content: center;
+        " @click="NextPN()">
+                <image src="/common/changepage_right.png"></image>
+            </div>
+        </div>
+        <text style="margin-top: 10px"></text>
+    </div>
+</template>
+
+<script>
+import router from "@system.router"
+export default {
+  public: {
+    type: 1,
+    oid: "",
+    replycount: 0
+  },
+  private: {
+    replies: [],
+    maxpn: 1,
+    current_pn: 1,
+    show_loading: true,
+    anims: {
+        loading: null,
+        loading_src: {value: "/common/seqanims/loadingWhite/icons8-loading_颜色反转-1.png"}
+    }
+  },
+  RouterBack() {
+    router.back()
+  },
+  PlaceHolderShowCheck(rpid, isListItem) {
+    if (isListItem) {
+      console.log(
+        "PlaceHolderShowCheck(ListItem): " +
+          rpid +
+          " and " +
+          this.replies[this.replies.length - 1].rpid
+      )
+      if (rpid == this.replies[this.replies.length - 1].rpid) {
+        return "290px"
+      }
+      return "230px"
+    } else {
+      console.log(
+        "PlaceHolderShowCheck(NoListItem): " +
+          rpid +
+          " and " +
+          this.replies[this.replies.length - 1].rpid
+      )
+      if (rpid == this.replies[this.replies.length - 1].rpid) {
+        return "60px"
+      }
+      return "0px"
+    }
+  },
+  NextPN() {
+    if (this.current_pn != this.maxpn) {
+      this.current_pn++
+      this.LoadReplies()
+    }
+  },
+  BackPN() {
+    if (this.current_pn != 1) {
+      this.current_pn--
+      this.LoadReplies()
+    }
+  },
+  async LoadReplies() {
+    this.replies = []
+    this.show_loading = true
+    this.anims.loading.start()
+    this.replies = (await this.$app.$def.biliclient.getReplies(this.type, this.oid, this.current_pn)).replies
+    this.anims.loading.stop()
+    this.show_loading = false
+  },
+  onInit() {
+    this.maxpn = Math.ceil(this.replycount / 10)
+    console.log("maxpn=" + this.maxpn)
+
+    this.anims.loading = new this.$app.$def.animengine.SequenceAnim(
+      "replysPage",
+      this.anims.loading_src,
+      28,
+      "/common/seqanims/loadingWhite/icons8-loading_颜色反转-*.png",
+      1000,
+      true
+    )
+
+    this.LoadReplies()
+  }
+}
+</script>
+
+<style>
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+
+.titlebar {
+  width: 55%;
+  margin-top: 45px;
+  align-items: center;
+  justify-content: center;
+}
+
+.replylist {
+  width: 77%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+}
+
+.reply {
+  width: 319px;
+  height: 230px;
+  border-radius: 50px;
+  background-color: #262626;
+  flex-direction: column;
+}
+
+.userinfo {
+  flex-direction: row;
+  align-items: center;
+  margin-left: 25px;
+  margin-top: 17px;
+}
+
+.userimg {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+}
+
+.username {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.replycontentdiv {
+  width: 253px;
+  height: 82px;
+  max-height: 82px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 7px;
+  margin-left: 33px;
+  justify-content: flex-start; /* 保证内容顶部对齐 */
+}
+
+.replycontent {
+  width: 100%;
+  font-size: 20px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+}
+
+.replycontent_showmore {
+  font-size: 20px;
+  font-weight: 600;
+  color: #4785ff;
+  margin-top: 1px;
+  margin-left: 33px;
+}
+
+.reply_toolbar {
+  flex-direction: row;
+  margin-left: 33px;
+  margin-top: 4px;
+}
+
+.toolbar_item {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.toolbar_img {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+}
+
+.toolbar_text {
+  font-size: 10px;
+  font-weight: 600;
+}
+</style>

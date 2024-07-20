@@ -52,6 +52,12 @@
       },
       "pages/foldervideos": {
         "component": "foldervideos"
+      },
+      "pages/prepage": {
+        "component": "prepage"
+      },
+      "pages/replys": {
+        "component": "replys"
       }
     }
   }

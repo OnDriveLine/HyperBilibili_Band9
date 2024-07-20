@@ -36,9 +36,8 @@ export default {
             uri: "pages/login"
           })
         } else {
-          await this.$app.$def.biliclient.login(false, null)
           router.replace({
-            uri: "pages/main"
+            uri: "pages/prepage"
           })
         }
       }
