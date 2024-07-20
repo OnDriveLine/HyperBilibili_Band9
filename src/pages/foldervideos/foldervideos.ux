@@ -1,54 +1,52 @@
 <template>
-    <div class="page">
-        <div class="titlebar" @click="RouterBack()">
-            <div style="width: 40px; height: 40px; position: absolute; left: 0px">
-                <image src="/common/icons8-back-100.png" style="width: 40px; height: 40px"></image>
-            </div>
-            <text style="font-size: 40px; font-weight: bold">收藏夹</text>
-        </div>
-        <div style="margin-top: 20px; flex-direction: row; align-items: center">
-            <div @click="BackPN()" style="width: 40px; height: 40px; align-items: center; justify-content: center">
-                <image src="/common/changepage_left.png"></image>
-            </div>
-            <text style="margin-left: 17px; font-size: 25px; font-weight: 600; color: #9e9e9e">
-                第{{ current_pn }}页
-            </text>
-            <div style="
+  <div class="page">
+    <div class="titlebar" @click="RouterBack()">
+      <div style="width: 40px; height: 40px; position: absolute; left: 0px">
+        <image src="/common/icons8-back-100.png" style="width: 40px; height: 40px"></image>
+      </div>
+      <text style="font-size: 40px; font-weight: bold">收藏夹</text>
+    </div>
+    <div style="margin-top: 20px; flex-direction: row; align-items: center">
+      <div @click="BackPN()" style="width: 40px; height: 40px; align-items: center; justify-content: center">
+        <image src="/common/changepage_left.png"></image>
+      </div>
+      <text style="margin-left: 17px; font-size: 25px; font-weight: 600; color: #9e9e9e">
+        第{{ current_pn }}页
+      </text>
+      <div style="
           margin-left: 17px;
           width: 40px;
           height: 40px;
           align-items: center;
           justify-content: center;
         " @click="NextPN()">
-                <image src="/common/changepage_right.png"></image>
-            </div>
-        </div>
-        <div class="foldervid_div">
-            <list class="foldervid_list">
-                <list-item type="foldervid_videos" for="{{foldervid_vids}}" class="foldervid_listitem"
-                    style="height: {{calcSpace($item.title, true)}}" onclick="OpenVideo({{$item.bvid}})">
-                    <div class="foldervid_list_vid">
-                        <div class="vidinfo">
-                            <div class="vidpicture">
-                                <image class="vidpicture_img" src="{{$item.pic}}@160w_100h" alt="/common/fullgray.png">
-                                </image>
-                            </div>
-                            <text class="vidtitle">{{ $item.title }}</text>
-                        </div>
-                        <div class="vidstat">
-                            <text class="upinfo">UP：{{ $item.owner.name }}</text>
-                            <text class="stat_view">
-                                {{ this.$app.$def.tools.formatNumber($item.stat.view) }}
-                            </text>
-                        </div>
-                    </div>
-                    <text style="margin-top: {{calcSpace($item.title, false)}}; height: 0px"></text>
-                </list-item>
-            </list>
-        </div>
-        <image style="position: absolute; margin-top: 265px" if="{{show_loading}}" src="{{anims.loading_src.value}}">
-        </image>
+        <image src="/common/changepage_right.png"></image>
+      </div>
     </div>
+    <div class="foldervid_div">
+      <list class="foldervid_list">
+        <list-item type="foldervid_videos" for="{{foldervid_vids}}" class="foldervid_listitem"
+          style="height: {{calcSpace($item.title, true)}}" onclick="OpenVideo({{$item.bvid}})">
+          <div class="foldervid_list_vid">
+            <div class="vidinfo">
+              <div class="vidpicture">
+                <image class="vidpicture_img" src="{{$item.pic}}@160w_100h" alt="/common/fullgray.png"></image>
+              </div>
+              <text class="vidtitle">{{ $item.title }}</text>
+            </div>
+            <div class="vidstat">
+              <text class="upinfo">UP：{{ $item.owner.name }}</text>
+              <text class="stat_view">
+                {{ this.$app.$def.tools.formatNumber($item.stat.view) }}
+              </text>
+            </div>
+          </div>
+          <text style="margin-top: {{calcSpace($item.title, false)}}; height: 0px"></text>
+        </list-item>
+      </list>
+    </div>
+    <image style="position: absolute; margin-top: 265px" if="{{show_loading}}" src="{{anims.loading_src.value}}"></image>
+  </div>
 </template>
 
 <script>
@@ -107,7 +105,7 @@ export default {
   async LoadVideos() {
     this.show_loading = true
     this.foldervid_vids.length = 0 // Clear Array
-    
+
     this.anims.loading.start()
 
     let medialist = await this.$app.$def.biliclient.getFavouriteFolderContent(
@@ -125,6 +123,15 @@ export default {
   onInit() {
     this.maxpn = Math.ceil(this.vidcount / 5)
     console.log("maxpn=" + this.maxpn)
+
+    this.anims.loading = new this.$app.$def.animengine.SequenceAnim(
+      "folderVideosPage",
+      this.anims.loading_src,
+      28,
+      "/common/seqanims/loadingWhite/icons8-loading_颜色反转-*.png",
+      1000,
+      true
+    )
 
     this.LoadVideos()
   }
