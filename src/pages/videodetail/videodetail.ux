@@ -79,7 +79,7 @@ export default {
     }
     setTimeout(() => {
         this.UpdateVideoToolbarStatus()
-    }, 200)
+    }, 1000)
   },
   GoReplyArea(){
     router.push({
