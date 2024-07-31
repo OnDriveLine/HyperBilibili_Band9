@@ -37,6 +37,7 @@
 
 <script>
 import router from "@system.router"
+import prompt from "@system.prompt"
 export default {
   private: {
     recommend_vids: [],
@@ -85,9 +86,20 @@ export default {
     }
     return "0px"
   },
+  async checkUpdates(){
+    var result = await this.$app.$def.biliclient.checkHyperbilibiliUpdates()
+    if(result.update){
+      prompt.showToast({
+        message: result.msg,
+        duration: 6000
+      })
+    }
+  },
   onInit() {
     this.GetVids()
     this.funnytip = this.$app.$def.funnytips.getTips()
+
+    this.checkUpdates()
   },
   onReady() {
     this.anims.loading = new this.$app.$def.animengine.SequenceAnim(

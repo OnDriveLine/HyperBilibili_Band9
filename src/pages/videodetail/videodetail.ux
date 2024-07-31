@@ -20,11 +20,11 @@
                 </div>
             </div>
             <div class="vidtoolbar" style="margin-top: 25px">
-                <div class="vidtool" style="margin-left: 0px">
+                <div class="vidtool" style="margin-left: 0px" @click="DisabledFeaturesWarning()">
                     <image class="vidtoolimg" src={{likesrc}}></image>
                     <text class="vidtooltext">{{this.$app.$def.tools.formatNumber(vid.stat.like)}}</text>
                 </div>
-                <div class="vidtool">
+                <div class="vidtool" @click="DisabledFeaturesWarning()">
                     <image class="vidtoolimg" src={{coinsrc}}></image>
                     <text class="vidtooltext">{{this.$app.$def.tools.formatNumber(vid.stat.coin)}}</text>
                 </div>
@@ -32,7 +32,7 @@
                     <image class="vidtoolimg" src={{starsrc}}></image>
                     <text class="vidtooltext">{{this.$app.$def.tools.formatNumber(vid.stat.favorite)}}</text>
                 </div>
-                <div class="vidtool">
+                <div class="vidtool" @click="AISummary()">
                     <image class="vidtoolimg" src="/common/vidtool_aisummary.png"></image>
                     <text class="vidtooltext">视频总结</text>
                 </div>
@@ -63,6 +63,23 @@ export default {
   },
   RouterBack() {
     router.back()
+  },
+  DisabledFeaturesWarning(){
+    prompt.showToast({
+        message: "由于B站风控，该功能暂不可用"
+    })
+  },
+  async AISummary(){
+    var summary = await this.$app.$def.biliclient.getVideoAISummaryByBVID(this.vid.bvid, this.vid.cid, this.vid.owner.mid)
+    if(!summary){
+        summary = "该视频没有摘要，可能是其内容中包含敏感信息（如涉政、涉军、涉企、或其它容易被误解或引起歧义、多人意见不一、容易引起争论的内容），或是视频没有可以被识别的音频"
+    }
+    router.push({
+        uri: "pages/textdetail",
+        params: {
+            text: summary
+        }
+    })
   },
   async AddToFav(){
     var result = await this.$app.$def.biliclient.starVideoToDefaultFavFolderByBVID(this.bvid)

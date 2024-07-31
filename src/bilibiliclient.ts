@@ -1,4 +1,19 @@
-import { fetch, storage } from './tsimports';
+import { fetch, storage, crypto } from './tsimports';
+
+const mixinKeyEncTab = [
+    46, 47, 18, 2, 53, 8, 23, 32, 15, 50, 10, 31, 58, 3, 45, 35, 27, 43, 5, 49,
+    33, 9, 42, 19, 29, 28, 14, 39, 12, 38, 41, 13, 37, 48, 7, 16, 24, 55, 40,
+    61, 26, 17, 0, 1, 60, 51, 30, 4, 22, 25, 54, 21, 56, 59, 6, 63, 57, 62, 11,
+    36, 20, 34, 44, 52
+]
+
+// 对 imgKey 和 subKey 进行字符顺序打乱编码
+// From: https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/misc/sign/wbi.md
+const getMixinKey = (orig: string) =>
+    mixinKeyEncTab
+        .map((n) => orig[n])
+        .join("")
+        .slice(0, 32);
 
 interface AccountData {
     sessData: string;
@@ -8,6 +23,8 @@ interface AccountData {
 }
 
 class BilibiliClient {
+    public version: string = "2.0"
+
     private qrCodeKey: string | null = null;
     private sessData: string | null = null;
     private biliJct: string | null = null;
@@ -35,6 +52,33 @@ class BilibiliClient {
         return `SESSDATA=${this.sessData}; bili_jct=${this.biliJct}; DedeUserID=${this.dedeUserID}; sid=${this.sid}; buvid3=${this.buvid3}; buvid4=${this.buvid4}`;
     }
 
+    // 对params进行wbi签名
+    // From: https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/docs/misc/sign/wbi.md
+    private encWbi(params: any, img_key: string, sub_key: string) {
+        const mixin_key = getMixinKey(img_key + sub_key),
+            curr_time = Math.round(Date.now() / 1000),
+            chr_filter = /[!'()*]/g;
+
+        Object.assign(params, { wts: curr_time }); // 添加 wts 字段
+        // 按照 key 重排参数
+        const query = Object.keys(params)
+            .sort()
+            .map((key) => {
+                // 过滤 value 中的 "!'()*" 字符
+                const value = params[key].toString().replace(chr_filter, "");
+                return `${encodeURIComponent(key)}=${encodeURIComponent(value)}`;
+            })
+            .join("&");
+
+        const wbi_sign = crypto.hashDigest({
+            data: query + mixin_key,
+            algo: "MD5"
+        })
+        console.log("wbi_sign: " + wbi_sign)
+
+        return query + "&w_rid=" + wbi_sign;
+    }
+
     // 发送GET请求的函数
     private async getRequest(url: string): Promise<any> {
         console.log("getRequest: " + url)
@@ -49,6 +93,10 @@ class BilibiliClient {
             console.error(`GET请求失败，错误码 = ${error.code}`);
             throw error;
         }
+    }
+
+    private async getRequestWbi(url: string, params: any): Promise<any> {
+        return (await this.getRequest(`${url}?${this.encWbi(params, this.accountInfo.wbi_img.img_url.slice(this.accountInfo.wbi_img.img_url.lastIndexOf('/') + 1, this.accountInfo.wbi_img.img_url.lastIndexOf('.')), this.accountInfo.wbi_img.sub_url.slice(this.accountInfo.wbi_img.sub_url.lastIndexOf('/') + 1, this.accountInfo.wbi_img.sub_url.lastIndexOf('.')))}`))
     }
 
     // 发送POST请求的函数
@@ -68,6 +116,25 @@ class BilibiliClient {
         } catch (error) {
             console.error(`POST请求失败，错误码 = ${error.code}`);
             throw error;
+        }
+    }
+
+    async checkHyperbilibiliUpdates(): Promise<any>{
+        const latestVerGet = await fetch.fetch({
+            url: "https://gitee.com/search__stars/hb_ota_info/raw/master/current_ver",
+            header: this.getHeaders()
+        });
+        console.log(latestVerGet.data)
+        const latestVer = latestVerGet.data.data;
+        if(latestVer != this.version){
+            return {
+                update: true,
+                msg: "检查到更新v" + latestVer + "，请前往bandbbs.cn下载更新"
+            }
+        }
+        return {
+            update: false,
+            msg: ""
         }
     }
 
@@ -230,11 +297,23 @@ class BilibiliClient {
     }
 
     // 获取二级评论区内容
-    async getSecReplies(type: string, oid: string, root: string, pn: number = 1, ps: number = 10){
+    async getSecReplies(type: string, oid: string, root: string, pn: number = 1, ps: number = 10) {
         const url = `https://api.bilibili.com/x/v2/reply/reply?type=${type}&oid=${oid}&pn=${pn}&ps=${ps}&root=${root}`
         const response = await this.getRequest(url);
 
         return response.data.data
+    }
+
+    // 获取视频AI摘要
+    async getVideoAISummaryByBVID(bvid: string, cid: string, up_mid: string){
+        const url = "https://api.bilibili.com/x/web-interface/view/conclusion/get"
+        const response = await this.getRequestWbi(url, {
+            bvid: bvid,
+            cid: cid,
+            up_mid: up_mid
+        })
+
+        return response.data.data.model_result.summary
     }
 
     // 收藏视频至默认收藏夹
@@ -242,11 +321,11 @@ class BilibiliClient {
         let defaultFolderID = 0
         const folders = await this.getUserFavouriteFolders(this.accountInfo.mid)
         folders.list.forEach(folder => {
-            if(folder.title == "默认收藏夹"){
+            if (folder.title == "默认收藏夹") {
                 defaultFolderID = folder.id
             }
         });
-        if(defaultFolderID == 0){
+        if (defaultFolderID == 0) {
             return false
         }
         this.getVideoInfoByBVID(bvid).then(async (videoInfo) => {

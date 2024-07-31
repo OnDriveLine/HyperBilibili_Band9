@@ -30,7 +30,7 @@ export default {
         version: ""
     },
     onInit(){
-        this.version = this.$app.$def.versionStr
+        this.version = "v" + this.$app.$def.biliclient.version
     }
 }
 </script>

@@ -10,7 +10,6 @@ export default {
   tools: tools,
   funnytips: funnytips,
   settings: settings,
-  versionStr: "v2.0",
   onCreate() {
     console.log("app created")
     settings.loadSettings()
