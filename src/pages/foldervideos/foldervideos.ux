@@ -115,10 +115,11 @@ export default {
     )
     medialist.medias.forEach(async (media) => {
       var mediainfo = await this.$app.$def.biliclient.getVideoInfoByBVID(media.bvid)
-      this.show_loading = false
-      this.anims.loading.stop()
       this.foldervid_vids.push(mediainfo)
     })
+
+    this.show_loading = false
+    this.anims.loading.stop()
   },
   onInit() {
     this.maxpn = Math.ceil(this.vidcount / 5)

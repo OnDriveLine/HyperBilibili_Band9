@@ -1,14 +1,18 @@
 <template>
-    <div class="page">
-        <image src="{{anims.loginsrc.value}}" style="width: 45px; height: 45px; object-fit: contain"></image>
-        <text style="font-weight: 600; font-size: 24px; margin-top: 10px">正在加载账号数据...</text>
+  <div class="page">
+    <image src="{{anims.loginsrc.value}}" style="width: 45px; height: 45px; object-fit: contain"></image>
+    <text style="font-weight: 600; font-size: 24px; margin-top: 10px">正在加载账号数据...</text>
+    <div class="featurebtn" style="position:absolute; bottom: 50px" @click="ReLogin()" if={{ShowReLogin}}>
+      <text class="featurebtn_text">遇到问题？重新登录</text>
     </div>
+  </div>
 </template>
 
 <script>
 import router from "@system.router"
 export default {
   private: {
+    ShowReLogin: false,
     anims: {
       login: null,
       loginsrc: {value: "/common/seqanims/loginWhite/icons8-login-1.png"}
@@ -18,6 +22,13 @@ export default {
     await this.$app.$def.biliclient.login(false, null)
     router.replace({
       uri: "pages/main"
+    })
+  },
+  ReLogin(){
+    this.$app.$def.biliclient.logOut()
+    router.clear()
+    router.replace({
+        uri: "pages/splash"
     })
   },
   onInit() {
@@ -33,6 +44,10 @@ export default {
     this.anims.login.start()
 
     this.PreLogin()
+
+    setTimeout(() => {
+      this.ShowReLogin = true
+    }, 5000)
   }
 }
 </script>
@@ -46,5 +61,19 @@ export default {
   position: absolute;
   width: 100%;
   justify-content: center;
+}
+
+.featurebtn {
+  width: 280px;
+  height: 65px;
+  border-radius: 90px;
+  background-color: #262626;
+  justify-content: center;
+  align-items: center;
+}
+
+.featurebtn_text {
+  font-size: 24px;
+  font-weight: 600;
 }
 </style>

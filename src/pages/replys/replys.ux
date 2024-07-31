@@ -1,110 +1,109 @@
 <template>
-    <div class="page">
-        <div class="titlebar" @click="RouterBack()">
-            <div style="width: 40px; height: 40px; position: absolute; left: 0px">
-                <image src="/common/icons8-back-100.png" style="width: 40px; height: 40px"></image>
-            </div>
-            <text style="font-size: 40px; font-weight: bold">评论区</text>
-        </div>
-        <image style="position: absolute; margin-top: 245px" if="{{show_loading}}" src="{{anims.loading_src.value}}"></image>
-        <list style="margin-top: 15px" class="replylist">
-            <list-item type="replies"
-                style="width: 100%; justify-content: center; margin-top: 10px; height: {{PlaceHolderShowCheck($item.rpid, true)}}"
-                for="{{replies}}">
-                <div class="reply">
-                    <div class="userinfo">
-                        <image class="userimg" src="{{$item.member.avatar}}@44w_44h" alt="/common/fullgray.png"></image>
-                        <text class="username" style="margin-left: 10px">{{ $item.member.uname }}</text>
-                        <image style="width: 24px; height: 14px; object-fit: contain; margin-left: 6px"
-                            src="/common/bililevel/lv{{$item.member.level_info.current_level}}.png"></image>
-                    </div>
-                    <div class="replycontentdiv">
-                        <text class="replycontent">{{ $item.content.message }}</text>
-                    </div>
-                    <text class="replycontent_showmore">查看详情</text>
-                    <div class="reply_toolbar">
-                        <div class="toolbar_item">
-                            <image class="toolbar_img" src="/common/reply_like.png"></image>
-                            <text class="toolbar_text" style="margin-top: 2px">
-                                {{ this.$app.$def.tools.formatNumber($item.like) }}
-                            </text>
-                        </div>
-                        <div class="toolbar_item" style="margin-left: 18px">
-                            <image class="toolbar_img" src="/common/reply_messages.png"></image>
-                            <text class="toolbar_text" style="margin-top: 2px">
-                                {{ this.$app.$def.tools.formatNumber($item.rcount) }}
-                            </text>
-                        </div>
-                    </div>
-                </div>
-            </list-item>
-        </list>
-        <div style="flex-direction: row; align-items: center; margin-top: -5px">
-            <div @click="BackPN()" style="width: 40px; height: 40px; align-items: center; justify-content: center">
-                <image src="/common/changepage_left.png"></image>
-            </div>
-            <text style="margin-left: 17px; font-size: 25px; font-weight: 600; color: #9e9e9e">
-                第{{ current_pn }}页
-            </text>
-            <div style="
-          margin-left: 17px;
-          width: 40px;
-          height: 40px;
-          align-items: center;
-          justify-content: center;
-        " @click="NextPN()">
-                <image src="/common/changepage_right.png"></image>
-            </div>
-        </div>
-        <text style="margin-top: 10px"></text>
+  <div class="page">
+    <div class="titlebar" @click="RouterBack()">
+      <div style="width: 40px; height: 40px; position: absolute; left: 0px">
+        <image src="/common/icons8-back-100.png" style="width: 40px; height: 40px"></image>
+      </div>
+      <text style="font-size: 40px; font-weight: bold">{{titletext}}</text>
     </div>
+    <image style="position: absolute; margin-top: 245px" if="{{show_loading}}" src="{{anims.loading_src.value}}"></image>
+    <list style="margin-top: 15px" class="replylist">
+      <list-item type="replies"
+        style="width: 100%; justify-content: center; margin-top: 10px; height: {{PlaceHolderShowCheck($item.rpid)}}"
+        for="{{replies}}">
+        <div class="reply">
+          <div class="userinfo">
+            <image class="userimg" src="{{$item.member.avatar}}@44w_44h" alt="/common/fullgray.png"></image>
+            <text class="username" style="margin-left: 10px">{{ $item.member.uname }}</text>
+            <image style="width: 24px; height: 14px; object-fit: contain; margin-left: 6px"
+              src="/common/bililevel/lv{{$item.member.level_info.current_level}}.png"></image>
+          </div>
+          <div class="replycontentdiv" onclick="ShowTools({{$item}})">
+            <text class="replycontent">{{ $item.content.message }}</text>
+          </div>
+          <div class="reply_replybtn" show="{{!secmode}}" @click="Reply()">
+            <text class="reply_replytext">回复</text>
+          </div>
+        </div>
+      </list-item>
+    </list>
+    <div class="pagechanger-container">
+      <div class="pagechanger">
+        <div @click="BackPN()" style="width: 40px; height: 40px; align-items: center; justify-content: center">
+          <image src="/common/changepage_left.png"></image>
+        </div>
+        <text style="margin-left: 17px; font-size: 25px; font-weight: 600; color: #9e9e9e">
+          第{{ current_pn }}页
+        </text>
+        <div style="
+            margin-left: 17px;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+          " @click="NextPN()">
+          <image src="/common/changepage_right.png"></image>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import router from "@system.router"
+import prompt from "@system.prompt"
 export default {
   public: {
     type: 1,
     oid: "",
-    replycount: 0
+    replycount: 0,
+    rootrpid: "",
+    secmode: false
   },
   private: {
+    titletext: "评论区",
     replies: [],
     maxpn: 1,
     current_pn: 1,
-    show_loading: true,
+    show_loading: false,
     anims: {
-        loading: null,
-        loading_src: {value: "/common/seqanims/loadingWhite/icons8-loading_颜色反转-1.png"}
+      loading: null,
+      loading_src: {value: "/common/seqanims/loadingWhite/icons8-loading_颜色反转-1.png"}
     }
   },
   RouterBack() {
     router.back()
   },
-  PlaceHolderShowCheck(rpid, isListItem) {
-    if (isListItem) {
-      console.log(
-        "PlaceHolderShowCheck(ListItem): " +
-          rpid +
-          " and " +
-          this.replies[this.replies.length - 1].rpid
-      )
-      if (rpid == this.replies[this.replies.length - 1].rpid) {
-        return "290px"
-      }
-      return "230px"
-    } else {
-      console.log(
-        "PlaceHolderShowCheck(NoListItem): " +
-          rpid +
-          " and " +
-          this.replies[this.replies.length - 1].rpid
-      )
-      if (rpid == this.replies[this.replies.length - 1].rpid) {
-        return "60px"
-      }
-      return "0px"
+  Reply(){
+    prompt.showToast({
+      message: "该功能暂不可用"
+    })
+  },
+  ShowTools(reply) {
+    if (!this.secmode) {
+      router.push({
+        uri: "pages/replytools",
+        params: {
+          type: this.type,
+          oid: this.oid,
+          reply: reply
+        }
+      })
     }
+    else{
+      router.push({
+        uri: "pages/textdetail",
+        params: {
+          text: reply.content.message
+        }
+      })
+    }
+  },
+  PlaceHolderShowCheck(rpid) {
+    if (rpid == this.replies[this.replies.length - 1].rpid) {
+      return "315px"
+    }
+    return "200px"
   },
   NextPN() {
     if (this.current_pn != this.maxpn) {
@@ -122,7 +121,20 @@ export default {
     this.replies = []
     this.show_loading = true
     this.anims.loading.start()
-    this.replies = (await this.$app.$def.biliclient.getReplies(this.type, this.oid, this.current_pn)).replies
+    if (this.secmode) {
+      this.replies = (
+        await this.$app.$def.biliclient.getSecReplies(
+          this.type,
+          this.oid,
+          this.rootrpid,
+          this.current_pn
+        )
+      ).replies
+    } else {
+      this.replies = (
+        await this.$app.$def.biliclient.getReplies(this.type, this.oid, this.current_pn)
+      ).replies
+    }
     this.anims.loading.stop()
     this.show_loading = false
   },
@@ -138,6 +150,10 @@ export default {
       1000,
       true
     )
+
+    if(this.secmode){
+      this.titletext = "子评论"
+    }
 
     this.LoadReplies()
   }
@@ -163,14 +179,14 @@ export default {
 
 .replylist {
   width: 77%;
-  height: 100%;
+  height: 75%;
   align-items: center;
   justify-content: center;
 }
 
 .reply {
   width: 319px;
-  height: 230px;
+  height: 200px;
   border-radius: 50px;
   background-color: #262626;
   flex-direction: column;
@@ -212,34 +228,32 @@ export default {
   text-overflow: ellipsis;
 }
 
-.replycontent_showmore {
-  font-size: 20px;
-  font-weight: 600;
-  color: #4785ff;
-  margin-top: 1px;
-  margin-left: 33px;
+.pagechanger-container {
+  bottom: 22px;
+  position: absolute;
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 20px;
+  padding: 5px 10px;
 }
 
-.reply_toolbar {
+.pagechanger {
   flex-direction: row;
-  margin-left: 33px;
-  margin-top: 4px;
-}
-
-.toolbar_item {
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
 }
 
-.toolbar_img {
-  width: 22px;
-  height: 22px;
-  object-fit: contain;
+.reply_replybtn {
+  background-color: #343434;
+  width: 88px;
+  height: 34px;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5px;
+  margin-left: 33px;
 }
 
-.toolbar_text {
-  font-size: 10px;
+.reply_replytext {
+  font-size: 18px;
   font-weight: 600;
 }
 </style>

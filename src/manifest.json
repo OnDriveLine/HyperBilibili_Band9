@@ -58,6 +58,12 @@
       },
       "pages/replys": {
         "component": "replys"
+      },
+      "pages/textdetail": {
+        "component": "textdetail"
+      },
+      "pages/replytools": {
+        "component": "replytools"
       }
     }
   }

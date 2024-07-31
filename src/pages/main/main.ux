@@ -1,5 +1,6 @@
 <template>
   <div class="page">
+    <image src="/common/rounddevices_bg.png" style="position: absolute"></image>
     <div class="bar" @click="SwitchPage()">
       <image src="/common/switch.png"></image>
       <text style="font-weight: 600; font-size: 30px; margin-left: 15px">首页</text>
@@ -19,9 +20,12 @@
             </div>
             <div class="vidstat">
               <text class="upinfo">UP：{{ $item.owner.name }}</text>
-              <text class="stat_view">
-                {{ this.$app.$def.tools.formatNumber($item.stat.view) }}
-              </text>
+              <div class="stat_view">
+                <image class="stat_view_img" src="/common/playcounticon.png"></image>
+                <text class="stat_view_text">
+                  {{ this.$app.$def.tools.formatNumber($item.stat.view) }}
+                </text>
+              </div>
             </div>
           </div>
           <text style="margin-top: {{calcSpace($item.title, false)}}; height: 0px"></text>
@@ -97,7 +101,7 @@ export default {
 
     this.anims.loading.start()
   },
-  onDestroy(){
+  onDestroy() {
     this.$app.$def.animengine.clearPageAnims("mainPage")
   }
 }
@@ -196,17 +200,31 @@ export default {
 .vidstat {
   flex-direction: row;
   margin-left: 30px;
+  align-items: center;
 }
 
 .upinfo {
   font-size: 14px;
   font-weight: 600;
+  width: 200px;
+  text-overflow: ellipsis;
 }
 
 .stat_view {
+  position: absolute;
+  margin-left: 230px;
+  align-items: center;
+}
+
+.stat_view_img {
+  width: 20px;
+  height: 15px;
+  object-fit: scale-down;
+}
+
+.stat_view_text {
   font-size: 14px;
   font-weight: 600;
-  position: absolute;
-  margin-left: 250px;
+  margin-left: 5px;
 }
 </style>

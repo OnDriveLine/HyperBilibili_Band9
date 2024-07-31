@@ -11,11 +11,11 @@
             <text class="vidtitle">{{ vid.title }}</text>
             <div class="statbar">
                 <div class="stat">
-                    <image src="/common/playcounticon.png" style="width: 23px; height: 25px; margin-top: 2px"></image>
+                    <image class="statimg" src="/common/playcounticon.png" style="width: 23px; height: 25px; margin-top: 2px"></image>
                     <text class="statext">{{ this.$app.$def.tools.formatNumber(vid.stat.view) }}</text>
                 </div>
-                <div class="stat" style="margin-left: 6px">
-                    <image src="/common/uploadericon.png" style="width: 27px; height: 29px"></image>
+                <div class="stat" style="margin-left: 10px">
+                    <image class="statimg" src="/common/uploadericon.png" style="width: 27px; height: 29px"></image>
                     <text class="statext">{{ vid.owner.name }}</text>
                 </div>
             </div>
@@ -79,7 +79,7 @@ export default {
     }
     setTimeout(() => {
         this.UpdateVideoToolbarStatus()
-    }, 1000)
+    }, 500)
   },
   GoReplyArea(){
     router.push({
@@ -161,12 +161,20 @@ export default {
 
 .statbar {
     flex-direction: row;
+    align-items: center;
     margin-top: 10px;
     width: 281px;
 }
 
 .stat {
     flex-direction: row;
+    align-items: center;
+}
+
+.statimg {
+    width: 20px;
+    height: 15px;
+    object-fit: scale-down;
 }
 
 .statext {

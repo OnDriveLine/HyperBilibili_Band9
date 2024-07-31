@@ -1,0 +1,116 @@
+<template>
+    <div class="page">
+        <div class="titlebar" @click="RouterBack()">
+            <div style="width: 40px; height: 40px; position: absolute; left: 0px">
+                <image src="/common/icons8-back-100.png" style="width: 40px; height: 40px"></image>
+            </div>
+            <text style="font-size: 40px; font-weight: bold">评论</text>
+        </div>
+        <div class="toolbtn" style="margin-top: 30px">
+            <div class="dataicon" style="margin-left: 25px">
+                <image class="toolicon" src="/common/replytools_like.png"></image>
+                <text class="tooldata" style="margin-top: 4px">{{this.$app.$def.tools.formatNumber(reply.like)}}</text>
+            </div>
+            <text class="toolname" style="margin-left: 92px; position: absolute">点赞该评论</text>
+        </div>
+        <div class="toolbtn" style="margin-top: 10px" @click="ShowSecReplies()">
+            <div class="dataicon" style="margin-left: 25px">
+                <image class="toolicon" src="/common/replytools_showreplies.png"></image>
+                <text class="tooldata" style="margin-top: 4px">{{this.$app.$def.tools.formatNumber(reply.rcount)}}</text>
+            </div>
+            <text class="toolname" style="margin-left: 92px; position: absolute">查看回复</text>
+        </div>
+        <div class="toolbtn" style="margin-top: 10px" @click="ShowDetail()">
+            <div class="dataicon" style="margin-left: 25px">
+                <image class="toolicon" src="/common/replytools_showdetail.png"></image>
+            </div>
+            <text class="toolname" style="margin-left: 92px; position: absolute">查看详情</text>
+        </div>
+    </div>
+</template>
+
+<script>
+import router from "@system.router"
+export default {
+  public: {
+    type: 0,
+    oid: "",
+    reply: null
+  },
+  RouterBack() {
+    router.back()
+  },
+  ShowDetail() {
+    router.push({
+        uri: "pages/textdetail",
+        params: {
+            text: this.reply.content.message
+        }
+    })
+  },
+  ShowSecReplies(){
+    router.push({
+        uri: "pages/replys",
+        params: {
+            type: this.type,
+            oid: this.oid,
+            replycount: this.reply.rcount,
+            rootrpid: this.reply.rpid,
+            secmode: true
+        }
+    })
+  },
+  onInit(){
+    this.reply = JSON.parse(this.reply)
+  }
+}
+</script>
+
+<style>
+.page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    position: absolute;
+    width: 100%;
+}
+
+.titlebar {
+    width: 55%;
+    margin-top: 45px;
+    align-items: center;
+    justify-content: center;
+}
+
+.toolbtn {
+    width: 280px;
+    height: 80px;
+    border-radius: 25px;
+    flex-direction: row;
+    align-items: center;
+    background-color: #262626;
+}
+
+.dataicon {
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.toolicon {
+    width: 31px;
+    height: 31px;
+    object-fit: scale-down;
+}
+
+.tooldata {
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.toolname {
+    font-size: 30px;
+    font-weight: 600;
+}
+</style>

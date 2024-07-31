@@ -37,6 +37,7 @@ class BilibiliClient {
 
     // 发送GET请求的函数
     private async getRequest(url: string): Promise<any> {
+        console.log("getRequest: " + url)
         try {
             const response = await fetch.fetch({
                 url: url,
@@ -223,6 +224,14 @@ class BilibiliClient {
     // 获取评论区内容
     async getReplies(type: string, oid: string, pn: number = 1, ps: number = 10, sort: number = 1) {
         const url = `https://api.bilibili.com/x/v2/reply?type=${type}&oid=${oid}&pn=${pn}&ps=${ps}&sort=${sort}`
+        const response = await this.getRequest(url);
+
+        return response.data.data
+    }
+
+    // 获取二级评论区内容
+    async getSecReplies(type: string, oid: string, root: string, pn: number = 1, ps: number = 10){
+        const url = `https://api.bilibili.com/x/v2/reply/reply?type=${type}&oid=${oid}&pn=${pn}&ps=${ps}&root=${root}`
         const response = await this.getRequest(url);
 
         return response.data.data

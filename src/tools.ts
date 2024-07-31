@@ -1,4 +1,5 @@
 export function formatNumber(num: number): string{
+    console.log("formatNumber: " + num)
     if(num < 1000){
         return num.toString();
     }
