@@ -1,11 +1,8 @@
+<import name="title-bar" src="../../components/TitleBar/TitleBar.ux"></import>
+
 <template>
     <div class="page">
-        <div class="titlebar" @click="RouterBack()">
-            <div style="width: 40px; height: 40px; position: absolute; left: 0px">
-                <image src="/common/icons8-back-100.png" style="width: 40px; height: 40px"></image>
-            </div>
-            <text style="font-size: 40px; font-weight: bold">视频</text>
-        </div>
+        <title-bar title="视频"></title-bar>
         <div class="maindiv">
             <image src="{{vid.pic}}@319w_150h" alt="/common/grayloading_cn.png" class="vidpic"></image>
             <text class="vidtitle">{{ vid.title }}</text>
@@ -60,9 +57,6 @@ export default {
     likesrc: "/common/vidtool_like.png",
     coinsrc: "/common/vidtool_coin.png",
     starsrc: "/common/vidtool_star.png"
-  },
-  RouterBack() {
-    router.back()
   },
   DisabledFeaturesWarning(){
     prompt.showToast({
@@ -152,13 +146,6 @@ export default {
     flex-direction: column;
     align-items: center;
     width: 100%;
-}
-
-.titlebar {
-    width: 55%;
-    margin-top: 45px;
-    align-items: center;
-    justify-content: center;
 }
 
 .vidpic {

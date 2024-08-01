@@ -1,9 +1,8 @@
+<import name="switch-bar" src="../../components/SwitchBar/SwitchBar.ux"></import>
+
 <template>
   <div class="page">
-    <div class="bar" @click="SwitchPage()">
-      <image src="/common/switch.png"></image>
-      <text style="font-weight: 600; font-size: 30px; margin-left: 15px">我的</text>
-    </div>
+    <switch-bar title="我的"></switch-bar>
     <image src="{{accountInfo.face}}@106w_106h" alt="/common/fullgray.png" class="profimg" style="margin-top: 30px">
     </image>
     <text class="{{name_text_class}}" style="margin-top: 15px">{{ accountInfo.uname }}</text>
@@ -43,11 +42,6 @@ export default {
     is_senior_member: false,
     accountInfo: {}
   },
-  SwitchPage() {
-    router.replace({
-      uri: "pages/arealist"
-    })
-  },
   GoMyFavFolders(){
     router.push({
       uri: "pages/favfolders",
@@ -85,11 +79,6 @@ export default {
   height: 100%;
   position: absolute;
   width: 100%;
-}
-
-.bar {
-  flex-direction: row;
-  margin-top: 30px;
 }
 
 .profimg {

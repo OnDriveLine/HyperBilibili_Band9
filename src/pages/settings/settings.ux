@@ -1,9 +1,8 @@
+<import name="switch-bar" src="../../components/SwitchBar/SwitchBar.ux"></import>
+
 <template>
     <div class="page">
-        <div class="bar" @click="SwitchPage()">
-            <image src="/common/switch.png"></image>
-            <text style="font-weight: 600; font-size: 30px; margin-left: 15px">设置</text>
-        </div>
+        <switch-bar title="设置"></switch-bar>
         <div class="setbase" style="margin-top: 45px" onclick="ClickCountSet({{countset_name[0]}})">
             <image class="seticon" src="/common/settings_freshtype.png"></image>
             <text class="setext_small">视频推荐相关性</text>
@@ -41,71 +40,61 @@ export default {
   private: {
     fresh_type: 3,
     home_vid_count: 10,
-    countset_name: [
-        "fresh_type",
-        "home_vid_count"
-    ],
+    countset_name: ["fresh_type", "home_vid_count"],
     countset: {
-        fresh_type_max: 3,
-        fresh_type_min: 1,
-        home_vid_count_max: 14,
-        home_vid_count_min: 1
+      fresh_type_max: 3,
+      fresh_type_min: 1,
+      home_vid_count_max: 14,
+      home_vid_count_min: 1
     }
   },
-  SwitchPage() {
-    router.replace({
-      uri: "pages/arealist"
-    })
-  },
-  GoAbout(){
+  GoAbout() {
     router.push({
-        uri: "pages/about"
+      uri: "pages/about"
     })
   },
-  ClearTmp(){
+  ClearTmp() {
     prompt.showToast({
-        message: "当前不可用"
+      message: "当前不可用"
     })
   },
-  ClickCountSet(name){
-    switch(name){
-        case "fresh_type":
-            var new_fresh_type = null
-            if(this.fresh_type < this.countset.fresh_type_max){
-                new_fresh_type = this.fresh_type + 1
-            }
-            else{
-                new_fresh_type = this.countset.fresh_type_min
-            }
-            this.$app.$def.settings.saveSettings({
-                fresh_type: new_fresh_type
-            })
-            setTimeout(() => {
-                this.UpdateNumView()
-            }, 100)
-            break
-        case "home_vid_count":
-            var new_home_vid_count = null
-            if(this.home_vid_count < this.countset.home_vid_count_max){
-                new_home_vid_count = this.home_vid_count + 1
-            }
-            else{
-                new_home_vid_count = this.countset.home_vid_count_min
-            }
-            this.$app.$def.settings.saveSettings({
-                home_vid_count: new_home_vid_count
-            })
-            setTimeout(() => {
-                this.UpdateNumView()
-            }, 100)
-            break
+  ClickCountSet(name) {
+    switch (name) {
+      case "fresh_type":
+        var new_fresh_type = null
+        if (this.fresh_type < this.countset.fresh_type_max) {
+          new_fresh_type = this.fresh_type + 1
+        } else {
+          new_fresh_type = this.countset.fresh_type_min
+        }
+        this.$app.$def.settings.saveSettings({
+          fresh_type: new_fresh_type
+        })
+        setTimeout(() => {
+          this.UpdateNumView()
+        }, 100)
+        break
+      case "home_vid_count":
+        var new_home_vid_count = null
+        if (this.home_vid_count < this.countset.home_vid_count_max) {
+          new_home_vid_count = this.home_vid_count + 1
+        } else {
+          new_home_vid_count = this.countset.home_vid_count_min
+        }
+        this.$app.$def.settings.saveSettings({
+          home_vid_count: new_home_vid_count
+        })
+        setTimeout(() => {
+          this.UpdateNumView()
+        }, 100)
+        break
     }
   },
-  logout(){
+  logout() {
     this.$app.$def.biliclient.logOut()
     router.clear()
     router.replace({
-        uri: "pages/splash"
+      uri: "pages/splash"
     })
   },
   UpdateNumView() {
@@ -126,11 +115,6 @@ export default {
     height: 100%;
     position: absolute;
     width: 100%;
-}
-
-.bar {
-    flex-direction: row;
-    margin-top: 30px;
 }
 
 .setbase {
