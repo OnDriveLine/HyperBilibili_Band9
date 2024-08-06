@@ -98,9 +98,9 @@ export default {
 }
 
 .btnimg {
-    width: 64px;
-    height: 64px;
-    object-fit: contain;
+    width: 70px;
+    height: 76px;
+    object-fit: scale-down;
 }
 
 .btn {

@@ -28,6 +28,11 @@
       <text class="btntext">稍后再看</text>
       <image src="/common/arrow_right.png"></image>
     </div>
+    <div class="btnbase" style="margin-top: 10px" @click="WIPTips()">
+      <image class="btnimg" src="/common/mypage_messager.png"></image>
+      <text class="btntext">我的消息</text>
+      <image src="/common/arrow_right.png"></image>
+    </div>
     <text style="margin-top: 25px"></text>
   </div>
 </template>
@@ -120,8 +125,8 @@ export default {
 
 .btnimg {
   margin-left: 22px;
-  width: 43px;
-  height: 43px;
+  width: 49px;
+  height: 52px;
   object-fit: contain;
 }
 
@@ -129,6 +134,6 @@ export default {
   margin-left: 22px;
   width: 190px;
   font-size: 35px;
-  font-weight: 600;
+  font-weight: 500;
 }
 </style>
