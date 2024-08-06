@@ -34,11 +34,14 @@ export default {
     oid: "",
     reply: null
   },
+  private: {
+    replymessage: ""
+  },
   ShowDetail() {
     router.push({
         uri: "pages/textdetail",
         params: {
-            text: this.reply.content.message
+            text: this.replymessage
         }
     })
   },
@@ -56,6 +59,7 @@ export default {
   },
   onInit(){
     this.reply = JSON.parse(this.reply)
+    this.replymessage = this.reply.content.message
   }
 }
 </script>

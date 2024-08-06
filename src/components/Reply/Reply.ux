@@ -1,0 +1,96 @@
+<template>
+    <div class="reply">
+        <div class="userinfo" onclick="ShowTools({{reply}})">
+            <image class="userimg" src="{{reply.member.avatar}}@44w_44h" alt="/common/fullgray.png"></image>
+            <text class="username" style="margin-left: 10px">{{ reply.member.uname }}</text>
+            <image style="width: 24px; height: 14px; object-fit: contain; margin-left: 6px"
+                src="/common/bililevel/lv{{reply.member.level_info.current_level}}.png"></image>
+        </div>
+        <div class="replycontentdiv" onclick="ShowTools({{reply}})">
+            <text class="replycontent">{{ reply.content.message }}</text>
+        </div>
+        <div class="reply_replybtn" onclick="Reply({{reply.rpid}})">
+            <text class="reply_replytext">回复</text>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+  props: ["reply"],
+  ShowTools(reply){
+    this.$emit("showTools", {
+      reply: reply
+    })
+  },
+  Reply(rpid){
+    this.$emit("reply", {
+      rpid: rpid
+    })
+  }
+}
+</script>
+
+<style>
+.reply {
+  width: 319px;
+  height: 200px;
+  border-radius: 50px;
+  background-color: #262626;
+  flex-direction: column;
+}
+
+.userinfo {
+  flex-direction: row;
+  align-items: center;
+  margin-left: 25px;
+  margin-top: 17px;
+}
+
+.userimg {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+}
+
+.username {
+  font-size: 20px;
+  font-weight: 600;
+  max-width: 180px;
+  text-overflow: ellipsis;
+}
+
+.replycontentdiv {
+  width: 253px;
+  height: 82px;
+  max-height: 82px;
+  display: flex;
+  flex-direction: column;
+  margin-top: 7px;
+  margin-left: 33px;
+  justify-content: flex-start; /* 保证内容顶部对齐 */
+}
+
+.replycontent {
+  width: 100%;
+  font-size: 20px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+}
+
+.reply_replybtn {
+  background-color: #343434;
+  width: 88px;
+  height: 34px;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+  margin-top: 5px;
+  margin-left: 33px;
+}
+
+.reply_replytext {
+  font-size: 18px;
+  font-weight: 600;
+}
+</style>

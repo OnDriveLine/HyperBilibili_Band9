@@ -1,46 +1,35 @@
 <import name="title-bar" src="../../components/TitleBar/TitleBar.ux"></import>
+<import name="reply" src="../../components/Reply/Reply.ux"></import>
+<import name="input-method" src="../../components/InputMethod/InputMethod.ux"></import>
+<import
+  name="floating-page-changer"
+  src="../../components/FloatingPageChanger/FloatingPageChanger.ux"
+></import>
 
 <template>
   <div class="page">
-    <title-bar title={{titletext}}></title-bar>
+    <title-bar title="{{titletext}}"></title-bar>
     <image style="position: absolute; margin-top: 245px" if="{{show_loading}}" src="{{anims.loading_src.value}}"></image>
     <list style="margin-top: 15px" class="replylist">
       <list-item type="replies"
         style="width: 100%; justify-content: center; margin-top: 10px; height: {{PlaceHolderShowCheck($item.rpid)}}"
         for="{{replies}}">
-        <div class="reply">
-          <div class="userinfo">
-            <image class="userimg" src="{{$item.member.avatar}}@44w_44h" alt="/common/fullgray.png"></image>
-            <text class="username" style="margin-left: 10px">{{ $item.member.uname }}</text>
-            <image style="width: 24px; height: 14px; object-fit: contain; margin-left: 6px"
-              src="/common/bililevel/lv{{$item.member.level_info.current_level}}.png"></image>
-          </div>
-          <div class="replycontentdiv" onclick="ShowTools({{$item}})">
-            <text class="replycontent">{{ $item.content.message }}</text>
-          </div>
-          <div class="reply_replybtn" show="{{!secmode}}" @click="Reply()">
-            <text class="reply_replytext">回复</text>
-          </div>
-        </div>
+        <reply reply="{{$item}}" @show-tools="ShowTools" @reply="Reply"></reply>
       </list-item>
     </list>
-    <div class="pagechanger-container">
-      <div class="pagechanger">
-        <div @click="BackPN()" style="width: 40px; height: 40px; align-items: center; justify-content: center">
-          <image src="/common/changepage_left.png"></image>
+    <floating-page-changer current_pn="{{current_pn}}" @backpn="BackPN" @nextpn="NextPN"></floating-page-changer>
+    <div class="inputpanel" if="{{replymode}}">
+      <input-method @complete="InputComplete" @delete="InputDelete"></input-method>
+      <div class="inputactions">
+        <div style="margin-left: 35px">
+          <image class="inputaction_img" src="/common/textinput_back.png"></image>
         </div>
-        <text style="margin-left: 17px; font-size: 25px; font-weight: 600; color: #9e9e9e">
-          第{{ current_pn }}页
-        </text>
-        <div style="
-            margin-left: 17px;
-            width: 40px;
-            height: 40px;
-            align-items: center;
-            justify-content: center;
-          " @click="NextPN()">
-          <image src="/common/changepage_right.png"></image>
+        <div style="margin-left: 75px" @click="SendReply">
+          <image class="inputaction_img" src="/common/textinput_finish.png"></image>
         </div>
+      </div>
+      <div class="inputshow">
+        <text class="inputshow_text">{{input_text}}</text>
       </div>
     </div>
   </div>
@@ -66,29 +55,53 @@ export default {
     anims: {
       loading: null,
       loading_src: {value: "/common/seqanims/loadingWhite/icons8-loading_颜色反转-1.png"}
+    },
+    replymode: false,
+    reply_target: null,
+    input_text: ""
+  },
+  async SendReply(){
+    this.replymode = false
+    var result = await this.$app.$def.biliclient.GiveSecReply(this.type, this.oid, this.reply_target, this.input_text)
+    console.log(result)
+    if(result == 0){
+      prompt.showToast({
+        message: "发送成功"
+      })
+    }
+    else{
+      prompt.showToast({
+        message: "发送失败，错误代码：" + result.code + " 原因：" + result.message
+      })
     }
   },
-  Reply(){
-    prompt.showToast({
-      message: "该功能暂不可用"
-    })
+  InputComplete(evt){
+    this.input_text += evt.detail.content;
   },
-  ShowTools(reply) {
+  InputDelete() {
+    this.input_text = this.input_text.slice(0, -1);
+  },
+  Reply(evt) {
+    this.replymode = true
+    this.input_text = ""
+    this.reply_target = evt.detail.rpid
+  },
+  ShowTools(evt) {
+    console.log(evt)
     if (!this.secmode) {
       router.push({
         uri: "pages/replytools",
         params: {
           type: this.type,
           oid: this.oid,
-          reply: reply
+          reply: evt.detail.reply
         }
       })
-    }
-    else{
+    } else {
       router.push({
         uri: "pages/textdetail",
         params: {
-          text: reply.content.message
+          text: evt.detail.reply.content.message
         }
       })
     }
@@ -145,7 +158,7 @@ export default {
       true
     )
 
-    if(this.secmode){
+    if (this.secmode) {
       this.titletext = "子评论"
     }
 
@@ -171,76 +184,35 @@ export default {
   justify-content: center;
 }
 
-.reply {
-  width: 319px;
-  height: 200px;
-  border-radius: 50px;
-  background-color: #262626;
-  flex-direction: column;
-}
-
-.userinfo {
-  flex-direction: row;
-  align-items: center;
-  margin-left: 25px;
-  margin-top: 17px;
-}
-
-.userimg {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-}
-
-.username {
-  font-size: 20px;
-  font-weight: 600;
-}
-
-.replycontentdiv {
-  width: 253px;
-  height: 82px;
-  max-height: 82px;
-  display: flex;
-  flex-direction: column;
-  margin-top: 7px;
-  margin-left: 33px;
-  justify-content: flex-start; /* 保证内容顶部对齐 */
-}
-
-.replycontent {
-  width: 100%;
-  font-size: 20px;
-  font-weight: 600;
-  text-overflow: ellipsis;
-}
-
-.pagechanger-container {
-  bottom: 22px;
+.inputpanel {
   position: absolute;
-  background-color: rgba(0, 0, 0, 0.8);
-  border-radius: 20px;
-  padding: 5px 10px;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  justify-content: center;
 }
 
-.pagechanger {
+.inputactions {
   flex-direction: row;
   align-items: center;
+  width: 50%;
+  position: absolute;
+  margin-top: 30px;
 }
 
-.reply_replybtn {
-  background-color: #343434;
-  width: 88px;
-  height: 34px;
-  border-radius: 10px;
-  align-items: center;
-  justify-content: center;
-  margin-top: 5px;
-  margin-left: 33px;
+.inputaction_img {
+  width: 35px;
+  height: 35px;
+  object-fit: scale-down;
 }
 
-.reply_replytext {
-  font-size: 18px;
-  font-weight: 600;
+.inputshow {
+  width: 65%;
+  position: absolute;
+  margin-top: 100px;
+}
+
+.inputshow_text {
+  font-size: 24px;
 }
 </style>

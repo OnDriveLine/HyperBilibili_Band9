@@ -1,5 +1,6 @@
 import { fetch, storage, crypto } from './tsimports';
 
+// wbi签名Tab
 const mixinKeyEncTab = [
     46, 47, 18, 2, 53, 8, 23, 32, 15, 50, 10, 31, 58, 3, 45, 35, 27, 43, 5, 49,
     33, 9, 42, 19, 29, 28, 14, 39, 12, 38, 41, 13, 37, 48, 7, 16, 24, 55, 40,
@@ -15,6 +16,8 @@ const getMixinKey = (orig: string) =>
         .join("")
         .slice(0, 32);
 
+// 会存储在storage内的AccountData
+// 不如说是Cookies？
 interface AccountData {
     sessData: string;
     biliJct: string;
@@ -23,18 +26,28 @@ interface AccountData {
 }
 
 class BilibiliClient {
-    public version: string = "2.0"
+    // 版本号字符串，独立于manifest.json
+    public version: string = "2.1"
 
+    // 扫码登陆时存储的qrcodekey，一般没用，除非在进行扫码登陆
     private qrCodeKey: string | null = null;
+
+    // B站Cookies
     private sessData: string | null = null;
     private biliJct: string | null = null;
     private dedeUserID: string | null = null;
     private sid: string | null = null;
+
+    // 账号数据存储（启动时加载）
+    // 注意：这不是AccountData，而是由B站下发的账号数据
     private accountInfo: any | null = null;
+
+    // 风控Cookies，不存储，每次登录使用spi刷新（详见updateBUVID函数）
     private buvid3: any | null = null;
     private buvid4: any | null = null;
 
     // 获取请求头
+    // 用于模拟正常模拟器环境，降低风控概率
     private getHeaders(): { [key: string]: string } {
         return {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/jxl,image/webp,image/png,image/svg+xml,*/*;q=0.8',
@@ -95,11 +108,13 @@ class BilibiliClient {
         }
     }
 
+    // 发送使用Wbi签名的GET请求
     private async getRequestWbi(url: string, params: any): Promise<any> {
         return (await this.getRequest(`${url}?${this.encWbi(params, this.accountInfo.wbi_img.img_url.slice(this.accountInfo.wbi_img.img_url.lastIndexOf('/') + 1, this.accountInfo.wbi_img.img_url.lastIndexOf('.')), this.accountInfo.wbi_img.sub_url.slice(this.accountInfo.wbi_img.sub_url.lastIndexOf('/') + 1, this.accountInfo.wbi_img.sub_url.lastIndexOf('.')))}`))
     }
 
     // 发送POST请求的函数
+    // 注意注意再注意，Content-Type一定要填对，否则会让你抓耳挠腮一晚上（迫真）
     private async postRequest(url: string, data: string, content_type: string): Promise<any> {
         var headers = this.getHeaders();
         headers["Content-Type"] = content_type
@@ -119,6 +134,8 @@ class BilibiliClient {
         }
     }
 
+    // 检查澎湃哔哩是否存在更新
+    // 这里借用了Gitee
     async checkHyperbilibiliUpdates(): Promise<any>{
         const latestVerGet = await fetch.fetch({
             url: "https://gitee.com/search__stars/hb_ota_info/raw/master/current_ver",
@@ -205,6 +222,7 @@ class BilibiliClient {
                     setCookieHeaders = setCookieHeaders.split(', ');
                 }
 
+                // 扫Set-Cookie头，拿B站Cookies
                 setCookieHeaders.forEach(cookie => {
                     if (cookie.includes('SESSDATA')) {
                         this.sessData = this.parseCookie(cookie, 'SESSDATA');
@@ -302,6 +320,42 @@ class BilibiliClient {
         const response = await this.getRequest(url);
 
         return response.data.data
+    }
+
+    // 点赞评论
+    async LikeReply(type: string, oid: string, rpid: string, action: number){
+        const url = "https://api.bilibili.com/x/v2/reply/action";
+        const body = `type=${type}&oid=${oid}&rpid=${rpid}&action=${action}&csrf=${this.biliJct}`;
+        const response = await this.postRequest(url, body, "application/x-www-form-urlencoded");
+
+        return response.data.code
+    }
+
+    // 发送评论（基于OID下，例如发送内容至视频评论区、回复动态等）
+    async GiveReply(type: string, oid: string, message: string){
+        const url = "https://api.bilibili.com/x/v2/reply/add";
+        const body = `type=${type}&oid=${oid}&message=${message}&plat=1&csrf=${this.biliJct}`;
+        const response = await this.postRequest(url, body, "application/x-www-form-urlencoded");
+
+        return response.data.code
+    }
+
+    // 回复发送的评论（基于内容下评论RPID，例如给视频评论区里的一条评论发评论，即回复那条评论，称为二级评论）
+    async GiveSecReply(type: string, oid: string, parent: string, message: string){
+        const url = "https://api.bilibili.com/x/v2/reply/add";
+        const body = `type=${type}&oid=${oid}&parent=${parent}&message=${message}&plat=1&csrf=${this.biliJct}`;
+        const response = await this.postRequest(url, body, "application/x-www-form-urlencoded");
+
+        return response.data.code
+    }
+
+    // 回复二级评论（基于内容下评论RPID+内容下评论回复RPID，例如给视频评论区里的一条评论的回复发回复，进入对话树）
+    async GiveTreeReply(type: string, oid: string, parent: string, root: string, message: string){
+        const url = "https://api.bilibili.com/x/v2/reply/add";
+        const body = `type=${type}&oid=${oid}&parent=${parent}&root=${root}&message=${message}&plat=1&csrf=${this.biliJct}`;
+        const response = await this.postRequest(url, body, "application/x-www-form-urlencoded");
+
+        return response.data.code
     }
 
     // 获取视频AI摘要

@@ -34,7 +34,7 @@
                     <text class="vidtooltext">视频总结</text>
                 </div>
             </div>
-            <div class="featurebtn" style="margin-top: 20px">
+            <div class="featurebtn" style="margin-top: 20px" @click="GenerateVideoManifest()">
                 <text class="featurebtn_text">生成视频清单</text>
             </div>
             <image src="/common/featurebtn_replyarea.png" style="margin-top: 15px" @click="GoReplyArea()"></image>
@@ -57,6 +57,11 @@ export default {
     likesrc: "/common/vidtool_like.png",
     coinsrc: "/common/vidtool_coin.png",
     starsrc: "/common/vidtool_star.png"
+  },
+  GenerateVideoManifest(){
+    prompt.showToast({
+        message: "该功能暂未开放"
+    })
   },
   DisabledFeaturesWarning(){
     prompt.showToast({
