@@ -25,7 +25,7 @@
       <list class="foldervid_list">
         <list-item type="foldervid_videos" for="{{foldervid_vids}}" class="foldervid_listitem"
           style="height: {{calcSpace($item.title, true)}}" onclick="OpenVideo({{$item.bvid}})">
-            <videoshow video={{$item}}></videoshow>
+          <videoshow video="{{$item}}"></videoshow>
           <text style="margin-top: {{calcSpace($item.title, false)}}; height: 0px"></text>
         </list-item>
       </list>
@@ -36,6 +36,7 @@
 
 <script>
 import router from "@system.router"
+
 export default {
   private: {
     foldervid_vids: [],
@@ -52,13 +53,13 @@ export default {
     vidcount: 0
   },
   NextPN() {
-    if (this.current_pn != this.maxpn) {
+    if (this.current_pn < this.maxpn) {
       this.current_pn++
       this.LoadVideos()
     }
   },
   BackPN() {
-    if (this.current_pn != 1) {
+    if (this.current_pn > 1) {
       this.current_pn--
       this.LoadVideos()
     }
@@ -67,41 +68,39 @@ export default {
     console.log("openvid: " + bvid)
     router.push({
       uri: "pages/videodetail",
-      params: {
-        bvid: bvid
-      }
+      params: {bvid}
     })
   },
   calcSpace(vid_title, isListItem) {
-    if (vid_title == this.foldervid_vids[this.foldervid_vids.length - 1].title) {
-      if (isListItem) {
-        return "270px"
-      }
-      return "80px"
-    }
+    const isLastItem = vid_title === this.foldervid_vids[this.foldervid_vids.length - 1]?.title
     if (isListItem) {
-      return "170px"
+      return isLastItem ? "270px" : "170px"
     }
-    return "0px"
+    return isLastItem ? "80px" : "0px"
   },
   async LoadVideos() {
     this.show_loading = true
-    this.foldervid_vids.length = 0 // Clear Array
-
+    this.foldervid_vids = [] // Clear Array
     this.anims.loading.start()
 
-    let medialist = await this.$app.$def.biliclient.getFavouriteFolderContent(
-      this.mlid,
-      this.current_pn,
-      5
-    )
-    medialist.medias.forEach(async (media) => {
-      var mediainfo = await this.$app.$def.biliclient.getVideoInfoByBVID(media.bvid)
-      this.foldervid_vids.push(mediainfo)
-    })
+    try {
+      const medialist = await this.$app.$def.biliclient.getFavouriteFolderContent(
+        this.mlid,
+        this.current_pn,
+        5
+      )
+      const videoInfoPromises = medialist.medias.map((media) =>
+        this.$app.$def.biliclient.getVideoInfoByBVID(media.bvid)
+      )
 
-    this.show_loading = false
-    this.anims.loading.stop()
+      // 并行获取所有视频信息
+      this.foldervid_vids = await Promise.all(videoInfoPromises)
+    } catch (error) {
+      console.error("加载视频时发生错误:", error)
+    } finally {
+      this.show_loading = false
+      this.anims.loading.stop()
+    }
   },
   onInit() {
     this.maxpn = Math.ceil(this.vidcount / 5)

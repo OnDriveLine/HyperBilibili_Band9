@@ -21,12 +21,17 @@
         </list>
       </div>
     </scroll>
-    <div style="position: absolute; bottom: 0px;" @click="Refresh()">
+    <div style="position: absolute; bottom: 0px" @click="Refresh()">
       <image src="/common/main_floatingrefresh.png"></image>
     </div>
-    <text style="position: absolute; color: rgba(0, 0, 0, 0); width: 0px; top: 50px">{{ anims.refresh_bottom.value }}</text>
-    <text style="position: absolute; color: rgba(0, 0, 0, 0); width: 0px; top: 50px">{{ ambientlight.rotatedeg }}</text>
-    <image if={{anims.showRefreshFX}} style="position: absolute; bottom: {{anims.refresh_bottom.value}}px" src="/common/TranslateFX/refreshFX.png"></image>
+    <text style="position: absolute; color: rgba(0, 0, 0, 0); width: 0px; top: 50px">
+      {{ anims.refresh_bottom.value }}
+    </text>
+    <text style="position: absolute; color: rgba(0, 0, 0, 0); width: 0px; top: 50px">
+      {{ ambientlight.rotatedeg }}
+    </text>
+    <image if="{{anims.showRefreshFX}}" style="position: absolute; bottom: {{anims.refresh_bottom.value}}px"
+      src="/common/TranslateFX/refreshFX.png"></image>
   </div>
 </template>
 
@@ -34,6 +39,7 @@
 import router from "@system.router"
 import prompt from "@system.prompt"
 import folme from "@system.folme"
+
 export default {
   private: {
     recommend_vids: [],
@@ -54,104 +60,102 @@ export default {
     ambientlightObj: null
   },
   OpenVideo(bvid) {
-    console.log("openvid: " + bvid)
+    console.log("openvid:", bvid)
     router.push({
       uri: "pages/videodetail",
-      params: {
-        bvid: bvid
-      }
+      params: {bvid}
     })
   },
-  async Refresh(){
-    if(!this.anims.showRefreshFX){
+  async Refresh() {
+    if (!this.anims.showRefreshFX) {
       this.recommend_vids = []
-      this.anims.loading.start()
       this.show_loading = true
       this.show_recommend_div = false
       this.anims.showRefreshFX = true
 
-      setTimeout(() => {
-        this.anims.refresh.start()
-      }, 200)
+      this.anims.loading.start()
 
-      setTimeout(async() => {
+      setTimeout(() => this.anims.refresh.start(), 200)
+
+      setTimeout(async () => {
         this.anims.refresh_bottom.value = "-350px"
         this.anims.refresh.stop()
         this.anims.showRefreshFX = false
         await this.GetVids()
       }, 1200)
-    }
-    else{
-      prompt.showToast({
-        message: "你先别急。"
-      })
+    } else {
+      prompt.showToast({message: "你先别急。"})
     }
   },
   async GetVids() {
-    this.recommend_vids = await this.$app.$def.biliclient.getMainPageRecommendVideos(
-      this.$app.$def.settings.SETTINGS.fresh_type,
-      this.$app.$def.settings.SETTINGS.home_vid_count
-    )
-    this.anims.loading.stop()
-    this.show_loading = false
-    this.show_recommend_div = true
+    try {
+      const {fresh_type, home_vid_count} = this.$app.$def.settings.SETTINGS
+      this.recommend_vids = await this.$app.$def.biliclient.getMainPageRecommendVideos(
+        fresh_type,
+        home_vid_count
+      )
+    } catch (error) {
+      console.error("获取推荐视频时出错:", error)
+      prompt.showToast({message: "获取推荐视频失败，请重试。"})
+    } finally {
+      this.anims.loading.stop()
+      this.show_loading = false
+      this.show_recommend_div = true
+    }
   },
   calcSpace(vid_title, isListItem) {
-    // 如果传入的视频标题是最后一个视频 就让占位文本占据20px的高度可供用户下滑
-    // 这样算是较为硬核的一种针对圆形屏幕的适配
-    if (vid_title == this.recommend_vids[this.recommend_vids.length - 1].title) {
-      if (isListItem) {
-        return "270px"
-      }
-      return "80px"
-    }
+    const isLastItem = vid_title === this.recommend_vids[this.recommend_vids.length - 1]?.title
     if (isListItem) {
-      return "170px"
+      return isLastItem ? "270px" : "170px"
     }
-    return "0px"
+    return isLastItem ? "80px" : "0px"
   },
   async checkUpdates() {
-    var result = await this.$app.$def.biliclient.checkHyperbilibiliUpdates()
-    if (result.update) {
-      prompt.showToast({
-        message: result.msg,
-        duration: 6000
-      })
+    try {
+      const result = await this.$app.$def.biliclient.checkHyperbilibiliUpdates()
+      if (result.update) {
+        prompt.showToast({message: result.msg, duration: 6000})
+      }
+    } catch (error) {
+      console.error("检查更新时出错:", error)
     }
   },
   onInit() {
     this.GetVids()
     this.funnytip = this.$app.$def.funnytips.getTips()
-
     this.checkUpdates()
   },
   onReady() {
+    const {loading_src, refresh_bottom} = this.anims
+
     this.anims.loading = new this.$app.$def.animengine.SequenceAnim(
       "mainPage",
-      this.anims.loading_src,
+      loading_src,
       28,
       "/common/seqanims/loadingWhite/icons8-loading_颜色反转-*.png",
       1000,
       true
     )
-
     this.anims.loading.start()
 
     this.anims.refresh = new this.$app.$def.animengine.DomAnim(
       "mainPage",
       {value: "0px"},
-      this.anims.refresh_bottom,
+      refresh_bottom,
       0,
       450,
       1000
     )
 
-    this.ambientlightObj = new this.$app.$def.ambientlight.AmbientLightRunner(this.ambientlight, this.$app.$def.settings.SETTINGS)
+    this.ambientlightObj = new this.$app.$def.ambientlight.AmbientLightRunner(
+      this.ambientlight,
+      this.$app.$def.settings.SETTINGS
+    )
     this.ambientlightObj.start()
   },
   onDestroy() {
     this.$app.$def.animengine.clearPageAnims("mainPage")
-    this.ambientlightObj.stop()
+    this.ambientlightObj?.stop()
   }
 }
 </script>

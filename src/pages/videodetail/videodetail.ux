@@ -1,5 +1,4 @@
 <import name="title-bar" src="../../components/TitleBar/TitleBar.ux"></import>
-<import name="full-screen-input" src="../../components/FullScreenInput/FullScreenInput.ux"></import>
 
 <template>
     <div class="page">
@@ -43,14 +42,13 @@
             </div>
             <image src="/common/featurebtn_replyarea.png" style="margin-top: 15px" @click="GoReplyArea()"></image>
         </div>
-        <full-screen-input input_text="{{input_text}}" if="{{replymode}}" @complete="InputComplete" @delete="InputDelete"
-            @send="SendReply" @exit="ExitInput"></full-screen-input>
     </div>
 </template>
 
 <script>
 import router from "@system.router"
 import prompt from "@system.prompt"
+
 export default {
   public: {
     bvid: 1 // 视频BVID
@@ -64,30 +62,47 @@ export default {
     coinsrc: "/common/vidtool_coin.png",
     starsrc: "/common/vidtool_star.png",
     replymode: false,
-    input_text: {
-      content: ""
-    }
+    input_text: {content: ""}
+  },
+  onInit() {
+    this.GetVideoDetail()
+    this.UpdateVideoToolbarStatus()
+  },
+  async GetVideoDetail() {
+    this.vid = await this.$app.$def.biliclient.getVideoInfoByBVID(this.bvid)
+  },
+  async UpdateVideoToolbarStatus() {
+    this.stared = await this.$app.$def.biliclient.isVideoStaredByBVID(this.bvid)
+    this.UpdateToolBarIconSrc()
+  },
+  UpdateToolBarIconSrc() {
+    this.likesrc = this.liked ? "/common/vidtool_liked.png" : "/common/vidtool_like.png"
+    this.coinsrc = this.coined ? "/common/vidtool_coined.png" : "/common/vidtool_coin.png"
+    this.starsrc = this.stared ? "/common/vidtool_stared.png" : "/common/vidtool_star.png"
+  },
+  formatNumber(num) {
+    return this.$app.$def.tools.formatNumber(num)
   },
   async SendReply() {
     this.replymode = false
-    if (this.input_text.content.length > 0) {
-      var result = this.$app.$def.biliclient.GiveReply(1, this.vid.aid, this.input_text.content)
-      if (result.code == 0) {
-        prompt.showToast({
-          message: "发送成功"
-        })
-      } else {
-        prompt.showToast({
-          message: "发送失败，错误代码：" + result.code + " 原因：" + result.message,
-          duration: 4000
-        })
-      }
-    } else {
-      prompt.showToast({
+    if (this.input_text.content.length === 0) {
+      return prompt.showToast({
         message: "评论内容不得为空！",
         duration: 2000
       })
     }
+
+    const result = await this.$app.$def.biliclient.GiveReply(
+      1,
+      this.vid.aid,
+      this.input_text.content
+    )
+    const message =
+      result.code === 0 ? "发送成功" : `发送失败，错误代码：${result.code} 原因：${result.message}`
+    prompt.showToast({
+      message,
+      duration: result.code === 0 ? 2000 : 4000
+    })
   },
   ExitInput() {
     this.replymode = false
@@ -99,13 +114,14 @@ export default {
     this.input_text.content = this.input_text.content.slice(0, -1)
   },
   Reply() {
+    /*
     this.replymode = true
     this.input_text.content = ""
-  },
-  GenerateVideoManifest() {
-    prompt.showToast({
-      message: "该功能暂未开放"
-    })
+    */
+   prompt.showToast({
+    message: "暂时仅支持回复其它用户的评论",
+    duration: 2000
+   })
   },
   DisabledFeaturesWarning() {
     prompt.showToast({
@@ -113,37 +129,22 @@ export default {
     })
   },
   async AISummary() {
-    var summary = await this.$app.$def.biliclient.getVideoAISummaryByBVID(
-      this.vid.bvid,
-      this.vid.cid,
-      this.vid.owner.mid
-    )
-    if (!summary) {
-      summary =
-        "该视频没有摘要，可能是其内容中包含敏感信息（如涉政、涉军、涉企、或其它容易被误解或引起歧义、多人意见不一、容易引起争论的内容），或是视频没有可以被识别的音频"
-    }
+    const summary =
+      (await this.$app.$def.biliclient.getVideoAISummaryByBVID(
+        this.vid.bvid,
+        this.vid.cid,
+        this.vid.owner.mid
+      )) || "该视频没有摘要，可能是其内容中包含敏感信息或没有可识别的音频"
     router.push({
       uri: "pages/textdetail",
-      params: {
-        text: summary
-      }
+      params: {text: summary}
     })
   },
   async AddToFav() {
-    var result = await this.$app.$def.biliclient.starVideoToDefaultFavFolderByBVID(this.bvid)
-    console.log(result)
-    if (!result) {
-      prompt.showToast({
-        message: "收藏成功"
-      })
-    } else {
-      prompt.showToast({
-        message: "收藏失败，请重试，或重新登录后再试"
-      })
-    }
-    setTimeout(() => {
-      this.UpdateVideoToolbarStatus()
-    }, 500)
+    const result = await this.$app.$def.biliclient.starVideoToDefaultFavFolderByBVID(this.bvid)
+    const message = result ? "收藏失败，请重试，或重新登录后再试" : "收藏成功"
+    prompt.showToast({message})
+    this.UpdateVideoToolbarStatus()
   },
   GoReplyArea() {
     router.push({
@@ -154,32 +155,6 @@ export default {
         replycount: this.vid.stat.reply
       }
     })
-  },
-  async UpdateVideoToolbarStatus() {
-    this.stared = await this.$app.$def.biliclient.isVideoStaredByBVID(this.bvid)
-
-    this.UpdateToolBarIconSrc()
-  },
-  UpdateToolBarIconSrc() {
-    this.likesrc = "/common/vidtool_like.png"
-    if (this.liked) {
-      this.likesrc = "/common/vidtool_liked.png"
-    }
-    this.coinsrc = "/common/vidtool_coin.png"
-    if (this.coined) {
-      this.coinsrc = "/common/vidtool_coined.png"
-    }
-    this.starsrc = "/common/vidtool_star.png"
-    if (this.stared) {
-      this.starsrc = "/common/vidtool_stared.png"
-    }
-  },
-  async GetVideoDetail() {
-    this.vid = await this.$app.$def.biliclient.getVideoInfoByBVID(this.bvid)
-  },
-  onInit() {
-    this.GetVideoDetail()
-    this.UpdateVideoToolbarStatus()
   }
 }
 </script>
