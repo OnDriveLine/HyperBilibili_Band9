@@ -1,36 +1,41 @@
 <import name="switch-bar" src="../../components/SwitchBar/SwitchBar.ux"></import>
 
 <template>
-    <div class="page">
-        <switch-bar title="设置"></switch-bar>
-        <div class="setbase" style="margin-top: 45px" onclick="ClickCountSet({{countset_name[0]}})">
-            <image class="seticon" src="/common/settings_freshtype.png"></image>
-            <text class="setext_small">视频推荐相关性</text>
-            <text class="countset_num">{{ fresh_type }}</text>
-        </div>
-        <div class="setbase" onclick="ClickCountSet({{countset_name[1]}})">
-            <image class="seticon" src="/common/settings_homevidcount.png"></image>
-            <text class="setext_small">首页视频推荐数</text>
-            <text class="countset_num">{{ home_vid_count }}</text>
-        </div>
-        <div class="setbase" @click="ClearTmp()">
-            <image class="seticon" src="/common/settings_removetmp.png"></image>
-            <text class="setext_small">清除缓存</text>
-            <image src="/common/arrow_right.png"></image>
-        </div>
-        <div class="setbase" @click="logout()">
-            <image class="seticon" src="/common/settings_logout.png"></image>
-            <text class="setext_small">退出登录</text>
-            <image src="/common/arrow_right.png"></image>
-        </div>
-        <div class="setbase" @click="GoAbout()">
-            <image class="seticon" src="/common/settings_about.png"></image>
-            <text class="setext_small">关于应用</text>
-            <image src="/common/arrow_right.png"></image>
-        </div>
-        <image style="margin-top: 30px" src="/common/opensource_warning.png"></image>
-        <text style="margin-top: 25px"></text>
+  <div class="page">
+    <switch-bar title="设置"></switch-bar>
+    <div class="setbase" style="margin-top: 45px" onclick="ClickCountSet({{countset_name[0]}})">
+      <image class="seticon" src="/common/settings_freshtype.png"></image>
+      <text class="setext_small">视频推荐相关性</text>
+      <text class="countset_num">{{ fresh_type }}</text>
     </div>
+    <div class="setbase" onclick="ClickCountSet({{countset_name[1]}})">
+      <image class="seticon" src="/common/settings_homevidcount.png"></image>
+      <text class="setext_small">首页视频推荐数</text>
+      <text class="countset_num">{{ home_vid_count }}</text>
+    </div>
+    <div class="setbase" onclick="SwitchSet({{switchset_name[0]}})">
+      <image class="seticon" src="/common/settings_enablefullanim.png"></image>
+      <text class="setext_small">启用完整动画</text>
+      <text class="countset_num">{{ enableFullAnimation ? "开" : "关" }}</text>
+    </div>
+    <div class="setbase" @click="ClearTmp()">
+      <image class="seticon" src="/common/settings_removetmp.png"></image>
+      <text class="setext_small">清除缓存</text>
+      <image src="/common/arrow_right.png"></image>
+    </div>
+    <div class="setbase" @click="logout()">
+      <image class="seticon" src="/common/settings_logout.png"></image>
+      <text class="setext_small">退出登录</text>
+      <image src="/common/arrow_right.png"></image>
+    </div>
+    <div class="setbase" @click="GoAbout()">
+      <image class="seticon" src="/common/settings_about.png"></image>
+      <text class="setext_small">关于应用</text>
+      <image src="/common/arrow_right.png"></image>
+    </div>
+    <image style="margin-top: 30px" src="/common/opensource_warning.png"></image>
+    <text style="margin-top: 25px"></text>
+  </div>
 </template>
 
 <script>
@@ -40,6 +45,8 @@ export default {
   private: {
     fresh_type: 3,
     home_vid_count: 10,
+    enableFullAnimation: false,
+    switchset_name: ["enable_full_anim"],
     countset_name: ["fresh_type", "home_vid_count"],
     countset: {
       fresh_type_max: 3,
@@ -57,6 +64,27 @@ export default {
     prompt.showToast({
       message: "当前不可用"
     })
+  },
+  SwitchSet(name) {
+    switch (name) {
+      case "enable_full_anim":
+        if (this.enableFullAnimation) {
+          this.enableFullAnimation = false
+          this.$app.$def.settings.saveSettings({
+            enableFullAnimation: this.enableFullAnimation
+          })
+        } else {
+          this.enableFullAnimation = true
+          this.$app.$def.settings.saveSettings({
+            enableFullAnimation: this.enableFullAnimation
+          })
+          prompt.showToast({
+            message: "开启此选项会导致首页等页面在低性能设备上严重卡顿，因此建议保持关闭！",
+            duration: 6000
+          })
+        }
+        this.UpdateNumView()
+    }
   },
   ClickCountSet(name) {
     switch (name) {
@@ -100,6 +128,7 @@ export default {
   UpdateNumView() {
     this.fresh_type = this.$app.$def.settings.SETTINGS.fresh_type
     this.home_vid_count = this.$app.$def.settings.SETTINGS.home_vid_count
+    this.enableFullAnimation = this.$app.$def.settings.SETTINGS.enableFullAnimation
   },
   onInit() {
     this.UpdateNumView()
@@ -109,47 +138,47 @@ export default {
 
 <style>
 .page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
-    position: absolute;
-    width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  position: absolute;
+  width: 100%;
 }
 
 .setbase {
-    width: 291px;
-    height: 81px;
-    border-radius: 30px;
-    background-color: #262626;
-    align-items: center;
-    flex-direction: row;
-    margin-top: 6px;
+  width: 291px;
+  height: 81px;
+  border-radius: 30px;
+  background-color: #262626;
+  align-items: center;
+  flex-direction: row;
+  margin-top: 6px;
 }
 
 .seticon {
-    margin-left: 25px;
-    width: 42px;
-    height: 42px;
-    object-fit: scale-down;
+  margin-left: 25px;
+  width: 42px;
+  height: 42px;
+  object-fit: scale-down;
 }
 
 .setext_small {
-    font-size: 22px;
-    font-weight: 600;
-    margin-left: 15px;
-    width: 170px;
+  font-size: 22px;
+  font-weight: 600;
+  margin-left: 15px;
+  width: 170px;
 }
 
 .setext {
-    font-size: 30px;
-    font-weight: 600;
-    margin-left: 15px;
+  font-size: 30px;
+  font-weight: 600;
+  margin-left: 15px;
 }
 
 .countset_num {
-    font-size: 20px;
-    font-weight: 600;
-    color: #4785ff;
+  font-size: 20px;
+  font-weight: 600;
+  color: #4785ff;
 }
 </style>

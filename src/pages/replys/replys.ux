@@ -1,6 +1,6 @@
 <import name="title-bar" src="../../components/TitleBar/TitleBar.ux"></import>
 <import name="reply" src="../../components/Reply/Reply.ux"></import>
-<import name="input-method" src="../../components/InputMethod/InputMethod.ux"></import>
+<import name="full-screen-input" src="../../components/FullScreenInput/FullScreenInput.ux"></import>
 <import
   name="floating-page-changer"
   src="../../components/FloatingPageChanger/FloatingPageChanger.ux"
@@ -18,20 +18,8 @@
       </list-item>
     </list>
     <floating-page-changer current_pn="{{current_pn}}" @backpn="BackPN" @nextpn="NextPN"></floating-page-changer>
-    <div class="inputpanel" if="{{replymode}}">
-      <input-method @complete="InputComplete" @delete="InputDelete"></input-method>
-      <div class="inputactions">
-        <div style="margin-left: 35px">
-          <image class="inputaction_img" src="/common/textinput_back.png"></image>
-        </div>
-        <div style="margin-left: 75px" @click="SendReply">
-          <image class="inputaction_img" src="/common/textinput_finish.png"></image>
-        </div>
-      </div>
-      <div class="inputshow">
-        <text class="inputshow_text">{{input_text}}</text>
-      </div>
-    </div>
+    <full-screen-input input_text={{input_text}} if="{{replymode}}" @complete="InputComplete" @delete="InputDelete" @send="SendReply"
+      @exit="ExitInput"></full-screen-input>
   </div>
 </template>
 
@@ -58,36 +46,63 @@ export default {
     },
     replymode: false,
     reply_target: null,
-    input_text: ""
+    input_text: {
+      // 使用Object，保持子组件和父组件的数据传递
+      content: ""
+    }
   },
-  async SendReply(){
+  async SendReply() {
     this.replymode = false
-    var result = await this.$app.$def.biliclient.GiveSecReply(this.type, this.oid, this.reply_target, this.input_text)
-    console.log(result)
-    if(result == 0){
+    var result = null
+    if (this.input_text.content.length > 0) {
+      if (this.secmode) {
+        result = await this.$app.$def.biliclient.GiveTreeReply(
+          this.type,
+          this.oid,
+          this.reply_target,
+          this.rootrpid,
+          this.input_text.content
+        )
+      } else {
+        result = await this.$app.$def.biliclient.GiveSecReply(
+          this.type,
+          this.oid,
+          this.reply_target,
+          this.input_text.content
+        )
+      }
+      if (result.code == 0) {
+        prompt.showToast({
+          message: "发送成功"
+        })
+      } else {
+        prompt.showToast({
+          message: "发送失败，错误代码：" + result.code + " 原因：" + result.message,
+          duration: 4000
+        })
+      }
+    } else {
       prompt.showToast({
-        message: "发送成功"
-      })
-    }
-    else{
-      prompt.showToast({
-        message: "发送失败，错误代码：" + result.code + " 原因：" + result.message
+        message: "评论内容不得为空！",
+        duration: 2000
       })
     }
   },
-  InputComplete(evt){
-    this.input_text += evt.detail.content;
+  ExitInput() {
+    this.replymode = false
+  },
+  InputComplete(evt) {
+    this.input_text.content += evt.detail.content
   },
   InputDelete() {
-    this.input_text = this.input_text.slice(0, -1);
+    this.input_text.content = this.input_text.content.slice(0, -1)
   },
   Reply(evt) {
     this.replymode = true
-    this.input_text = ""
+    this.input_text.content = ""
     this.reply_target = evt.detail.rpid
   },
   ShowTools(evt) {
-    console.log(evt)
     if (!this.secmode) {
       router.push({
         uri: "pages/replytools",
@@ -101,7 +116,8 @@ export default {
       router.push({
         uri: "pages/textdetail",
         params: {
-          text: evt.detail.reply.content.message
+          text: evt.detail.reply.content.message,
+          titletext: "评论详情"
         }
       })
     }
@@ -144,6 +160,7 @@ export default {
     }
     this.anims.loading.stop()
     this.show_loading = false
+    global.runGC()
   },
   onInit() {
     this.maxpn = Math.ceil(this.replycount / 10)

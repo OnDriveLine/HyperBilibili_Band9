@@ -27,7 +27,7 @@ export default {
 <style>
 .vid {
   border-radius: 50px;
-  background-color: #262626;
+  background-color: #262626af;
   height: 100%;
   width: 100%;
   justify-content: center;

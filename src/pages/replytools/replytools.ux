@@ -3,17 +3,15 @@
 <template>
     <div class="page">
         <title-bar title="评论"></title-bar>
-        <div class="toolbtn" style="margin-top: 30px">
+        <div class="toolbtn" style="margin-top: 30px" @click="LikeReply()">
             <div class="dataicon" style="margin-left: 25px">
                 <image class="toolicon" src="/common/replytools_like.png"></image>
-                <text class="tooldata" style="margin-top: 4px">{{this.$app.$def.tools.formatNumber(reply.like)}}</text>
             </div>
             <text class="toolname" style="margin-left: 92px; position: absolute">点赞该评论</text>
         </div>
         <div class="toolbtn" style="margin-top: 10px" @click="ShowSecReplies()">
             <div class="dataicon" style="margin-left: 25px">
                 <image class="toolicon" src="/common/replytools_showreplies.png"></image>
-                <text class="tooldata" style="margin-top: 4px">{{this.$app.$def.tools.formatNumber(reply.rcount)}}</text>
             </div>
             <text class="toolname" style="margin-left: 92px; position: absolute">查看回复</text>
         </div>
@@ -28,6 +26,7 @@
 
 <script>
 import router from "@system.router"
+import prompt from "@system.prompt"
 export default {
   public: {
     type: 0,
@@ -37,27 +36,41 @@ export default {
   private: {
     replymessage: ""
   },
+  async LikeReply() {
+    var result = await this.$app.$def.biliclient.LikeReply(this.type, this.oid, this.reply.rpid, 1)
+    console.log(result)
+    if (result.code == 0) {
+      prompt.showToast({
+        message: "点赞成功！"
+      })
+    } else {
+      prompt.showToast({
+        message: "点赞失败...错误代码：" + result.code + " 报错信息：" + result.message,
+        duration: 4000
+      })
+    }
+  },
   ShowDetail() {
     router.push({
-        uri: "pages/textdetail",
-        params: {
-            text: this.replymessage
-        }
+      uri: "pages/textdetail",
+      params: {
+        text: this.replymessage
+      }
     })
   },
-  ShowSecReplies(){
+  ShowSecReplies() {
     router.push({
-        uri: "pages/replys",
-        params: {
-            type: this.type,
-            oid: this.oid,
-            replycount: this.reply.rcount,
-            rootrpid: this.reply.rpid,
-            secmode: true
-        }
+      uri: "pages/replys",
+      params: {
+        type: this.type,
+        oid: this.oid,
+        replycount: this.reply.rcount,
+        rootrpid: this.reply.rpid,
+        secmode: true
+      }
     })
   },
-  onInit(){
+  onInit() {
     this.reply = JSON.parse(this.reply)
     this.replymessage = this.reply.content.message
   }
@@ -90,14 +103,9 @@ export default {
 }
 
 .toolicon {
-    width: 31px;
-    height: 31px;
+    width: 35px;
+    height: 39px;
     object-fit: scale-down;
-}
-
-.tooldata {
-    font-size: 15px;
-    font-weight: 600;
 }
 
 .toolname {

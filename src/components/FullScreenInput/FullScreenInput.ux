@@ -1,0 +1,79 @@
+<import name="input-method" src="../InputMethod/InputMethod.ux"></import>
+
+<template>
+    <div class="inputpanel">
+        <input-method hide={{keyboardHide}} @complete="InputComplete" @delete="InputDelete"></input-method>
+        <div class="inputactions">
+            <div style="margin-left: 35px" @click="ExitInput">
+                <image class="inputaction_img" src="/common/textinput_back.png"></image>
+            </div>
+            <div style="margin-left: 75px" @click="SendReply">
+                <image class="inputaction_img" src="/common/textinput_finish.png"></image>
+            </div>
+        </div>
+        <div class="inputshow">
+            <text class="inputshow_text">{{ input_text.content }}</text>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    props: {
+        input_text: {
+            default: null
+        },
+        keyboardHide: {
+            default: false
+        }
+    },
+    InputComplete(evt){
+        this.$emit("complete", {
+            content: evt.detail.content
+        })
+    },
+    InputDelete(){
+        this.$emit("delete")
+    },
+    ExitInput(){
+        this.$emit("exit")
+    },
+    SendReply(){
+        this.$emit("send")
+    }
+}
+</script>
+
+<style>
+.inputpanel {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  justify-content: center;
+}
+
+.inputactions {
+  flex-direction: row;
+  align-items: center;
+  width: 50%;
+  position: absolute;
+  margin-top: 30px;
+}
+
+.inputaction_img {
+  width: 35px;
+  height: 35px;
+  object-fit: scale-down;
+}
+
+.inputshow {
+  width: 65%;
+  position: absolute;
+  margin-top: 100px;
+}
+
+.inputshow_text {
+  font-size: 24px;
+}
+</style>

@@ -3,25 +3,37 @@
 
 <template>
   <div class="page">
-    <image src="/common/rounddevices_bg.png" style="position: absolute"></image>
-    <switch-bar title="首页"></switch-bar>
-    <text class="tip">{{ funnytip }}</text>
-    <image style="position: absolute; margin-top: 265px" if="{{show_loading}}" src="{{anims.loading_src.value}}"></image>
-    <div class="recommend_div" if="{{show_recommend_div}}">
-      <list class="recommend_list">
-        <list-item type="recommend_videos" for="{{recommend_vids}}" class="recommend_listitem"
-          style="height: {{calcSpace($item.title, true)}}" onclick="OpenVideo({{$item.bvid}})">
-            <videoshow video={{$item}}></videoshow>
-          <text style="margin-top: {{calcSpace($item.title, false)}}; height: 0px"></text>
-        </list-item>
-      </list>
+    <image src="/common/rounddevices_bg.png"
+      style="position: absolute; transform: rotate({{ambientlight.rotatedeg}}); transform-origin: {{ambientlight.transform_origin}}; left: 0px">
+    </image>
+    <scroll scroll-y="true" class="scroll">
+      <switch-bar title="首页"></switch-bar>
+      <text class="tip">{{ funnytip }}</text>
+      <image style="position: absolute; margin-top: 265px" if="{{show_loading}}" src="{{anims.loading_src.value}}">
+      </image>
+      <div class="recommend_div" if="{{show_recommend_div}}">
+        <list class="recommend_list">
+          <list-item type="recommend_videos" for="{{recommend_vids}}" class="recommend_listitem"
+            style="height: {{calcSpace($item.title, true)}}" onclick="OpenVideo({{$item.bvid}})">
+            <videoshow video="{{$item}}"></videoshow>
+            <text style="margin-top: {{calcSpace($item.title, false)}}; height: 0px"></text>
+          </list-item>
+        </list>
+      </div>
+    </scroll>
+    <div style="position: absolute; bottom: 0px;" @click="Refresh()">
+      <image src="/common/main_floatingrefresh.png"></image>
     </div>
+    <text style="position: absolute; color: rgba(0, 0, 0, 0); width: 0px; top: 50px">{{ anims.refresh_bottom.value }}</text>
+    <text style="position: absolute; color: rgba(0, 0, 0, 0); width: 0px; top: 50px">{{ ambientlight.rotatedeg }}</text>
+    <image if={{anims.showRefreshFX}} style="position: absolute; bottom: {{anims.refresh_bottom.value}}px" src="/common/TranslateFX/refreshFX.png"></image>
   </div>
 </template>
 
 <script>
 import router from "@system.router"
 import prompt from "@system.prompt"
+import folme from "@system.folme"
 export default {
   private: {
     recommend_vids: [],
@@ -30,8 +42,16 @@ export default {
     funnytip: "",
     anims: {
       loading: null,
-      loading_src: {value: "/common/seqanims/loadingWhite/icons8-loading_颜色反转-1.png"}
-    }
+      loading_src: {value: "/common/seqanims/loadingWhite/icons8-loading_颜色反转-1.png"},
+      refresh: null,
+      showRefreshFX: false,
+      refresh_bottom: {value: "-350px"}
+    },
+    ambientlight: {
+      transform_origin: "0px 0px",
+      rotatedeg: "0deg"
+    },
+    ambientlightObj: null
   },
   OpenVideo(bvid) {
     console.log("openvid: " + bvid)
@@ -41,6 +61,31 @@ export default {
         bvid: bvid
       }
     })
+  },
+  async Refresh(){
+    if(!this.anims.showRefreshFX){
+      this.recommend_vids = []
+      this.anims.loading.start()
+      this.show_loading = true
+      this.show_recommend_div = false
+      this.anims.showRefreshFX = true
+
+      setTimeout(() => {
+        this.anims.refresh.start()
+      }, 200)
+
+      setTimeout(async() => {
+        this.anims.refresh_bottom.value = "-350px"
+        this.anims.refresh.stop()
+        this.anims.showRefreshFX = false
+        await this.GetVids()
+      }, 1200)
+    }
+    else{
+      prompt.showToast({
+        message: "你先别急。"
+      })
+    }
   },
   async GetVids() {
     this.recommend_vids = await this.$app.$def.biliclient.getMainPageRecommendVideos(
@@ -65,9 +110,9 @@ export default {
     }
     return "0px"
   },
-  async checkUpdates(){
+  async checkUpdates() {
     var result = await this.$app.$def.biliclient.checkHyperbilibiliUpdates()
-    if(result.update){
+    if (result.update) {
       prompt.showToast({
         message: result.msg,
         duration: 6000
@@ -91,9 +136,22 @@ export default {
     )
 
     this.anims.loading.start()
+
+    this.anims.refresh = new this.$app.$def.animengine.DomAnim(
+      "mainPage",
+      {value: "0px"},
+      this.anims.refresh_bottom,
+      0,
+      450,
+      1000
+    )
+
+    this.ambientlightObj = new this.$app.$def.ambientlight.AmbientLightRunner(this.ambientlight, this.$app.$def.settings.SETTINGS)
+    this.ambientlightObj.start()
   },
   onDestroy() {
     this.$app.$def.animengine.clearPageAnims("mainPage")
+    this.ambientlightObj.stop()
   }
 }
 </script>
@@ -105,6 +163,14 @@ export default {
   align-items: center;
   height: 100%;
   position: absolute;
+  width: 100%;
+}
+
+.scroll {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
   width: 100%;
 }
 

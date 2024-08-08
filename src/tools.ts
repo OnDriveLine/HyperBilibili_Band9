@@ -1,12 +1,14 @@
-export function formatNumber(num: number): string{
+import { device } from "./tsimports"
+
+export function formatNumber(num: number): string {
     console.log("formatNumber: " + num)
-    if(num < 1000){
+    if (num < 1000) {
         return num.toString();
     }
-    else if(num < 10000){
-        return (num/1000).toFixed(1) + 'k';
+    else if (num < 10000) {
+        return (num / 1000).toFixed(1) + 'k';
     }
-    else{
+    else {
         return (num / 10000).toFixed(1) + 'w'
     }
 }
@@ -23,4 +25,17 @@ export function getCurrentTime(): string {
     const timeString: string = `${formattedHours}:${formattedMinutes}`;
 
     return timeString;
+}
+
+export function getDeviceInformation(): Promise<any> {
+    return new Promise((resolve, reject) => {
+        device.getInfo({
+            success: (data) => {
+                resolve(data);
+            },
+            fail: (error) => {
+                reject(error);
+            }
+        });
+    });
 }

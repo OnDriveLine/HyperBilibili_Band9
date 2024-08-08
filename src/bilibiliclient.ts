@@ -47,7 +47,7 @@ class BilibiliClient {
     private buvid4: any | null = null;
 
     // 获取请求头
-    // 用于模拟正常模拟器环境，降低风控概率
+    // 用于模拟正常浏览器环境，降低风控概率
     private getHeaders(): { [key: string]: string } {
         return {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/jxl,image/webp,image/png,image/svg+xml,*/*;q=0.8',
@@ -116,6 +116,7 @@ class BilibiliClient {
     // 发送POST请求的函数
     // 注意注意再注意，Content-Type一定要填对，否则会让你抓耳挠腮一晚上（迫真）
     private async postRequest(url: string, data: string, content_type: string): Promise<any> {
+        console.log("postRequest: " + url + " body: " + data + " contentType: " + content_type)
         var headers = this.getHeaders();
         headers["Content-Type"] = content_type
 
@@ -328,7 +329,7 @@ class BilibiliClient {
         const body = `type=${type}&oid=${oid}&rpid=${rpid}&action=${action}&csrf=${this.biliJct}`;
         const response = await this.postRequest(url, body, "application/x-www-form-urlencoded");
 
-        return response.data.code
+        return response.data
     }
 
     // 发送评论（基于OID下，例如发送内容至视频评论区、回复动态等）
@@ -337,7 +338,7 @@ class BilibiliClient {
         const body = `type=${type}&oid=${oid}&message=${message}&plat=1&csrf=${this.biliJct}`;
         const response = await this.postRequest(url, body, "application/x-www-form-urlencoded");
 
-        return response.data.code
+        return response.data
     }
 
     // 回复发送的评论（基于内容下评论RPID，例如给视频评论区里的一条评论发评论，即回复那条评论，称为二级评论）
@@ -346,7 +347,7 @@ class BilibiliClient {
         const body = `type=${type}&oid=${oid}&parent=${parent}&message=${message}&plat=1&csrf=${this.biliJct}`;
         const response = await this.postRequest(url, body, "application/x-www-form-urlencoded");
 
-        return response.data.code
+        return response.data
     }
 
     // 回复二级评论（基于内容下评论RPID+内容下评论回复RPID，例如给视频评论区里的一条评论的回复发回复，进入对话树）
@@ -355,7 +356,7 @@ class BilibiliClient {
         const body = `type=${type}&oid=${oid}&parent=${parent}&root=${root}&message=${message}&plat=1&csrf=${this.biliJct}`;
         const response = await this.postRequest(url, body, "application/x-www-form-urlencoded");
 
-        return response.data.code
+        return response.data
     }
 
     // 获取视频AI摘要

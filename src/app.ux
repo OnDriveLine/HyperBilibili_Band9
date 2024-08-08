@@ -4,12 +4,14 @@ import { BilibiliClient }  from "./bilibiliclient"
 import * as tools from "./tools"
 import * as funnytips from "./funnytips"
 import * as settings from "./settings"
+import * as ambientlight from "./ambientlight"
 export default {
   animengine: animengine,
   biliclient: new BilibiliClient(),
   tools: tools,
   funnytips: funnytips,
   settings: settings,
+  ambientlight: ambientlight,
   onCreate() {
     console.log("app created")
     settings.loadSettings()
