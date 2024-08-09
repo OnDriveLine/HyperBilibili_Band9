@@ -1,0 +1,120 @@
+<import name="switch-bar" src="../../components/SwitchBar/SwitchBar.ux"></import>
+
+<template>
+    <div class="page">
+        <image style="position: absolute" src="/common/rounddevices_searchbg.png"></image>
+        <switch-bar title="搜索"></switch-bar>
+        <div class="searchbtn" style="margin-top: 20px">
+            <image src="/common/searchpage_search.png" style="margin-left: 25px"></image>
+            <text class="searchtip" style="margin-left: 15px">点此搜索</text>
+        </div>
+        <div class="hotwords" style="margin-top: 23px">
+            <div style="flex-direction: row; align-items: center">
+                <image src="/common/searchpage_fire.png" style="object-fit :scale-down"></image>
+                <text class="hottitle">热搜榜</text>
+            </div>
+            <list style="margin-top: 13px" class="hotwordlist" if={{showHotwordsList}}>
+                <list-item type="hotwordlist" style="
+            flex-direction: row;
+            align-items: center;
+            margin-top: 13px;
+            width: 100%;
+            height: 30px;
+          " for="{{hotwords}}">
+                    <image src="{{$item.icon}}@22w_22h"></image>
+                    <text style="
+              font-size: 22px;
+              font-weight: 500;
+              width: 238px;
+              lines: 1;
+              margin-left: 12px;
+              text-overflow: ellipsis;
+            ">
+                        {{ $item.show_name }}
+                    </text>
+                </list-item>
+            </list>
+        </div>
+        <image style="position: absolute; margin-top: 305px" if="{{show_loading}}" src="{{anims.loading_src.value}}"></image>
+    </div>
+</template>
+
+<script>
+export default {
+  private: {
+    hotwords: null,
+    showHotwordsList: false,
+    show_loading: true,
+    anims: {
+      loading: null,
+      loading_src: {value: "/common/seqanims/loadingWhite/icons8-loading_颜色反转-1.png"}
+    }
+  },
+  async GetHotWords() {
+    this.show_loading = true
+    this.anims.loading.start()
+
+    this.hotwords = await this.$app.$def.biliclient.getSearchHotwords()
+    this.showHotwordsList = true
+
+    this.anims.loading.stop()
+    this.show_loading = false
+  },
+  onInit() {
+    this.anims.loading = new this.$app.$def.animengine.SequenceAnim(
+      "replysPage",
+      this.anims.loading_src,
+      28,
+      "/common/seqanims/loadingWhite/icons8-loading_颜色反转-*.png",
+      1000,
+      true
+    )
+
+    this.GetHotWords()
+  }
+}
+</script>
+
+<style>
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+
+.searchbtn {
+  width: 270px;
+  height: 50px;
+  border-radius: 130px;
+  flex-direction: row;
+  align-items: center;
+  background-color: #222222;
+}
+
+.searchtip {
+  font-size: 25px;
+  font-weight: 500;
+}
+
+.hotwords {
+  width: 272px;
+  height: 243px;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.hottitle {
+  font-size: 26px;
+  font-weight: 600;
+  margin-left: 5px;
+  margin-top: 3px;
+}
+
+.hotwordlist {
+  width: 272px;
+  height: 245px;
+}
+</style>

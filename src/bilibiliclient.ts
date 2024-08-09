@@ -397,6 +397,14 @@ class BilibiliClient {
         return false
     }
 
+    async getSearchHotwords(): Promise<any>{
+        const url = "https://s.search.bilibili.com/main/hotword";
+        const response = await this.getRequest(url);
+        console.log(response)
+
+        return response.data.list
+    }
+
     // 退出登录（指在手表上删除存储的账号数据）
     logOut(): any {
         storage.delete({

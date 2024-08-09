@@ -51,7 +51,7 @@ export default {
       loading_src: {value: "/common/seqanims/loadingWhite/icons8-loading_颜色反转-1.png"},
       refresh: null,
       showRefreshFX: false,
-      refresh_bottom: {value: "-350px"}
+      refresh_bottom: {value: "-350"}
     },
     ambientlight: {
       transform_origin: "0px 0px",

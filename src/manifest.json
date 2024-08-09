@@ -64,6 +64,9 @@
       },
       "pages/replytools": {
         "component": "replytools"
+      },
+      "pages/search": {
+        "component": "search"
       }
     }
   }

@@ -1,35 +1,39 @@
 <template>
     <div class="page">
-        <text class="time">{{time}}</text>
-        <div class="btnline" style="margin-top: 15px;">
-            <div class="btn" onclick="GoPage({{pages[0]}})">
-                <div class="btnbase">
-                    <image src="/common/arealist_home.png" class="btnimg"></image>
+        <scroll class="scroll" scroll-y="true" @scrollbottom="DoScrollTip">
+            <text class="time">{{time}}</text>
+            <div class="btnline" style="margin-top: 15px;">
+                <div class="btn" onclick="GoPage({{pages[0]}})">
+                    <div class="btnbase">
+                        <image src="/common/arealist_home.png" class="btnimg"></image>
+                    </div>
+                    <text class="btntext">首页</text>
                 </div>
-                <text class="btntext">首页</text>
-            </div>
-            <div class="btn" style="margin-left: 35px;" onclick="GoPage({{pages[1]}})">
-                <div class="btnbase">
-                    <image src="/common/arealist_updates.png" class="btnimg"></image>
+                <div class="btn" style="margin-left: 35px;" onclick="GoPage({{pages[1]}})">
+                    <div class="btnbase">
+                        <image src="/common/arealist_updates.png" class="btnimg"></image>
+                    </div>
+                    <text class="btntext">动态</text>
                 </div>
-                <text class="btntext">动态</text>
             </div>
-        </div>
-        <div class="btnline" style="margin-top: 15px;">
-            <div class="btn" onclick="GoPage({{pages[2]}})">
-                <div class="btnbase">
-                    <image src="/common/arealist_my.png" class="btnimg"></image>
+            <div class="btnline" style="margin-top: 15px;">
+                <div class="btn" onclick="GoPage({{pages[2]}})">
+                    <div class="btnbase">
+                        <image src="/common/arealist_my.png" class="btnimg"></image>
+                    </div>
+                    <text class="btntext">我的</text>
                 </div>
-                <text class="btntext">我的</text>
-            </div>
-            <div class="btn" style="margin-left: 35px;" onclick="GoPage({{pages[3]}})">
-                <div class="btnbase">
-                    <image src="/common/arealist_settings.png" class="btnimg"></image>
+                <div class="btn" style="margin-left: 35px;" onclick="GoPage({{pages[3]}})">
+                    <div class="btnbase">
+                        <image src="/common/arealist_settings.png" class="btnimg"></image>
+                    </div>
+                    <text class="btntext">设置</text>
                 </div>
-                <text class="btntext">设置</text>
             </div>
-        </div>
-        <text style="margin-top: 30px;"></text>
+            <text style="margin-top: 450px;"></text>
+        </scroll>
+        <image if="{{showChangePageFX}}" style="position: absolute; bottom: {{anims.ChangePageFXBTM.value}}px"
+        src="/common/TranslateFX/searchEnterFX.png"></image>
     </div>
 </template>
 
@@ -39,12 +43,37 @@ import prompt from "@system.prompt"
 export default {
     private: {
         time: "",
+        showChangePageFX: false,
         pages: [
             "main",
             "dynamic",
             "mypage",
             "settings"
-        ]
+        ],
+        anims: {
+            ChangePageFX: null,
+            ChangePageFXBTM: {
+                value: "-350"
+            }
+        }
+    },
+    DoScrollTip(){
+        console.log("scroll bottom!")
+        this.showChangePageFX = true
+        this.anims.ChangePageFX = new this.$app.$def.animengine.DomAnim(
+            "arealist",
+            {value: ""},
+            this.anims.ChangePageFXBTM,
+            0,
+            450,
+            600
+        )
+        this.anims.ChangePageFX.start()
+        setTimeout(() => {
+            router.replace({
+                uri: "pages/search"
+            })
+        },700)
     },
     onInit(){
         this.time = this.$app.$def.tools.getCurrentTime()
@@ -73,6 +102,14 @@ export default {
     align-items: center;
     height: 100%;
     position: absolute;
+    width: 100%;
+}
+
+.scroll {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
     width: 100%;
 }
 

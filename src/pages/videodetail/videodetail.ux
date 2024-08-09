@@ -1,48 +1,63 @@
 <import name="title-bar" src="../../components/TitleBar/TitleBar.ux"></import>
+<import name="full-screen-input" src="../../components/FullScreenInput/FullScreenInput.ux"></import>
 
 <template>
-    <div class="page">
-        <title-bar title="视频"></title-bar>
-        <div class="maindiv">
-            <image src="{{vid.pic}}@319w_150h" alt="/common/grayloading_cn.png" class="vidpic"></image>
-            <text class="vidtitle">{{ vid.title }}</text>
-            <div class="statbar">
-                <div class="stat">
-                    <image class="statimg" src="/common/playcounticon.png"
-                        style="width: 23px; height: 25px; margin-top: 2px"></image>
-                    <text class="statext">{{ this.$app.$def.tools.formatNumber(vid.stat.view) }}</text>
-                </div>
-                <div class="stat" style="margin-left: 10px">
-                    <image class="statimg" src="/common/uploadericon.png" style="width: 27px; height: 29px"></image>
-                    <text class="statext">{{ vid.owner.name }}</text>
-                </div>
-            </div>
-            <div class="vidtoolbar" style="margin-top: 25px">
-                <div class="vidtool" style="margin-left: 0px" @click="DisabledFeaturesWarning()">
-                    <image class="vidtoolimg" src="{{likesrc}}"></image>
-                    <text class="vidtooltext">{{ this.$app.$def.tools.formatNumber(vid.stat.like) }}</text>
-                </div>
-                <div class="vidtool" @click="DisabledFeaturesWarning()">
-                    <image class="vidtoolimg" src="{{coinsrc}}"></image>
-                    <text class="vidtooltext">{{ this.$app.$def.tools.formatNumber(vid.stat.coin) }}</text>
-                </div>
-                <div class="vidtool" @click="AddToFav()">
-                    <image class="vidtoolimg" src="{{starsrc}}"></image>
-                    <text class="vidtooltext">
-                        {{ this.$app.$def.tools.formatNumber(vid.stat.favorite) }}
-                    </text>
-                </div>
-                <div class="vidtool" @click="AISummary()">
-                    <image class="vidtoolimg" src="/common/vidtool_aisummary.png"></image>
-                    <text class="vidtooltext">视频总结</text>
-                </div>
-            </div>
-            <div class="featurebtn" style="margin-top: 20px" @click="Reply">
-                <text class="featurebtn_text">发送评论</text>
-            </div>
-            <image src="/common/featurebtn_replyarea.png" style="margin-top: 15px" @click="GoReplyArea()"></image>
+  <div class="page">
+    <scroll scroll-y="true" class="maindiv">
+      <title-bar title="视频"></title-bar>
+      <image src="{{vid.pic}}@319w_150h" alt="/common/grayloading_cn.png" class="vidpic"></image>
+      <text class="vidtitle">{{ vid.title }}</text>
+      <div class="statbar">
+        <div class="stat">
+          <image class="statimg" src="/common/playcounticon.png" style="width: 23px; height: 25px; margin-top: 2px">
+          </image>
+          <text class="statext">{{ this.$app.$def.tools.formatNumber(vid.stat.view) }}</text>
         </div>
-    </div>
+        <div class="stat" style="margin-left: 10px">
+          <image class="statimg" src="/common/uploadericon.png" style="width: 27px; height: 29px"></image>
+          <text class="statext">{{ vid.owner.name }}</text>
+        </div>
+      </div>
+      <scroll scroll-x="true" class="vidtoolbar" style="margin-top: 25px">
+        <div class="vidtool" style="margin-left: 0px" @click="DisabledFeaturesWarning()">
+          <image class="vidtoolimg" src="{{likesrc}}"></image>
+          <text class="vidtooltext">{{ this.$app.$def.tools.formatNumber(vid.stat.like) }}</text>
+        </div>
+        <div class="vidtool" @click="DisabledFeaturesWarning()">
+          <image class="vidtoolimg" src="{{coinsrc}}"></image>
+          <text class="vidtooltext">{{ this.$app.$def.tools.formatNumber(vid.stat.coin) }}</text>
+        </div>
+        <div class="vidtool" @click="AddToFav()">
+          <image class="vidtoolimg" src="{{starsrc}}"></image>
+          <text class="vidtooltext">
+            {{ this.$app.$def.tools.formatNumber(vid.stat.favorite) }}
+          </text>
+        </div>
+        <div class="vidtool" @click="AISummary()">
+          <image class="vidtoolimg" src="/common/vidtool_aisummary.png"></image>
+          <text class="vidtooltext">视频总结</text>
+        </div>
+        <div class="vidtool" @click="">
+          <image class="vidtoolimg" src="/common/vidtool_generatemanifest.png"></image>
+          <text class="vidtooltext">视频清单</text>
+        </div>
+        <div class="vidtool" @click="">
+          <image class="vidtoolimg" src="/common/vidtool_watchlater.png"></image>
+          <text class="vidtooltext">稍后再看</text>
+        </div>
+        <div class="vidtool" @click="">
+          <image class="vidtoolimg" src="/common/vidtool_watchonphone.png"></image>
+          <text class="vidtooltext">手机上看</text>
+        </div>
+      </scroll>
+      <div class="featurebtn" style="margin-top: 20px" @click="Reply">
+        <text class="featurebtn_text">发送评论</text>
+      </div>
+      <image src="/common/featurebtn_replyarea.png" style="margin-top: 15px" @click="GoReplyArea()"></image>
+    </scroll>
+    <full-screen-input style="position: absolute" input_text="{{input_text}}" if="{{replymode}}" @complete="InputComplete" @delete="InputDelete"
+    @send="SendReply" @exit="ExitInput"></full-screen-input>
+  </div>
 </template>
 
 <script>
@@ -114,14 +129,8 @@ export default {
     this.input_text.content = this.input_text.content.slice(0, -1)
   },
   Reply() {
-    /*
     this.replymode = true
     this.input_text.content = ""
-    */
-   prompt.showToast({
-    message: "暂时仅支持回复其它用户的评论",
-    duration: 2000
-   })
   },
   DisabledFeaturesWarning() {
     prompt.showToast({
@@ -174,6 +183,7 @@ export default {
   flex-direction: column;
   align-items: center;
   width: 100%;
+  height: 100%
 }
 
 .vidpic {

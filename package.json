@@ -6,7 +6,7 @@
     "node": ">=8.10"
   },
   "scripts": {
-    "start": "aiot server --watch --open-nuttx --enable-custom-component true",
+    "start": "aiot server --watch --open-nuttx --enable-custom-component true --enable-protobuf true",
     "build": "aiot build --enable-custom-component --enable-jsc --enable-protobuf",
     "release": "aiot release",
     "watch": "aiot watch --open-nuttx",
