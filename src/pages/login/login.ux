@@ -36,7 +36,7 @@ export default {
       if (result.success) {
         console.log("登录成功")
         prompt.showToast({message: "登录成功"})
-        router.replace({uri: "pages/main"})
+        router.replace({uri: "pages/introduction"})
         clearInterval(this.qrpoll_interval)
       } else if (result.message.includes("登录失败")) {
         prompt.showToast({message: result.message, duration: 5000})
