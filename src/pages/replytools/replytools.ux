@@ -59,16 +59,23 @@ export default {
     })
   },
   ShowSecReplies() {
-    router.push({
-      uri: "pages/replys",
-      params: {
-        type: this.type,
-        oid: this.oid,
-        replycount: this.reply.rcount,
-        rootrpid: this.reply.rpid,
-        secmode: true
-      }
-    })
+    if(this.reply.rcount > 0){
+      router.push({
+        uri: "pages/replys",
+        params: {
+          type: this.type,
+          oid: this.oid,
+          replycount: this.reply.rcount,
+          rootrpid: this.reply.rpid,
+          secmode: true
+        }
+      })
+    }
+    else{
+      prompt.showToast({
+        message: "没人回复这条评论哦！"
+      })
+    }
   },
   onInit() {
     this.reply = JSON.parse(this.reply)

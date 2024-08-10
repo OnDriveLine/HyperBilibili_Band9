@@ -18,7 +18,7 @@
       <text class="btntext">我的收藏</text>
       <image src="/common/arrow_right.png"></image>
     </div>
-    <div class="btnbase" style="margin-top: 10px" @click="WIPTips()">
+    <div class="btnbase" style="margin-top: 10px" @click="GoHistory()">
       <image class="btnimg" src="/common/mypage_history.png"></image>
       <text class="btntext">历史记录</text>
       <image src="/common/arrow_right.png"></image>
@@ -46,6 +46,11 @@ export default {
     is_vip: false,
     is_senior_member: false,
     accountInfo: {}
+  },
+  GoHistory(){
+    router.push({
+      uri: "pages/history"
+    })
   },
   GoMyFavFolders(){
     router.push({

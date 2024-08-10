@@ -18,6 +18,7 @@ export default {
                 "/common/guides/circle/3_enterSearch.png",
                 "/common/guides/circle/4_videoDetailMoreFeatures.png",
                 "/common/guides/circle/5_replyMoreFeatures.png",
+                "/common/guides/circle/6_dontsupportvideoplay.png"
             ],
             "pill-shaped": [
                 "/common/guides/pill-shaped/1_welcome.png",

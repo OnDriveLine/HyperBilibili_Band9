@@ -19,11 +19,11 @@
         </div>
       </div>
       <scroll scroll-x="true" class="vidtoolbar" style="margin-top: 25px">
-        <div class="vidtool" style="margin-left: 0px" @click="DisabledFeaturesWarning()">
+        <div class="vidtool" style="margin-left: 0px" @click="LikeClick()" @longpress="PowerIt()">
           <image class="vidtoolimg" src="{{likesrc}}"></image>
           <text class="vidtooltext">{{ this.$app.$def.tools.formatNumber(vid.stat.like) }}</text>
         </div>
-        <div class="vidtool" @click="DisabledFeaturesWarning()">
+        <div class="vidtool" @click="CoinClick()">
           <image class="vidtoolimg" src="{{coinsrc}}"></image>
           <text class="vidtooltext">{{ this.$app.$def.tools.formatNumber(vid.stat.coin) }}</text>
         </div>
@@ -55,8 +55,8 @@
       </div>
       <image src="/common/featurebtn_replyarea.png" style="margin-top: 15px" @click="GoReplyArea()"></image>
     </scroll>
-    <full-screen-input style="position: absolute" input_text="{{input_text}}" if="{{replymode}}" @complete="InputComplete" @delete="InputDelete"
-    @send="SendReply" @exit="ExitInput"></full-screen-input>
+    <full-screen-input style="position: absolute" input_text="{{input_text}}" if="{{replymode}}" @complete="InputComplete"
+      @delete="InputDelete" @send="SendReply" @exit="ExitInput"></full-screen-input>
   </div>
 </template>
 
@@ -88,6 +88,8 @@ export default {
   },
   async UpdateVideoToolbarStatus() {
     this.stared = await this.$app.$def.biliclient.isVideoStaredByBVID(this.bvid)
+    this.liked = await this.$app.$def.biliclient.isVideoLikedByBVID(this.bvid)
+    this.coined = await this.$app.$def.biliclient.isVideoCoinedByBVID(this.bvid)
     this.UpdateToolBarIconSrc()
   },
   UpdateToolBarIconSrc() {
@@ -95,8 +97,31 @@ export default {
     this.coinsrc = this.coined ? "/common/vidtool_coined.png" : "/common/vidtool_coin.png"
     this.starsrc = this.stared ? "/common/vidtool_stared.png" : "/common/vidtool_star.png"
   },
-  formatNumber(num) {
-    return this.$app.$def.tools.formatNumber(num)
+  async PowerIt(){
+    prompt.showToast({message: "一键三连中！"})
+    this.LikeClick()
+    this.CoinClick()
+    this.AddToFav()
+  },
+  async LikeClick() {
+    var result = await this.$app.$def.biliclient.LikeVideo(this.vid.bvid, 1)
+    const message =
+      result.code === 0 ? "点赞成功" : `点赞失败，错误代码：${result.code} 原因：${result.message}`
+    prompt.showToast({
+      message,
+      duration: result.code === 0 ? 2000 : 4000
+    })
+    this.UpdateVideoToolbarStatus()
+  },
+  async CoinClick() {
+    var result = await this.$app.$def.biliclient.CoinVideo(this.vid.bvid, 1)
+    const message =
+      result.code === 0 ? "投币成功" : `投币失败，错误代码：${result.code} 原因：${result.message}`
+    prompt.showToast({
+      message,
+      duration: result.code === 0 ? 2000 : 4000
+    })
+    this.UpdateVideoToolbarStatus()
   },
   async SendReply() {
     this.replymode = false
@@ -183,7 +208,7 @@ export default {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  height: 100%
+  height: 100%;
 }
 
 .vidpic {

@@ -299,6 +299,22 @@ class BilibiliClient {
         return response.data.data
     }
 
+    // 使用视频bvid检测视频是否被点赞
+    async isVideoLikedByBVID(bvid: string): Promise<boolean> {
+        const url = `https://api.bilibili.com/x/web-interface/archive/has/like?bvid=${bvid}`
+        const response = await this.getRequest(url);
+
+        return response.data.data
+    }
+
+    // 使用视频bvid检测视频是否被投币
+    async isVideoCoinedByBVID(bvid: string): Promise<boolean> {
+        const url = `https://api.bilibili.com/x/web-interface/archive/coins?bvid=${bvid}`
+        const response = await this.getRequest(url);
+
+        return response.data.data.multiply
+    }
+
     // 使用视频bvid检测视频是否被收藏
     async isVideoStaredByBVID(bvid: string): Promise<boolean> {
         const url = `https://api.bilibili.com/x/v2/fav/video/favoured?aid=${bvid}`
@@ -397,7 +413,7 @@ class BilibiliClient {
         return false
     }
 
-    async getSearchHotwords(): Promise<any>{
+    async getSearchHotwords(): Promise<any> {
         const url = "https://s.search.bilibili.com/main/hotword";
         const response = await this.getRequest(url);
         console.log(response)
@@ -405,16 +421,33 @@ class BilibiliClient {
         return response.data.list
     }
 
+    async getWatchHistory(pn: number, ps: number): Promise<any>{
+        const url = `https://api.bilibili.com/x/v2/history?pn=${pn}&ps=${ps}`;
+        const response = await this.getRequest(url);
+
+        return response.data.data
+    }
+
+    async LikeVideo(bvid: string, like: number): Promise<any>{
+        const url = "https://api.bilibili.com/x/web-interface/archive/like"
+        const body = `bvid=${bvid}&like=${like}&csrf=${this.biliJct}`
+        const response = await this.postRequest(url, body, "application/x-www-form-urlencoded");
+
+        return response.data
+    }
+
+    async CoinVideo(bvid: string, multiply: number): Promise<any>{
+        const url = "https://api.bilibili.com/x/web-interface/coin/add"
+        const body = `bvid=${bvid}&multiply=${multiply}&csrf=${this.biliJct}`
+        const response = await this.postRequest(url, body, "application/x-www-form-urlencoded");
+
+        return response.data
+    }
+
     // 退出登录（指在手表上删除存储的账号数据）
-    logOut(): any {
+    logOut() {
         storage.delete({
-            key: "bilibili_account",
-            success: (data) => {
-                return true;
-            },
-            fail: (data, code) => {
-                return false;
-            }
+            key: "bilibili_account"
         })
     }
 
