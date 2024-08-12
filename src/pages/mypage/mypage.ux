@@ -3,9 +3,11 @@
 <template>
   <div class="page">
     <switch-bar title="我的"></switch-bar>
-    <image src="{{accountInfo.face}}@106w_106h" alt="/common/fullgray.png" class="profimg" style="margin-top: 30px">
-    </image>
-    <text class="{{name_text_class}}" style="margin-top: 15px">{{ accountInfo.uname }}</text>
+    <div class="profdiv" style="margin-top: 20px">
+      <image src="{{accountInfo.face}}@106w_106h" alt="/common/fullgray.png" class="profimg"></image>
+      <image src="{{accountInfo.pendant.image}}@176w_176h" alt="/common/alphaimg.png" class="profpendantimg"></image>
+    </div>
+    <text class="{{name_text_class}}">{{ accountInfo.uname }}</text>
     <div class="tagbar" style="margin-top: 5px">
       <image class="tagimg" src="/common/bililevel/lv{{accountInfo.level_info.current_level}}.png" style="height: 20px">
       </image>
@@ -91,9 +93,25 @@ export default {
   width: 100%;
 }
 
+.profdiv {
+  width: 176px; /* 设置为与 profpendantimg 一致 */
+  height: 176px; /* 设置为与 profpendantimg 一致 */
+  align-items: center;
+  justify-content: center;
+}
+
 .profimg {
   width: 106px;
   height: 106px;
+  border-radius: 50%;
+}
+
+.profpendantimg {
+  width: 176px;
+  height: 176px;
+  position: absolute;
+  top: 0;
+  left: 0;
   border-radius: 50%;
 }
 
