@@ -25,9 +25,9 @@
         <image class="replystat_img" src="/common/replycontrol_like.png"></image>
         <text class="replystat_count" style="margin-left: 5px">{{reply.like}}</text>
       </div>
-      <div class="replystat" style="margin-left: 15px">
+      <div class="replystat" style="margin-left: 15px" if={{!secmode}}>
         <image class="replystat_img" src="/common/replycontrol_reply.png"></image>
-        <text class="replystat_count" style="margin-left: 5px" if={{!secmode}}>{{reply.rcount}}</text>
+        <text class="replystat_count" style="margin-left: 5px">{{reply.rcount}}</text>
       </div>
     </div>
   </div>
@@ -74,7 +74,9 @@ export default {
 .username {
   font-size: 20px;
   font-weight: 600;
-  max-width: 180px;
+  max-width: 160px;
+  /* IDE会误报 别管 */
+  lines: 1;
   text-overflow: ellipsis;
 }
 
