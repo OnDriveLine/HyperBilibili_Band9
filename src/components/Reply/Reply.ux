@@ -1,29 +1,47 @@
 <template>
-    <div class="reply">
-        <div class="userinfo" onclick="ShowTools({{reply}})">
-            <image class="userimg" src="{{reply.member.avatar}}@44w_44h" alt="/common/fullgray.png"></image>
-            <text class="username" style="margin-left: 10px">{{ reply.member.uname }}</text>
-            <image style="width: 24px; height: 14px; object-fit: contain; margin-left: 6px"
-                src="/common/bililevel/lv{{reply.member.level_info.current_level}}.png"></image>
+  <div class="reply">
+    <div class="userinfo" onclick="ShowTools({{reply}})">
+      <image class="userimg" src="{{reply.member.avatar}}@44w_44h" alt="/common/fullgray.png"></image>
+      <div style="flex-direction: column; justify-content: center">
+        <div class="rowbar">
+          <text class="username" style="margin-left: 10px">{{ reply.member.uname }}</text>
+          <image style="width: 24px; height: 14px; object-fit: contain; margin-left: 6px"
+            src="/common/bililevel/lv{{reply.member.level_info.current_level}}.png"></image>
         </div>
-        <div class="replycontentdiv" onclick="ShowTools({{reply}})">
-            <text class="replycontent">{{ reply.content.message }}</text>
+        <div class="rowbar" style="margin-left: 10px">
+          <text class="stattext">{{ reply.reply_control.time_desc }}</text>
+          <text class="stattext" style="margin-left: 5px">{{ reply.reply_control.location }}</text>
         </div>
-        <div class="reply_replybtn" onclick="Reply({{reply.rpid}})">
-            <text class="reply_replytext">回复</text>
-        </div>
+      </div>
     </div>
+    <div class="replycontentdiv" onclick="ShowTools({{reply}})">
+      <text class="replycontent">{{ reply.content.message }}</text>
+    </div>
+    <div class="bottom_bar">
+      <div class="reply_replybtn" onclick="Reply({{reply.rpid}})">
+        <text class="reply_replytext">回复</text>
+      </div>
+      <div class="replystat" style="margin-left: 25px">
+        <image class="replystat_img" src="/common/replycontrol_like.png"></image>
+        <text class="replystat_count" style="margin-left: 5px">{{reply.like}}</text>
+      </div>
+      <div class="replystat" style="margin-left: 15px">
+        <image class="replystat_img" src="/common/replycontrol_reply.png"></image>
+        <text class="replystat_count" style="margin-left: 5px" if={{!secmode}}>{{reply.rcount}}</text>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
-  props: ["reply"],
-  ShowTools(reply){
+  props: ["reply", "secmode"],
+  ShowTools(reply) {
     this.$emit("showTools", {
       reply: reply
     })
   },
-  Reply(rpid){
+  Reply(rpid) {
     this.$emit("reply", {
       rpid: rpid
     })
@@ -35,7 +53,7 @@ export default {
 .reply {
   width: 319px;
   height: 200px;
-  border-radius: 50px;
+  border-radius: 25px;
   background-color: #262626;
   flex-direction: column;
 }
@@ -92,5 +110,36 @@ export default {
 .reply_replytext {
   font-size: 18px;
   font-weight: 600;
+}
+
+.bottom_bar {
+  flex-direction: row;
+  align-items: center;
+}
+
+.stattext {
+  font-size: 14px;
+  color: rgb(136, 136, 136);
+}
+
+.rowbar {
+  flex-direction: row;
+  align-items: center;
+}
+
+.replystat {
+  flex-direction: row;
+  height: 100%;
+  align-items: center;
+}
+
+.replystat_count {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.replystat_img {
+  width: 22px;
+  height: 23px;
 }
 </style>

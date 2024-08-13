@@ -14,7 +14,7 @@
       <list-item type="replies"
         style="width: 100%; justify-content: center; margin-top: 10px; height: {{PlaceHolderShowCheck($item.rpid)}}"
         for="{{replies}}">
-        <reply reply="{{$item}}" @show-tools="ShowTools" @reply="Reply"></reply>
+        <reply secmode={{secmode}} reply="{{$item}}" @show-tools="ShowTools" @reply="Reply"></reply>
       </list-item>
     </list>
     <floating-page-changer current_pn="{{current_pn}}" @backpn="BackPN" @nextpn="NextPN"></floating-page-changer>
