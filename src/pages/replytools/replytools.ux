@@ -34,10 +34,11 @@ export default {
     reply: null
   },
   private: {
-    replymessage: ""
+    replymessage: "",
+    reply_clone: null
   },
   async LikeReply() {
-    var result = await this.$app.$def.biliclient.LikeReply(this.type, this.oid, this.reply.rpid, 1)
+    var result = await this.$app.$def.biliclient.LikeReply(this.type, this.oid, this.reply_clone.rpid, 1)
     console.log(result)
     if (result.code == 0) {
       prompt.showToast({
@@ -59,14 +60,14 @@ export default {
     })
   },
   ShowSecReplies() {
-    if(this.reply.rcount > 0){
+    if(this.reply_clone.rcount > 0){
       router.push({
         uri: "pages/replys",
         params: {
           type: this.type,
           oid: this.oid,
-          replycount: this.reply.rcount,
-          rootrpid: this.reply.rpid,
+          replycount: this.reply_clone.rcount,
+          rootrpid: this.reply_clone.rpid,
           secmode: true
         }
       })
@@ -78,8 +79,13 @@ export default {
     }
   },
   onInit() {
-    this.reply = JSON.parse(this.reply)
+    // 经观察，在某些情况下（如内存不足或切换页面触发GC）时，传入的reply大概率会变成string
+    // 因此进行判断，将其parse一下
+    if(typeof this.reply === "string") {
+      this.reply = JSON.parse(this.reply)
+    }
     this.replymessage = this.reply.content.message
+    this.reply_clone = this.reply // 对reply进行一个克隆，防止router back后被GC清理
   }
 }
 </script>

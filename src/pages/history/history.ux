@@ -10,7 +10,7 @@
             <list-item type="history"
                 class="historyvid_listitem"
                 style="height: {{calcSpace($item.title, true)}}"
-                for="{{history}}">
+                for="{{history}}" onclick="OpenVideo({{$item.bvid}})">
                 <videoshow video={{$item}}></videoshow>
                 <text style="margin-top: {{calcSpace($item.title, false)}}; height: 0px"></text>
             </list-item>
@@ -19,6 +19,7 @@
 </template>
 
 <script>
+import router from "@system.router"
 export default {
   private: {
     history: null,
@@ -55,6 +56,12 @@ export default {
       this.show_loading = false
       this.anims.loading.stop()
     }
+  },
+  OpenVideo(bvid) {
+    router.push({
+      uri: "pages/videodetail",
+      params: {bvid}
+    })
   },
   onInit(){
     this.anims.loading = new this.$app.$def.animengine.SequenceAnim(

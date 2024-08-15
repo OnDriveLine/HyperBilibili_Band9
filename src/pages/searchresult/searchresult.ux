@@ -1,0 +1,243 @@
+<import name="switch-bar" src="../../components/SwitchBar/SwitchBar.ux"></import>
+<import name="user" src="../../components/User/User.ux"></import>
+<import name="videoshow" src="../../components/Video/Video.ux"></import>
+
+<template>
+  <div class="page">
+    <image style="position: absolute; opacity: 0.5" src="/common/rounddevices_searchbg.png"></image>
+    <scroll scroll-y="true" class="scroll">
+      <switch-bar title="搜索" if="{{!overview_mode}}"></switch-bar>
+      <div class="searchbar" if="{{!overview_mode}}" @click="SearchBarClick">
+        <image src="/common/searchpage_search.png" style="margin-left: 16px"></image>
+        <text style="margin-left: 12px; font-weight: 600; font-size: 25px">{{ keyword }}</text>
+      </div>
+      <div class="typebar" style="margin-top: 13px" if="{{!overview_mode}}">
+        <text class="typetext" style="color: {{typebar_colors.c1}};">综合</text>
+        <text class="typetext" style="color: {{typebar_colors.c2}}; margin-left: 20px;">视频</text>
+        <text class="typetext" style="color: {{typebar_colors.c3}}; margin-left: 20px;">用户</text>
+        <text class="typetext" style="color: {{typebar_colors.c4}}; margin-left: 20px;">专栏</text>
+      </div>
+      <swiper indicator="false" @change="UpdateTypeBarColors" class="swipermain" style="margin-top: 15px"
+        if="{{!show_loading}}" duration="10">
+        <div class="swiper_container">
+          <list if={{typebar_if.c1}} style="width: 100%; height: 100%; justify-content: center" @scroll="ScrollOverviewCheck">
+            <list-item type="tiplabel" class="tiplabel" if="{{comprehensive_status.has_users_result}}">
+              <text class="listtip">用户</text>
+            </list-item>
+            <list-item type="comprehensive_user" style="width: 100%; height: 99px; justify-content: center"
+              if="{{comprehensive_status.has_users_result}}">
+              <user user="{{search.users[0]}}"></user>
+            </list-item>
+            <list-item type="tiplabel" class="tiplabel" style="margin-top: 10px"
+              if="{{comprehensive_status.has_video_result}}">
+              <text class="listtip">视频</text>
+            </list-item>
+            <list-item type="comprehensive_videos" style="width: 100%; height: 170px; justify-content: center"
+              if="{{comprehensive_status.has_video_result}}" for="{{search.comprehensive_videos}}">
+              <div style="width: 77%; justify-content: center; margin-top: 5px" onclick="OpenVideo({{$item.bvid}})">
+                <videoshow video="{{$item}}"></videoshow>
+              </div>
+            </list-item>
+            <list-item type="placeholder" style="width: 100%; height: 100px"></list-item>
+          </list>
+        </div>
+        <div class="swiper_container">
+          <list if={{typebar_if.c2}} style="width: 100%; height: 100%; justify-content: center" @scroll="ScrollOverviewCheck">
+            <list-item type="videos" style="width: 100%; height: 170px; justify-content: center" for="{{search.videos}}">
+              <div style="width: 77%; justify-content: center; margin-top: 5px">
+                <videoshow video="{{$item}}"></videoshow>
+              </div>
+            </list-item>
+            <list-item type="placeholder" style="width: 100%; height: 100px"></list-item>
+          </list>
+        </div>
+        <div class="swiper_container">
+          <list if={{typebar_if.c3}} style="width: 100%; height: 100%; justify-content: center" @scroll="ScrollOverviewCheck">
+            <list-item type="users" style="width: 100%; height: 99px; justify-content: center" for="{{search.users}}">
+              <user user="{{$item}}"></user>
+            </list-item>
+            <list-item type="placeholder" style="width: 100%; height: 100px"></list-item>
+          </list>
+        </div>
+        <div class="swiper_container" style="align-items: center; justify-content: center">
+          <text style="margin-top: -155px; font-weight: 600">暂不支持</text>
+        </div>
+      </swiper>
+    </scroll>
+    <image style="position: absolute; margin-top: 305px" if="{{show_loading}}" src="{{anims.loading_src.value}}"></image>
+  </div>
+</template>
+
+<script>
+import router from "@system.router"
+export default {
+  private: {
+    search: {},
+    overview_mode: false,
+    show_loading: true,
+    comprehensive_status: {
+      has_users_result: true,
+      has_video_result: true
+    },
+    typebar_colors: {
+      c1: "",
+      c2: "",
+      c3: "",
+      c4: ""
+    },
+    typebar_if: {
+      c1: false,
+      c2: false,
+      c3: false,
+      c4: false
+    },
+    anims: {
+      loading: null,
+      loading_src: {value: "/common/seqanims/loadingWhite/icons8-loading_颜色反转-1.png"},
+      loading_position: "305"
+    }
+  },
+  public: {
+    keyword: ""
+  },
+  UpdateTypeBarColors(index) {
+    this.typebar_colors = {
+      c1: "#919191",
+      c2: "#919191",
+      c3: "#919191",
+      c4: "#919191"
+    }
+    this.typebar_if = {
+      c1: false,
+      c2: false,
+      c3: false,
+      c4: false
+    }
+    if (index.index >= 0 && index.index < 4) {
+      this.typebar_colors[`c${index.index + 1}`] = "#0851ac"
+      this.typebar_if[`c${index.index + 1}`] = true
+    }
+  },
+  SearchBarClick() {
+    router.back()
+  },
+  ScrollOverviewCheck(ret) {
+    if (ret.scrollY != 0) {
+      this.overview_mode = true
+    } else {
+      this.overview_mode = false
+    }
+  },
+  OpenVideo(bvid) {
+    router.push({
+      uri: "pages/videodetail",
+      params: {bvid}
+    })
+  },
+  // 搜索结果返回的信息烂到不能用，进行一个patch操作
+  async PatchSearchResult() {
+    this.search.videos = await Promise.all(
+      this.search.videos.map(async (vid) => {
+        return await this.$app.$def.biliclient.getVideoInfoByBVID(vid.bvid)
+      })
+    )
+    this.search.comprehensive_videos = await Promise.all(
+      this.search.comprehensive_videos.map(async (vid) => {
+        return await this.$app.$def.biliclient.getVideoInfoByBVID(vid.bvid)
+      })
+    )
+
+    if (this.search.users.length < 1) {
+      this.comprehensive_status.has_users_result = false
+    }
+    if (this.search.videos.length < 1) {
+      this.comprehensive_status.has_video_result = false
+    }
+  },
+  async DoSearch() {
+    this.show_loading = true
+    this.anims.loading.start()
+
+    this.search = await this.$app.$def.biliclient.searchContents(this.keyword, 10)
+    await this.PatchSearchResult()
+
+    this.show_loading = false
+    this.anims.loading.stop()
+  },
+  onInit() {
+    this.UpdateTypeBarColors({index: 0})
+
+    this.anims.loading = new this.$app.$def.animengine.SequenceAnim(
+      "replysPage",
+      this.anims.loading_src,
+      28,
+      "/common/seqanims/loadingWhite/icons8-loading_颜色反转-*.png",
+      1000,
+      true
+    )
+
+    this.DoSearch()
+  }
+}
+</script>
+
+<style>
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+
+.scroll {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.searchbar {
+  background-color: #222222;
+  width: 255px;
+  height: 50px;
+  border-radius: 130px;
+  margin-top: 20px;
+  flex-direction: row;
+  align-items: center;
+}
+
+.typebar {
+  flex-direction: row;
+  width: 257px;
+  height: 34px;
+}
+
+.typetext {
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.swipermain {
+  width: 100%;
+  height: 100%;
+}
+
+.tiplabel {
+  width: 100%;
+  height: 50px;
+}
+
+.listtip {
+  margin-left: 72px;
+  font-size: 25px;
+  font-weight: 600;
+}
+
+.swiper_container {
+  width: 100%;
+  height: 100%;
+}
+</style>

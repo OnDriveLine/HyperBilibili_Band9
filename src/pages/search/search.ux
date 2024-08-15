@@ -1,28 +1,29 @@
 <import name="switch-bar" src="../../components/SwitchBar/SwitchBar.ux"></import>
+<import name="full-screen-input" src="../../components/FullScreenInput/FullScreenInput.ux"></import>
 
 <template>
-    <div class="page">
-        <image style="position: absolute" src="/common/rounddevices_searchbg.png"></image>
-        <switch-bar title="搜索"></switch-bar>
-        <div class="searchbtn" style="margin-top: 20px">
-            <image src="/common/searchpage_search.png" style="margin-left: 25px"></image>
-            <text class="searchtip" style="margin-left: 15px">点此搜索</text>
-        </div>
-        <div class="hotwords" style="margin-top: 23px">
-            <div style="flex-direction: row; align-items: center">
-                <image src="/common/searchpage_fire.png" style="object-fit :scale-down"></image>
-                <text class="hottitle">热搜榜</text>
-            </div>
-            <list style="margin-top: 13px" class="hotwordlist" if={{showHotwordsList}}>
-                <list-item type="hotwordlist" style="
+  <div class="page">
+    <image style="position: absolute" src="/common/rounddevices_searchbg.png"></image>
+    <switch-bar title="搜索"></switch-bar>
+    <div class="searchbtn" style="margin-top: 20px" @click="OpenInput">
+      <image src="/common/searchpage_search.png" style="margin-left: 25px"></image>
+      <text class="searchtip" style="margin-left: 15px">点此搜索</text>
+    </div>
+    <div class="hotwords" style="margin-top: 23px">
+      <div style="flex-direction: row; align-items: center">
+        <image src="/common/searchpage_fire.png" style="object-fit: scale-down"></image>
+        <text class="hottitle">热搜榜</text>
+      </div>
+      <list style="margin-top: 13px" class="hotwordlist" if="{{showHotwordsList}}">
+        <list-item type="hotwordlist" style="
             flex-direction: row;
             align-items: center;
             margin-top: 13px;
             width: 100%;
             height: 30px;
           " for="{{hotwords}}">
-                    <image src="{{$item.icon}}@22w_22h"></image>
-                    <text style="
+          <image src="{{$item.icon}}@22w_22h"></image>
+          <text style="
               font-size: 22px;
               font-weight: 500;
               width: 238px;
@@ -30,25 +31,50 @@
               margin-left: 12px;
               text-overflow: ellipsis;
             ">
-                        {{ $item.show_name }}
-                    </text>
-                </list-item>
-            </list>
-        </div>
-        <image style="position: absolute; margin-top: 305px" if="{{show_loading}}" src="{{anims.loading_src.value}}"></image>
+            {{ $item.show_name }}
+          </text>
+        </list-item>
+      </list>
     </div>
+    <image style="position: absolute; margin-top: 305px" if="{{show_loading}}" src="{{anims.loading_src.value}}"></image>
+    <full-screen-input style="position: absolute" input_text="{{input_text}}" if="{{input_mode}}"
+      @complete="InputComplete" @delete="InputDelete" @send="GoSearch" @exit="ExitInput"></full-screen-input>
+  </div>
 </template>
 
 <script>
+import router from "@system.router"
 export default {
   private: {
     hotwords: null,
     showHotwordsList: false,
     show_loading: true,
+    input_mode: false,
     anims: {
       loading: null,
       loading_src: {value: "/common/seqanims/loadingWhite/icons8-loading_颜色反转-1.png"}
-    }
+    },
+    input_text: {content: ""}
+  },
+  ExitInput() {
+    this.input_mode = false
+  },
+  InputComplete(evt) {
+    this.input_text.content += evt.detail.content
+  },
+  InputDelete() {
+    this.input_text.content = this.input_text.content.slice(0, -1)
+  },
+  GoSearch() {
+    router.push({
+      uri: "pages/searchresult",
+      params: {
+        keyword: this.input_text.content
+      }
+    })
+  },
+  OpenInput(){
+    this.input_mode = true
   },
   async GetHotWords() {
     this.show_loading = true

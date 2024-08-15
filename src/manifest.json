@@ -73,6 +73,9 @@
       },
       "pages/history": {
         "component": "history"
+      },
+      "pages/searchresult": {
+        "component": "searchresult"
       }
     }
   }
