@@ -135,7 +135,7 @@ class BilibiliClient {
     }
 
     // 获取二维码信息
-    async login_qr(): Promise<{ url: string, qrcode_key: string }> {
+    async loginQR(): Promise<{ url: string, qrcode_key: string }> {
         console.log("请求登录二维码");
         const response = await this.getRequest('https://passport.bilibili.com/x/passport-login/web/qrcode/generate');
         if (response && response.data) {
@@ -369,7 +369,7 @@ class BilibiliClient {
         return response.data;
     }
 
-    // 全站搜索
+    // 全站搜索（首页入口）（视频、用户）
     async searchContents(keyword: string, vidcount: number = 20): Promise<any> {
         const url = "https://api.bilibili.com/x/web-interface/wbi/search/all/v2";
         const response = await this.getRequestWbi(url, { keyword });
@@ -395,6 +395,61 @@ class BilibiliClient {
         result.videos = result.videos.slice(0, vidcount)
 
         return result;
+    }
+
+    // 获取通知信息数量 （例如回复我的、at我的、点赞数量）
+    async getMessageNotifyFeed(){
+        const url = "https://api.vc.bilibili.com/x/im/web/msgfeed/unread";
+        const response = await this.getRequest(url);
+        return response.data.data;
+    }
+
+    // 获取私信Session列表
+    // 一次性最多拉取20个，可加end_ts做IFS（但没必要）
+    async getDMSessions(session_type: number, sort_rule: number){
+        const url = "https://api.vc.bilibili.com/session_svr/v1/session_svr/get_sessions"
+        const response = await this.getRequestWbi(url, {
+            session_type,
+            sort_rule,
+            group_fold: 0,
+            unfollow_fold: 0,
+            mobi_app: "web"
+        })
+
+        return response.data.data
+    }
+
+    // 获取私信Session聊天记录
+    // 若要做IFS，则end_seqno应该为最顶上那条信息的序列号
+    // 接口有漏洞，自带防撤回
+    async getDMSessionMessage(session_type: number, talker_id: string, size: number = 10, end_seqno: string){
+        const url = "https://api.vc.bilibili.com/svr_sync/v1/svr_sync/fetch_session_msgs"
+        var params = {
+            session_type,
+            talker_id,
+            size
+        };
+        if(end_seqno){
+            params["end_seqno"] = end_seqno;
+        }
+        const response = await this.getRequestWbi(url, params);
+
+        return response.data.data
+    }
+
+    // 根据UID批量获取用户信息
+    async getMultiUserInfoByUID(uids: Array<String>){
+        const url = "https://api.bilibili.com/x/polymer/pc-electron/v1/user/cards";
+        let param = "";
+        uids.forEach(uid => {
+            param += uid
+            if(uids.indexOf(uid) != uids.length -1){
+                param += ","
+            }
+        });
+        const response = await this.getRequest(`${url}?uids=${param}`)
+
+        return response.data.data
     }
 
     // 退出登录（删除本地存储的账号数据）

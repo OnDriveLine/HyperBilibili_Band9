@@ -30,7 +30,7 @@
       <text class="btntext">稍后再看</text>
       <image src="/common/arrow_right.png"></image>
     </div>
-    <div class="btnbase" style="margin-top: 10px" @click="WIPTips()">
+    <div class="btnbase" style="margin-top: 10px" @click="GoMessages()">
       <image class="btnimg" src="/common/mypage_messager.png"></image>
       <text class="btntext">我的消息</text>
       <image src="/common/arrow_right.png"></image>
@@ -60,6 +60,11 @@ export default {
       params: {
         user_mid: this.$app.$def.biliclient.accountInfo.mid
       }
+    })
+  },
+  GoMessages(){
+    router.push({
+      uri: "pages/messages"
     })
   },
   WIPTips() {

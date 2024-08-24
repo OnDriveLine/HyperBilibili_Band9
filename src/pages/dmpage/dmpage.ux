@@ -1,0 +1,145 @@
+<import name="sendbox" src="../../components/FloatingSendBox/FloatingSendBox.ux"></import>
+
+<template>
+  <div class="page">
+    <scroll class="scroll" scroll-y="true" id="mainscroll">
+      <div for="{{messages}}">
+        <div class="targetmsg-container" if="{{$item.receiver_id == myId}}">
+          <div class="targetmsg"
+            style="margin-top: {{MsgBoxStyleCalcMarginTop($item.msg_seqno)}}; margin-bottom: {{MsgBoxStyleCalcMarginBottom($item.msg_seqno)}}">
+            <image class="msgprofpic" src="{{targetPic}}@75w_75h" alt="/common/fullgray.png"></image>
+            <div class="msgbox" style="margin-left: 5px">
+              <text class="msgtext">
+                {{ JSON.parse($item.content).content || "该消息暂不支持显示" }}
+              </text>
+            </div>
+          </div>
+        </div>
+        <div class="mymsg-container" if="{{$item.receiver_id == targetId}}">
+          <div class="mymsg"
+            style="margin-top: {{MsgBoxStyleCalcMarginTop($item.msg_seqno)}}; margin-bottom: {{MsgBoxStyleCalcMarginBottom($item.msg_seqno)}}">
+            <div style="background-color: #ff7da8" class="msgbox">
+              <text class="msgtext">
+                {{ JSON.parse($item.content).content || "该消息暂不支持显示" }}
+              </text>
+            </div>
+            <image style="margin-left: 5px" class="msgprofpic" src="{{myPic}}@75w_75h" alt="/common/fullgray.png"></image>
+          </div>
+        </div>
+      </div>
+    </scroll>
+    <sendbox style="position: absolute"></sendbox>
+  </div>
+</template>
+
+<script>
+export default {
+  public: {
+    myId: 0,
+    targetId: 1,
+    myPic: "",
+    targetPic: ""
+  },
+  private: {
+    messages: []
+  },
+  MsgBoxStyleCalcMarginTop(msg_seqno) {
+    if (msg_seqno == this.messages[0].msg_seqno) {
+      return "85px"
+    }
+    return "15px"
+  },
+  MsgBoxStyleCalcMarginBottom(msg_seqno) {
+    if (msg_seqno == this.messages[this.messages.length - 1].msg_seqno) {
+      return "160px"
+    }
+    return "0px"
+  },
+  async UpdateMessages(){
+    var messages = (await this.$app.$def.biliclient.getDMSessionMessage(1, this.targetId, 30)).messages.reverse()
+    if(messages != this.messages){
+      this.messages = messages
+      setTimeout(() => {
+        this.ScrollToEnd()
+      }, 200)
+    }
+  },
+  ScrollToEnd(){
+    this.$element('mainscroll').getScrollRect({
+      success: (rect) => {
+        this.$element('mainscroll').scrollTo({
+          top: rect.height
+        })
+      }
+    })
+  },
+  onShow(){
+    this.UpdateMessages()
+  },
+  onInit(){
+
+  }
+}
+</script>
+
+<style>
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+
+.scroll {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+}
+
+.targetmsg-container {
+  display: flex;
+  justify-content: flex-start; /* 消息框向左对齐 */
+  width: 100%;
+}
+
+.mymsg-container {
+  display: flex;
+  justify-content: flex-end; /* 消息框向右对齐 */
+  width: 100%;
+}
+
+.targetmsg {
+  flex-direction: row;
+  margin-left: 55px;
+}
+
+.mymsg {
+  flex-direction: row;
+  margin-right: 55px;
+}
+
+.msgbox {
+  max-width: 171px;
+  max-height: 140px;
+  border-radius: 19px;
+  padding: 15px;
+  background-color: #242424;
+}
+
+.msgprofpic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: scale-down;
+}
+
+.msgtext {
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+  text-overflow: ellipsis;
+}
+</style>

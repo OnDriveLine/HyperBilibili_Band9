@@ -30,6 +30,7 @@
                     <text class="btntext">设置</text>
                 </div>
             </div>
+            <text style="font-size: 24px; font-weight: 600; margin-top: 50px">上滑进入搜索页</text>
             <text style="margin-top: 450px;"></text>
         </scroll>
         <image if="{{showChangePageFX}}" style="position: absolute; bottom: {{anims.ChangePageFXBTM.value}}px"

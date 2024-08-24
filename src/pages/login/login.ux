@@ -47,7 +47,7 @@ export default {
   },
   async GetQR() {
     try {
-      const get_result = await this.$app.$def.biliclient.login_qr()
+      const get_result = await this.$app.$def.biliclient.loginQR()
       this.qr_value = get_result.url
       console.log(get_result)
       this.show_qr = true

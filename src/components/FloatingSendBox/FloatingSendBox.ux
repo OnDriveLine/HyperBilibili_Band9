@@ -1,0 +1,38 @@
+<template>
+    <div class="sendbox">
+        <div class="textbox">
+            <text class="textbox_text">点此输入文字</text>
+        </div>
+        <image src="/common/dmpage_sendbtn.png" style="margin-left: 6px"></image>
+    </div>
+</template>
+
+<script>
+export default {}
+</script>
+
+<style>
+.sendbox {
+  width: 284px;
+  height: 73px;
+  border-radius: 48px;
+  background-color: #262626ef;
+  padding: 12px 20px;
+  position: absolute;
+  bottom: 55px
+}
+
+.textbox {
+  width: 189px;
+  height: 48px;
+  border-radius: 48px;
+  background-color: #3D3D3D;
+  align-items: center;
+  padding: 15px;
+}
+
+.textbox_text {
+  font-size: 20px;
+  font-weight: 600;
+}
+</style>

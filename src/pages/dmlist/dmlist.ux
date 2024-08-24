@@ -1,0 +1,132 @@
+<import name="title-bar" src="../../components/TitleBar/TitleBar.ux"></import>
+
+<template>
+  <div class="page">
+    <title-bar title="私信"></title-bar>
+    <image style="position: absolute; margin-top: 245px" if="{{show_loading}}" src="{{anims.loading_src.value}}"></image>
+    <div class="dmlist" for="{{sessions}}" style="margin-top: 18px">
+      <div class="user" onclick="GoDMPage({{$item.talker_id}})">
+        <image class="userface" src="{{session_cards[$item.talker_id].face}}@75w_75h" alt="/common/fullgray.png"></image>
+        <div class="infoarea">
+          <text class="username">{{session_cards[$item.talker_id].name}}</text>
+          <text class="lastmsg">{{JSON.parse($item.last_msg.content).content || JSON.parse($item.last_msg.content).reply_content || JSON.parse($item.last_msg.content).text || "暂无消息"}}</text>
+        </div>
+      </div>
+    </div>
+    <text style="font-size: 18px; margin-top: 15px; font-weight: 600" show="{{Show20UserLimit}}">暂时最多只支持显示20个用户哦~</text>
+    <text style="margin-top: 25px"></text>
+  </div>
+</template>
+
+<script>
+import router from "@system.router"
+export default {
+  private: {
+    sessions: [],
+    session_cards: {},
+    show_loading: false,
+    Show20UserLimit: false,
+    anims: {
+      loading: null,
+      loading_src: {value: "/common/seqanims/loadingWhite/icons8-loading_颜色反转-1.png"}
+    }
+  },
+  async InitSessions(){
+    this.anims.loading.start()
+    this.show_loading = true
+
+    this.sessions = (await this.$app.$def.biliclient.getDMSessions(1, 2)).session_list
+
+    var session_uids = []
+    this.sessions.forEach((session) => {
+      session_uids.push(session.talker_id)
+    })
+
+    this.session_cards = await this.$app.$def.biliclient.getMultiUserInfoByUID(session_uids)
+
+    this.anims.loading.stop()
+    this.show_loading = false
+    this.Show20UserLimit = true
+  },
+  GoDMPage(targetId){
+    router.push({
+      uri: "pages/dmpage",
+      params: {
+        myId: this.$app.$def.biliclient.accountInfo.mid,
+        targetId: targetId,
+        myPic: this.$app.$def.biliclient.accountInfo.face,
+        targetPic: this.session_cards[`${targetId}`].face
+      }
+    })
+  },
+  onInit(){
+    this.anims.loading = new this.$app.$def.animengine.SequenceAnim(
+      "replysPage",
+      this.anims.loading_src,
+      28,
+      "/common/seqanims/loadingWhite/icons8-loading_颜色反转-*.png",
+      1000,
+      true
+    )
+
+    this.InitSessions()
+  }
+}
+</script>
+
+<style>
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+
+.dmlist {
+  width: 313px;
+}
+
+.user {
+  height: 119px;
+  border-radius: 33px;
+  background-color: #222222;
+  flex-direction: row;
+  width: 313px;
+  align-items: center;
+}
+
+.userface {
+  min-width: 75px;
+  min-height: 75px;
+  max-width: 75px;
+  max-height: 75px;
+  object-fit: scale-down;
+  margin-left: 26px;
+  border-radius: 50%;
+}
+
+.infoarea {
+  flex-direction: column;
+  justify-content: center;
+  width: 195px;
+}
+
+.username {
+  font-size: 28px;
+  font-weight: 600;
+  margin-left: 11px;
+  max-height: 40px;
+  text-overflow: ellipsis;
+}
+
+.lastmsg {
+  font-size: 20px;
+  font-weight: 600;
+  margin-left: 11px;
+  max-height: 55px;
+  text-overflow: ellipsis;
+  color: #585858
+}
+</style>

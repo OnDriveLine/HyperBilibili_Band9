@@ -76,6 +76,15 @@
       },
       "pages/searchresult": {
         "component": "searchresult"
+      },
+      "pages/messages": {
+        "component": "messages"
+      },
+      "pages/dmlist": {
+        "component": "dmlist"
+      },
+      "pages/dmpage": {
+        "component": "dmpage"
       }
     }
   }
