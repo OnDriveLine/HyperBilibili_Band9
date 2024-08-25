@@ -4,7 +4,7 @@
   <div class="page">
     <title-bar title="私信"></title-bar>
     <image style="position: absolute; margin-top: 245px" if="{{show_loading}}" src="{{anims.loading_src.value}}"></image>
-    <div class="dmlist" for="{{sessions}}" style="margin-top: 18px">
+    <div class="dmlist" for="{{sessions}}" style="margin-top: 18px" if="{{show_dmlist}}">
       <div class="user" onclick="GoDMPage({{$item.talker_id}})">
         <image class="userface" src="{{session_cards[$item.talker_id].face}}@75w_75h" alt="/common/fullgray.png"></image>
         <div class="infoarea">
@@ -25,6 +25,7 @@ export default {
     sessions: [],
     session_cards: {},
     show_loading: false,
+    show_dmlist: false,
     Show20UserLimit: false,
     anims: {
       loading: null,
@@ -53,6 +54,7 @@ export default {
     this.anims.loading.stop()
     this.show_loading = false
     this.Show20UserLimit = true
+    this.show_dmlist = true
   },
   GoDMPage(targetId){
     router.push({
