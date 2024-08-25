@@ -88,7 +88,7 @@ export default {
   },
   onInit() {
     this.anims.loading = new this.$app.$def.animengine.SequenceAnim(
-      "replysPage",
+      "searchPage",
       this.anims.loading_src,
       28,
       "/common/seqanims/loadingWhite/icons8-loading_颜色反转-*.png",

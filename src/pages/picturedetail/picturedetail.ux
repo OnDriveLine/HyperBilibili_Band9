@@ -2,17 +2,18 @@
 
 <template>
     <div class="page">
-        <scroll class="scroll" scroll-x="true" scroll-y="true" @scroll="onScroll" bounces="true" id="scroll">
-            <div style="{{container_style}}">
-              <image style="{{img_style}}" src="{{img_uri}}" id="img"></image>
-            </div>
-        </scroll>
-        <title-bar title="图片预览"></title-bar>
-        <div class="scroll_toolbar">
-            <text style="font-size: 24px; font-weight: 600">缩放调整</text>
-            <slider style="margin-top: 5px" min="50" max="500" step="10" value="{{initialSliderValue}}"
-                @change="UpdateImageStyle"></slider>
-        </div>
+      <text style="margin-top: 233px" if="ShowBigPictureTips">图片过大，可能会无法显示</text>
+      <scroll class="scroll" scroll-x="true" scroll-y="true" @scroll="onScroll" bounces="true" id="scroll">
+          <div style="{{container_style}}">
+            <image style="{{img_style}}" src="{{img_uri}}" id="img"></image>
+          </div>
+      </scroll>
+      <title-bar title="图片预览"></title-bar>
+      <div class="scroll_toolbar">
+          <text style="font-size: 24px; font-weight: 600">缩放调整</text>
+          <slider style="margin-top: 5px" min="50" max="500" step="10" value="{{initialSliderValue}}"
+              @change="UpdateImageStyle"></slider>
+      </div>
     </div>
 </template>
 
@@ -25,6 +26,7 @@ export default {
   private: {
     base_width: 0,
     base_height: 0,
+    ShowBigPictureTips: false,
     img_style: {
       "object-fit": "contain",
       "position": "absolute"
@@ -91,6 +93,9 @@ export default {
         console.log("image loaded: ", rect);
         this.base_height = rect.height;
         this.base_width = rect.width;
+        if(rect.width > 800 && rect.height > 800){
+          this.ShowBigPictureTips = true
+        }
         setTimeout(() => {
           this.UpdateImageStyle({
             progress: this.initialSliderValue

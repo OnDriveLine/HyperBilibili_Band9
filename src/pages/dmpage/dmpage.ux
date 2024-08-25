@@ -21,7 +21,7 @@
                 [已撤回] {{ JSON.parse($item.content).content }}
               </text>
               <!-- 图片消息 -->
-              <image class="imgmsg" if="{{$item.msg_type == 2}}" src="{{JSON.parse($item.content).url}}" alt="/common/fullgray.png"></image>
+              <image class="imgmsg" if="{{$item.msg_type == 2}}" src="{{JSON.parse($item.content).url}}@156w_125h" alt="/common/fullgray.png"></image>
               <!-- 不支持显示的消息 -->
               <text class="msgtext" if="{{($item.msg_type != 5) && ($item.msg_type != 2) && ($item.msg_type != 1)}}">
                 该消息暂不支持显示
@@ -43,7 +43,7 @@
                 [已撤回] {{ JSON.parse($item.content).content }}
               </text>
               <!-- 图片消息 -->
-              <image class="imgmsg" if="{{$item.msg_type == 2}}" src="{{JSON.parse($item.content).url}}" alt="/common/fullgray.png"></image>
+              <image class="imgmsg" if="{{$item.msg_type == 2}}" src="{{JSON.parse($item.content).url}}@156w_125h" alt="/common/fullgray.png"></image>
               <!-- 不支持显示的消息 -->
               <text class="msgtext" if="{{($item.msg_type != 5) && ($item.msg_type != 2) && ($item.msg_type != 1)}}">
                 该消息暂不支持显示
@@ -149,7 +149,7 @@ export default {
     this.input_text.content = input_text_set
     setTimeout(() => {
       this.ScrollToEnd()
-    }, 300)
+    }, 500)
   },
   FinishInput() {
     this.inputmode = false
@@ -189,7 +189,7 @@ export default {
           this.messages[this.messages.length - 1].msg_seqno
       ) {
         this.messages = newMessages
-        setTimeout(this.ScrollToEnd, 200)
+        setTimeout(this.ScrollToEnd, 500)
       }
 
       if (initial && this.show_loading) {
@@ -223,7 +223,7 @@ export default {
   },
   onInit() {
     this.anims.loading = new this.$app.$def.animengine.SequenceAnim(
-      "replysPage",
+      "dmPage",
       this.anims.loading_src,
       28,
       "/common/seqanims/loadingWhite/icons8-loading_颜色反转-*.png",
