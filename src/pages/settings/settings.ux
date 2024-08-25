@@ -28,6 +28,11 @@
       <text class="setext_small">退出登录</text>
       <image src="/common/arrow_right.png"></image>
     </div>
+    <div class="setbase" @click="GoDonation()">
+      <image class="seticon" src="/common/donation.png"></image>
+      <text class="setext_small">捐赠</text>
+      <image src="/common/arrow_right.png"></image>
+    </div>
     <div class="setbase" @click="GoAbout()">
       <image class="seticon" src="/common/settings_about.png"></image>
       <text class="setext_small">关于应用</text>
@@ -54,6 +59,11 @@ export default {
       home_vid_count_max: 14,
       home_vid_count_min: 1
     }
+  },
+  GoDonation(){
+    router.push({
+      uri: "pages/donation"
+    })
   },
   GoAbout() {
     router.push({

@@ -303,5 +303,7 @@ export default {
   font-weight: 600;
   color: #ffffff;
   text-overflow: ellipsis;
+  max-height: 140px;
+  max-width: 171px;
 }
 </style>

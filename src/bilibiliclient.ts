@@ -22,7 +22,7 @@ interface AccountData {
 
 class BilibiliClient {
     // 版本号
-    public version: string = "2.1";
+    public version: string = "2.2";
 
     // 扫码登录用的二维码Key
     private qrCodeKey: string | null = null;
