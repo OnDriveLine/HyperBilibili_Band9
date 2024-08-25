@@ -9,7 +9,7 @@ const mixinKeyEncTab = [
 ];
 
 // 对imgKey和subKey进行混淆编码
-const getMixinKey = (orig: string) => 
+const getMixinKey = (orig: string) =>
     mixinKeyEncTab.map(n => orig[n]).join("").slice(0, 32);
 
 // 账号数据接口
@@ -39,6 +39,13 @@ class BilibiliClient {
     // 风控Cookies（不存储，登录时刷新）
     private buvid3: string | null = null;
     private buvid4: string | null = null;
+
+    // 私信DeviceId，每次登录刷新
+    // From https://github.com/andywang425/BLTH/
+    private dm_deviceid = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (function (name) {
+        let randomInt = 16 * Math.random() | 0;
+        return ("x" === name ? randomInt : 3 & randomInt | 8).toString(16).toUpperCase()
+    }));
 
     // 获取请求头，用于模拟正常浏览器环境，降低风控概率
     private getHeaders(): Record<string, string> {
@@ -100,21 +107,33 @@ class BilibiliClient {
     }
 
     // 发送POST请求
-    private async postRequest(url: string, data: string, content_type: string): Promise<any> {
+    private async postRequest(url: string, data: string, content_type: string, custom_headers: any = null): Promise<any> {
         console.log(`postRequest: ${url}, body: ${data}, contentType: ${content_type}`);
+        let headers = { ...this.getHeaders(), "Content-Type": content_type }
+        if(custom_headers){
+            headers = custom_headers
+        }
         try {
             const response = await fetch.fetch({
                 url,
                 responseType: 'json',
                 method: 'POST',
                 data,
-                header: { ...this.getHeaders(), "Content-Type": content_type }
+                header: headers
             });
             return response.data;
         } catch (error) {
             console.error(`POST请求失败，错误码 = ${error.code}`);
             throw error;
         }
+    }
+
+    // 发送带Wbi签名的POST请求
+    private async postRequestWbi(url: string, wbiParams: any, data: string, content_type: string, custom_headers: any = null): Promise<any> {
+        const img_key = this.accountInfo.wbi_img.img_url.split('/').pop().split('.')[0];
+        const sub_key = this.accountInfo.wbi_img.sub_url.split('/').pop().split('.')[0];
+        const signedParams = this.encWbi(wbiParams, img_key, sub_key);
+        return this.postRequest(`${url}?${signedParams}`, data, content_type, custom_headers);
     }
 
     // 检查澎湃哔哩是否存在更新
@@ -383,7 +402,7 @@ class BilibiliClient {
                     break;
                 case "video":
                     result_array.data.forEach(vid => {
-                        if(vid.bvid){
+                        if (vid.bvid) {
                             result.videos.push(vid)
                         }
                     });
@@ -398,7 +417,7 @@ class BilibiliClient {
     }
 
     // 获取通知信息数量 （例如回复我的、at我的、点赞数量）
-    async getMessageNotifyFeed(){
+    async getMessageNotifyFeed() {
         const url = "https://api.vc.bilibili.com/x/im/web/msgfeed/unread";
         const response = await this.getRequest(url);
         return response.data.data;
@@ -406,7 +425,7 @@ class BilibiliClient {
 
     // 获取私信Session列表
     // 一次性最多拉取20个，可加end_ts做IFS（但没必要）
-    async getDMSessions(session_type: number, sort_rule: number){
+    async getDMSessions(session_type: number, sort_rule: number) {
         const url = "https://api.vc.bilibili.com/session_svr/v1/session_svr/get_sessions"
         const response = await this.getRequestWbi(url, {
             session_type,
@@ -422,14 +441,14 @@ class BilibiliClient {
     // 获取私信Session聊天记录
     // 若要做IFS，则end_seqno应该为最顶上那条信息的序列号
     // 接口有漏洞，自带防撤回
-    async getDMSessionMessage(session_type: number, talker_id: string, size: number = 10, end_seqno: string){
+    async getDMSessionMessage(session_type: number, talker_id: string, size: number = 10, end_seqno: string) {
         const url = "https://api.vc.bilibili.com/svr_sync/v1/svr_sync/fetch_session_msgs"
         var params = {
             session_type,
             talker_id,
             size
         };
-        if(end_seqno){
+        if (end_seqno) {
             params["end_seqno"] = end_seqno;
         }
         const response = await this.getRequestWbi(url, params);
@@ -437,13 +456,33 @@ class BilibiliClient {
         return response.data.data
     }
 
+    // 发送私信消息
+    async SendDMSessionMessage(receiver_id: string, msg_type: number, content: string) {
+        const url = "https://api.vc.bilibili.com/web_im/v1/web_im/send_msg";
+        const body = `msg[sender_uid]=${this.accountInfo.mid}&msg[receiver_id]=${receiver_id}&msg[receiver_type]=1&msg[msg_type]=${msg_type}&msg[dev_id]=${this.dm_deviceid}&msg[timestamp]=${Number.parseInt(((new Date()).getTime() / 1000).toString())}&msg[content]=${encodeURIComponent(`{"content": "${content}"}`)}&csrf=${this.biliJct}&csrf_token=${this.biliJct}&msg[msg_status]=0&msg[new_face_version]=0&from_firework=0&build=0&mobi_app=web`;
+        
+        var headers = { ...this.getHeaders(), "Content-Type": "application/x-www-form-urlencoded" }
+        headers["Host"] = "api.vc.bilibili.com"
+        headers["Origin"] = "https://message.bilibili.com"
+        headers["Referer"] = "https://message.bilibili.com/"
+        headers["Content-Length"] = body.length
+
+        const response = await this.postRequestWbi(url, {
+            w_sender_uid: this.accountInfo.mid,
+            w_receiver_id: receiver_id,
+            w_dev_id: this.dm_deviceid
+        }, body, "application/x-www-form-urlencoded", headers);
+
+        return response.data
+    }
+
     // 根据UID批量获取用户信息
-    async getMultiUserInfoByUID(uids: Array<String>){
+    async getMultiUserInfoByUID(uids: Array<String>) {
         const url = "https://api.bilibili.com/x/polymer/pc-electron/v1/user/cards";
         let param = "";
         uids.forEach(uid => {
             param += uid
-            if(uids.indexOf(uid) != uids.length -1){
+            if (uids.indexOf(uid) != uids.length - 1) {
                 param += ","
             }
         });

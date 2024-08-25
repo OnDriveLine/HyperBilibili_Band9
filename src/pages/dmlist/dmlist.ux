@@ -39,7 +39,13 @@ export default {
 
     var session_uids = []
     this.sessions.forEach((session) => {
-      session_uids.push(session.talker_id)
+      if(session.talker_id){
+        session_uids.push(session.talker_id)
+      }
+      else{
+        // Pass掉非法UID
+        this.sessions = this.sessions.filter(item => item !== session)
+      }
     })
 
     this.session_cards = await this.$app.$def.biliclient.getMultiUserInfoByUID(session_uids)
