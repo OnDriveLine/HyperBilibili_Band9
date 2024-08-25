@@ -180,8 +180,8 @@ export default {
   async UpdateMessages(initial = false) {
     // 更新消息
     try {
-      const response = await this.$app.$def.biliclient.getDMSessionMessage(1, this.targetId, 30)
-      const newMessages = response.messages.reverse()
+      let response = await this.$app.$def.biliclient.getDMSessionMessage(1, this.targetId, 30)
+      let newMessages = response.messages.reverse()
 
       if (
         newMessages.length > 0 &&
@@ -196,6 +196,10 @@ export default {
         this.show_loading = false
         this.anims.loading.stop()
       }
+
+      // 释放内存，防止挂机OOM崩溃
+      response = null
+      newMessages = null
     } catch (error) {
       prompt.showToast({
         message: `更新消息失败！${error.message}`
