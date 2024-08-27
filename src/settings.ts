@@ -11,7 +11,7 @@ export let SETTINGS: SettingsInterface = {
   fresh_type: 3, //视频推荐相关度，范围1-3，根据大数据推送
   home_vid_count: 10,
   enableFullAnimation: false,
-  enableInterconnectMode: false
+  enableInterconnectMode: true
 };
 
 export function loadSettings(): void {
