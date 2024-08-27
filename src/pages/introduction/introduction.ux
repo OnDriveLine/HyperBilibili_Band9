@@ -9,16 +9,13 @@ import router from "@system.router"
 export default {
     private: {
         current_step: 0,
-        current_src: "/common/guides/circle/1_welcome.png",
+        current_src: "/common/guides/pill-shaped/1_welcome.png",
         current_device_step_count: 0,
         steps_map: {
             circle: [
-                "/common/guides/circle/1_welcome.png",
-                "/common/guides/circle/2_switchPage.png",
-                "/common/guides/circle/3_enterSearch.png",
-                "/common/guides/circle/4_videoDetailMoreFeatures.png",
-                "/common/guides/circle/5_replyMoreFeatures.png",
-                "/common/guides/circle/6_dontsupportvideoplay.png"
+            "/common/guides/pill-shaped/1_welcome.png",
+            "/common/guides/pill-shaped/2_switchPage.png",
+            "/common/guides/pill-shaped/3_videoDetailMoreFeatures.png",
             ],
             "pill-shaped": [
                 "/common/guides/pill-shaped/1_welcome.png",

@@ -3,12 +3,9 @@
 
 <template>
   <div class="page">
-    <image src="/common/rounddevices_bg.png"
-      style="position: absolute; transform: rotate({{ambientlight.rotatedeg}}); transform-origin: {{ambientlight.transform_origin}}; left: 0px">
-    </image>
     <scroll scroll-y="true" class="scroll">
-      <switch-bar title="首页"></switch-bar>
-      <text class="tip">{{ funnytip }}</text>
+      <switch-bar style="color: #ffffff" title="首页"></switch-bar>
+      <text class="tip" style="color: #ffffff">{{ funnytip }}</text>
       <image style="position: absolute; margin-top: 265px" if="{{show_loading}}" src="{{anims.loading_src.value}}">
       </image>
       <div class="recommend_div" if="{{show_recommend_div}}">
@@ -185,22 +182,22 @@ export default {
 }
 
 .recommend_div {
-  margin-top: 15px;
+  margin-top: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
   height: 100%;
-  width: 100%;
+  width: 185px;
 }
 
 .recommend_list {
-  width: 77%;
+  width: 185px;
   height: 100%;
 }
 
 .recommend_listitem {
   height: 170px;
-  width: 100%;
+  width: 185px;
   margin-top: 5px;
   display: flex;
   flex-direction: column;

@@ -64,7 +64,7 @@ export default {
 }
 
 .featurebtn {
-  width: 280px;
+  width: 185px;
   height: 65px;
   border-radius: 90px;
   background-color: #262626;
@@ -73,7 +73,7 @@ export default {
 }
 
 .featurebtn_text {
-  font-size: 24px;
+  font-size: 16px;
   font-weight: 600;
 }
 </style>

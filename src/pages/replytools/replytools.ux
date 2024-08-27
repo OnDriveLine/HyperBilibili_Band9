@@ -7,19 +7,19 @@
       <div class="dataicon" style="margin-left: 25px">
         <image class="toolicon" src="/common/replytools_like.png"></image>
       </div>
-      <text class="toolname" style="margin-left: 92px; position: absolute">点赞该评论</text>
+      <text class="toolname" style="margin-left: 75px; position: absolute">赞此评论</text>
     </div>
     <div class="toolbtn" style="margin-top: 10px" @click="ShowSecReplies()">
       <div class="dataicon" style="margin-left: 25px">
         <image class="toolicon" src="/common/replytools_showreplies.png"></image>
       </div>
-      <text class="toolname" style="margin-left: 92px; position: absolute">查看回复</text>
+      <text class="toolname" style="margin-left: 75px; position: absolute">查看回复</text>
     </div>
     <div class="toolbtn" style="margin-top: 10px" @click="ShowDetail()">
       <div class="dataicon" style="margin-left: 25px">
         <image class="toolicon" src="/common/replytools_showdetail.png"></image>
       </div>
-      <text class="toolname" style="margin-left: 92px; position: absolute">查看详情</text>
+      <text class="toolname" style="margin-left: 75px; position: absolute">查看详情</text>
     </div>
   </div>
 </template>
@@ -105,7 +105,7 @@ export default {
 }
 
 .toolbtn {
-  width: 280px;
+  width: 185px;
   height: 80px;
   border-radius: 25px;
   flex-direction: row;
@@ -126,7 +126,7 @@ export default {
 }
 
 .toolname {
-  font-size: 30px;
+  font-size: 24px;
   font-weight: 600;
 }
 </style>

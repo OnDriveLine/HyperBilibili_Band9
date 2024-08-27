@@ -3,10 +3,6 @@
 <template>
   <div class="page">
     <switch-bar title="我的"></switch-bar>
-    <div class="profdiv" style="margin-top: 20px">
-      <image src="{{accountInfo.face}}@106w_106h" alt="/common/fullgray.png" class="profimg"></image>
-      <image src="{{accountInfo.pendant.image}}@176w_176h" alt="/common/alphaimg.png" class="profpendantimg"></image>
-    </div>
     <text class="{{name_text_class}}">{{ accountInfo.uname }}</text>
     <div class="tagbar" style="margin-top: 5px">
       <image class="tagimg" src="/common/bililevel/lv{{accountInfo.level_info.current_level}}.png" style="height: 20px">
@@ -15,12 +11,12 @@
         src="/common/bilivip/{{accountInfo.vip_label.label_theme}}.png"></image>
       <image class="tagimg" if="{{is_senior_member}}" style="margin-left: 10px" src="/common/senior_member.png"></image>
     </div>
-    <div class="btnbase" style="margin-top: 40px" @click="GoMyFavFolders()">
+    <div class="btnbase" style="margin-top: 40px" @click="WIPTips()">
       <image class="btnimg" src="/common/mypage_star.png"></image>
       <text class="btntext">我的收藏</text>
       <image src="/common/arrow_right.png"></image>
     </div>
-    <div class="btnbase" style="margin-top: 10px" @click="GoHistory()">
+    <div class="btnbase" style="margin-top: 10px" @click="WIPTips()">
       <image class="btnimg" src="/common/mypage_history.png"></image>
       <text class="btntext">历史记录</text>
       <image src="/common/arrow_right.png"></image>
@@ -30,7 +26,7 @@
       <text class="btntext">稍后再看</text>
       <image src="/common/arrow_right.png"></image>
     </div>
-    <div class="btnbase" style="margin-top: 10px" @click="GoMessages()">
+    <div class="btnbase" style="margin-top: 10px" @click="WIPTips()">
       <image class="btnimg" src="/common/mypage_messager.png"></image>
       <text class="btntext">我的消息</text>
       <image src="/common/arrow_right.png"></image>
@@ -49,27 +45,9 @@ export default {
     is_senior_member: false,
     accountInfo: {}
   },
-  GoHistory(){
-    router.push({
-      uri: "pages/history"
-    })
-  },
-  GoMyFavFolders(){
-    router.push({
-      uri: "pages/favfolders",
-      params: {
-        user_mid: this.$app.$def.biliclient.accountInfo.mid
-      }
-    })
-  },
-  GoMessages(){
-    router.push({
-      uri: "pages/messages"
-    })
-  },
   WIPTips() {
     prompt.showToast({
-      message: "该功能还在开发中"
+      message: "您所使用的设备不支持该功能"
     })
   },
   UpdateShow() {
@@ -144,24 +122,24 @@ export default {
 }
 
 .btnbase {
-  width: 314px;
-  height: 93px;
+  width: 185px;
+  height: 65px;
   border-radius: 30px;
   background-color: #262626;
   align-items: center;
 }
 
 .btnimg {
-  margin-left: 22px;
-  width: 49px;
-  height: 52px;
+  margin-left: 5px;
+  width: 32px;
+  height: 35px;
   object-fit: contain;
 }
 
 .btntext {
-  margin-left: 22px;
-  width: 190px;
-  font-size: 35px;
+  margin-left: 5px;
+  width: 110px;
+  font-size: 25px;
   font-weight: 500;
 }
 </style>

@@ -38,7 +38,7 @@
       <text class="setext_small">关于应用</text>
       <image src="/common/arrow_right.png"></image>
     </div>
-    <image style="margin-top: 30px" src="/common/opensource_warning.png"></image>
+    <image class="warning" src="/common/opensource_warning.png"></image>
     <text style="margin-top: 25px"></text>
   </div>
 </template>
@@ -157,7 +157,7 @@ export default {
 }
 
 .setbase {
-  width: 291px;
+  width: 185px;
   height: 81px;
   border-radius: 30px;
   background-color: #262626;
@@ -166,18 +166,23 @@ export default {
   margin-top: 6px;
 }
 
+.warning {
+  width: 165px;
+  height: 59px;
+  margin-top: 30px
+}
 .seticon {
-  margin-left: 25px;
-  width: 42px;
-  height: 42px;
+  margin-left: 15px;
+  width: 32px;
+  height: 32px;
   object-fit: scale-down;
 }
 
 .setext_small {
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 600;
   margin-left: 15px;
-  width: 170px;
+  width: 85px;
 }
 
 .setext {
