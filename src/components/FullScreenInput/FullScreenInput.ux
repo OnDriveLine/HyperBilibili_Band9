@@ -2,7 +2,7 @@
 
 <template>
     <div class="inputpanel">
-        <input-method style="position: absolute" hide={{keyboardHide}} @complete="InputComplete" @delete="InputDelete" vibratemode="short"></input-method>
+        <input-method style="position: absolute" hide={{keyboardHide}} @complete="InputComplete" @delete="InputDelete" @screentype="{{screentype}}" vibratemode="short"></input-method>
         <div class="inputactions">
             <div style="margin-left: 35px" @click="ExitInput">
                 <image class="inputaction_img" src="/common/textinput_back.png"></image>
@@ -25,6 +25,9 @@ export default {
         },
         keyboardHide: {
             default: false
+        },
+        screentype: {
+            default: ""
         }
     },
     InputComplete(evt){
@@ -40,6 +43,14 @@ export default {
     },
     SendReply(){
         this.$emit("send")
+    },
+    async InitScreenType(){
+        if(!this.screentype){
+            this.screentype = (await this.$app.$def.tools.getDeviceInformation).screenShape
+        }
+    },
+    onInit(){
+        this.InitScreenType()
     }
 }
 </script>
