@@ -1,6 +1,9 @@
 # HyperBilibili （澎湃哔哩）
 在Vela嵌入式设备上基于QuickApp实现的第三方B站客户端
 
+# 前情提要
+本项目基于SearchStars [HyperBilibili](https://github.com/Searchstars/HyperBilibili)项目v2.2版本编写，为GPL-3.0项目开源
+
 ## 使用
 对于普通用户而非开发者，你只需要下载本应用的release版本（RPK文件）然后安装到你的设备上就行了。目前，我只会在米坛社区和Github上发布release版本，如果你想获得经过测试的稳定版本，请前往[米坛社区发布页](https://www.bandbbs.cn/threads/10200/)获取。如果你想紧跟代码提交的步伐，在手表上运行本项目最新且未经测试的不稳定开发版代码，请从本仓库的dist文件夹中直接下载rpk
 
