@@ -23,7 +23,7 @@ interface AccountData {
 
 class BilibiliClient {
     // 版本号
-    public version: string = "2.2";
+    public version: string = "2.3";
 
     // Fetch API
     // 会根据是否启用interconnect模式做出改变
