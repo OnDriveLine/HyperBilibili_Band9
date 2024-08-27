@@ -23,7 +23,7 @@ interface AccountData {
 
 class BilibiliClient {
     // 版本号
-    public version: string = "2.3";
+    public version: string = "2.2.9";
 
     // Fetch API
     // 会根据是否启用interconnect模式做出改变
@@ -173,7 +173,7 @@ class BilibiliClient {
         const latestVer = latestVerGet.data.data;
         if (latestVer != this.version) {
             return {
-                update: true,
+                update: false,
                 msg: `检查到更新v${latestVer}，请前往bandbbs.cn下载更新`
             };
         }
