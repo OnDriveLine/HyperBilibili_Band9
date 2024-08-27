@@ -14,10 +14,10 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v4.1.7
 
     - name: Set up Node.js
-      uses: actions/setup-node@v2
+      uses: actions/setup-node@v4.0.3
       with:
         node-version: '20'
 
@@ -28,7 +28,7 @@ jobs:
       run: npx aiot build
 
     - name: Upload rpk files
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4.3.6
       with:
         name: RPK
         path: dist/**/*.rpk
