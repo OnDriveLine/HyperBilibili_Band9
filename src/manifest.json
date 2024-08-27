@@ -91,6 +91,9 @@
       },
       "pages/donation": {
         "component": "donation"
+      },
+      "pages/interconnecthelper": {
+        "component": "interconnecthelper"
       }
     }
   }

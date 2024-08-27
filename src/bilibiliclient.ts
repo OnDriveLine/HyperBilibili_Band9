@@ -1,4 +1,5 @@
-import { fetch, storage, crypto } from './tsimports';
+import { fetch, storage, crypto, prompt } from './tsimports';
+import * as interconnectfetch from './interconnectfetch'
 
 // Wbi签名混淆表
 const mixinKeyEncTab = [
@@ -24,6 +25,16 @@ class BilibiliClient {
     // 版本号
     public version: string = "2.2";
 
+    // Fetch API
+    // 会根据是否启用interconnect模式做出改变
+    // 具体请看constructor
+    public fetch: any;
+
+    // Interconnect 再封装 Message API
+    public interconnecter: any;
+    // 是否启用interconnect联网方式
+    private interconnect_mode: boolean;
+
     // 扫码登录用的二维码Key
     private qrCodeKey: string | null = null;
 
@@ -36,7 +47,7 @@ class BilibiliClient {
     // B站账号信息（非AccountData）
     private accountInfo: any | null = null;
 
-    // 风控Cookies（不存储，登录时刷新）
+    // 风控Cookies（不存储，构建biliclient时更新）
     private buvid3: string | null = null;
     private buvid4: string | null = null;
 
@@ -46,6 +57,18 @@ class BilibiliClient {
         let randomInt = 16 * Math.random() | 0;
         return ("x" === name ? randomInt : 3 & randomInt | 8).toString(16).toUpperCase()
     }));
+
+    constructor(interconnectMode = false, interconnecter = null){
+        this.updateBUVID();
+        this.interconnect_mode = interconnectMode;
+        if(interconnectMode){
+            this.fetch = new interconnectfetch.fetch(interconnecter);
+            this.interconnecter = interconnecter
+        }
+        else{
+            this.fetch = fetch;
+        }
+    }
 
     // 获取请求头，用于模拟正常浏览器环境，降低风控概率
     private getHeaders(): Record<string, string> {
@@ -62,7 +85,11 @@ class BilibiliClient {
 
     // 构建Cookie字符串
     private getCookieString(): string {
-        return `SESSDATA=${this.sessData}; bili_jct=${this.biliJct}; DedeUserID=${this.dedeUserID}; sid=${this.sid}; buvid3=${this.buvid3}; buvid4=${this.buvid4}`;
+        var cookies = `buvid3=${this.buvid3}; buvid4=${this.buvid4}; `;
+        if(this.sessData){
+            cookies += `SESSDATA=${this.sessData}; bili_jct=${this.biliJct}; DedeUserID=${this.dedeUserID}; sid=${this.sid}; `
+        }
+        return cookies;
     }
 
     // Wbi签名
@@ -86,7 +113,7 @@ class BilibiliClient {
     private async getRequest(url: string): Promise<any> {
         console.log("getRequest: " + url);
         try {
-            const response = await fetch.fetch({
+            const response = await this.fetch.fetch({
                 url,
                 responseType: 'json',
                 header: this.getHeaders()
@@ -114,7 +141,7 @@ class BilibiliClient {
             headers = custom_headers
         }
         try {
-            const response = await fetch.fetch({
+            const response = await this.fetch.fetch({
                 url,
                 responseType: 'json',
                 method: 'POST',
@@ -138,7 +165,7 @@ class BilibiliClient {
 
     // 检查澎湃哔哩是否存在更新
     async checkHyperbilibiliUpdates(): Promise<any> {
-        const latestVerGet = await fetch.fetch({
+        const latestVerGet = await this.fetch.fetch({
             url: "https://gitee.com/search__stars/hb_ota_info/raw/master/current_ver",
             header: this.getHeaders()
         });
@@ -159,6 +186,12 @@ class BilibiliClient {
         const response = await this.getRequest('https://passport.bilibili.com/x/passport-login/web/qrcode/generate');
         if (response && response.data) {
             this.qrCodeKey = response.data.data.qrcode_key;
+            if(this.interconnect_mode){
+                await this.interconnecter.sendMessage(JSON.stringify({
+                    msgtype: "SHOWQR",
+                    message: response.data.data.url
+                }))
+            }
             return { url: response.data.data.url, qrcode_key: response.data.data.qrcode_key };
         } else {
             throw new Error('获取二维码失败');

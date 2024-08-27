@@ -5,16 +5,22 @@ import * as tools from "./tools"
 import * as funnytips from "./funnytips"
 import * as settings from "./settings"
 import * as ambientlight from "./ambientlight"
+import * as jumpcheck from "./jumpcheck"
+import * as interconnecter from "./interconnecter"
 export default {
   animengine: animengine,
-  biliclient: new BilibiliClient(),
+  biliclient: null,
   tools: tools,
   funnytips: funnytips,
   settings: settings,
   ambientlight: ambientlight,
+  jumpcheck: jumpcheck,
+  interconnecter: interconnecter,
   onCreate() {
     console.log("app created")
     settings.loadSettings()
+    
+    this.biliclient = new BilibiliClient(this.settings.SETTINGS.enableInterconnectMode, this.interconnecter)
   },
   onDestroy() {
     console.log("app destroyed")

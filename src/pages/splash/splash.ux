@@ -11,7 +11,6 @@
 
 <script>
 import router from "@system.router"
-import storage from "@system.storage"
 export default {
   private: {
     anims: {
@@ -26,22 +25,6 @@ export default {
         }
       }
     }
-  },
-  async JumpCheck() {
-    storage.get({
-      key: "bilibili_account",
-      success: async (bilibili_account) => {
-        if (bilibili_account.length < 1) {
-          router.replace({
-            uri: "pages/login"
-          })
-        } else {
-          router.replace({
-            uri: "pages/prepage"
-          })
-        }
-      }
-    })
   },
   onShow() {
     this.anims.splash = new this.$app.$def.animengine.DomAnim(
@@ -64,7 +47,16 @@ export default {
     setTimeout(() => {
       this.anims.splash_out.start()
       setTimeout(() => {
-        this.JumpCheck()
+        if(this.$app.$def.jumpcheck.NetworkCheck() || this.$app.$def.settings.SETTINGS.enableInterconnectMode){
+          if(this.$app.$def.settings.SETTINGS.enableInterconnectMode){
+            router.replace({
+              uri: "pages/interconnecthelper"
+            })
+          }
+          else{
+            this.$app.$def.jumpcheck.Jump()
+          }
+        }
       }, 500)
     }, 1000)
   },

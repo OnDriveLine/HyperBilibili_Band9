@@ -1,0 +1,35 @@
+<template>
+  <div class="page">
+    <text>等待连接手机</text>
+  </div>
+</template>
+
+<script>
+export default {
+    private: {
+        checktimer: null
+    },
+    onInit(){
+        this.checktimer = setInterval(() => {
+            if(this.$app.$def.interconnecter.CONNECTION_OPEN){
+                this.$app.$def.jumpcheck.Jump()
+            }
+        }, 1000)
+    },
+    onDestroy(){
+        clearInterval(this.checktimer)
+    }
+}
+</script>
+
+<style>
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+</style>
