@@ -37,15 +37,15 @@
           <image class="vidtoolimg" src="/common/vidtool_aisummary.png"></image>
           <text class="vidtooltext">视频总结</text>
         </div>
-        <div class="vidtool" @click="">
+        <div class="vidtool" @click="WIPTips">
           <image class="vidtoolimg" src="/common/vidtool_generatemanifest.png"></image>
           <text class="vidtooltext">视频清单</text>
         </div>
-        <div class="vidtool" @click="">
+        <div class="vidtool" @click="WIPTips">
           <image class="vidtoolimg" src="/common/vidtool_watchlater.png"></image>
           <text class="vidtooltext">稍后再看</text>
         </div>
-        <div class="vidtool" @click="">
+        <div class="vidtool" @click="WIPTips">
           <image class="vidtoolimg" src="/common/vidtool_watchonphone.png"></image>
           <text class="vidtooltext">手机上看</text>
         </div>
@@ -82,6 +82,11 @@ export default {
   onInit() {
     this.GetVideoDetail()
     this.UpdateVideoToolbarStatus()
+  },
+  WIPTips(){
+    prompt.showToast({
+      message: "该功能仍在开发中"
+    })
   },
   async GetVideoDetail() {
     this.vid = await this.$app.$def.biliclient.getVideoInfoByBVID(this.bvid)

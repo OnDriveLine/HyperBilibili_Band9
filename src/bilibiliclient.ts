@@ -71,7 +71,7 @@ class BilibiliClient {
     }
 
     // 获取请求头，用于模拟正常浏览器环境，降低风控概率
-    private getHeaders(): Record<string, string> {
+    getHeaders(): Record<string, string> {
         return {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/jxl,image/webp,image/png,image/svg+xml,*/*;q=0.8',
             'Accept-Encoding': '',
@@ -521,6 +521,22 @@ class BilibiliClient {
         });
         const response = await this.getRequest(`${url}?uids=${param}`)
 
+        return response.data.data
+    }
+
+    // 根据BVID与CID获取视频MP4流地址
+    // qn: 32=480p 64=720p
+    async getVideoMP4StreamByBVID(cid: string, bvid: string, qn: string = "32"){
+        const url = `https://api.bilibili.com/x/player/wbi/playurl`
+        const response = await this.getRequestWbi(url, {
+            cid,
+            bvid,
+            qn,
+            fnval: "1",
+            platform: "html5"
+        })
+
+        console.log(response)
         return response.data.data
     }
 

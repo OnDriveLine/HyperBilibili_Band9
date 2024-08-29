@@ -39,3 +39,9 @@ export function getDeviceInformation(): Promise<any> {
         });
     });
 }
+
+export function unicodeToString(unicodeStr) {
+    return unicodeStr.replace(/\\u([\dA-F]{4})/gi, function (match, grp) {
+        return String.fromCharCode(parseInt(grp, 16));
+    });
+}
