@@ -44,7 +44,7 @@
         <div class="swiper_container">
           <list if={{typebar_if.c2}} style="width: 100%; height: 100%; justify-content: center" @scroll="ScrollOverviewCheck">
             <list-item type="videos" style="width: 100%; height: 170px; justify-content: center" for="{{search.videos}}">
-              <div style="width: 77%; justify-content: center; margin-top: 5px">
+              <div style="width: 77%; justify-content: center; margin-top: 5px" onclick="OpenVideo({{$item.bvid}})">
                 <videoshow video="{{$item}}"></videoshow>
               </div>
             </list-item>
@@ -53,7 +53,7 @@
         </div>
         <div class="swiper_container">
           <list if={{typebar_if.c3}} style="width: 100%; height: 100%; justify-content: center" @scroll="ScrollOverviewCheck">
-            <list-item type="users" style="width: 100%; height: 99px; justify-content: center" for="{{search.users}}">
+            <list-item type="users" style="width: 100%; height: 99px; justify-content: center; margin-top: 5px" for="{{search.users}}">
               <user user="{{$item}}"></user>
             </list-item>
             <list-item type="placeholder" style="width: 100%; height: 100px"></list-item>
@@ -136,16 +136,34 @@ export default {
   },
   // 搜索结果返回的信息烂到不能用，进行一个patch操作
   async PatchSearchResult() {
-    this.search.videos = await Promise.all(
-      this.search.videos.map(async (vid) => {
-        return await this.$app.$def.biliclient.getVideoInfoByBVID(vid.bvid)
+    var videos = []
+    var comprehensive_videos = []
+    this.search.videos.forEach(video => {
+      videos.push({
+        pic: video.pic,
+        title: video.title.replace("<em class=\"keyword\">", "").replace("</em>", ""),
+        owner: {
+          name: video.author
+        },
+        stat: {
+          view: video.play
+        }
       })
-    )
-    this.search.comprehensive_videos = await Promise.all(
-      this.search.comprehensive_videos.map(async (vid) => {
-        return await this.$app.$def.biliclient.getVideoInfoByBVID(vid.bvid)
+    });
+    this.search.comprehensive_videos.forEach(video => {
+      comprehensive_videos.push({
+        pic: video.pic,
+        title: video.title.replace("<em class=\"keyword\">", "").replace("</em>", ""),
+        owner: {
+          name: video.author
+        },
+        stat: {
+          view: video.play
+        }
       })
-    )
+    });
+    this.search.videos = videos
+    this.search.comprehensive_videos = comprehensive_videos
 
     if (this.search.users.length < 1) {
       this.comprehensive_status.has_users_result = false
@@ -160,6 +178,10 @@ export default {
 
     this.search = await this.$app.$def.biliclient.searchContents(this.keyword, 10)
     await this.PatchSearchResult()
+
+    // 深度搜索用户
+    var users = await this.$app.$def.biliclient.searchContentWithType(this.keyword, "bili_user")
+    this.search.users = users.result
 
     this.show_loading = false
     this.anims.loading.stop()

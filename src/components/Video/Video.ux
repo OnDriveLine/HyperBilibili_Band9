@@ -20,7 +20,12 @@
 
 <script>
 export default {
-    props: ["video"]
+  props: ["video"],
+  onInit(){
+    if(!(this.video.pic.includes("http://") || this.video.pic.includes("https://"))){
+      this.video.pic = "https:" + this.video.pic
+    }
+  }
 }
 </script>
 

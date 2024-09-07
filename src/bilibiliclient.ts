@@ -23,7 +23,7 @@ interface AccountData {
 
 class BilibiliClient {
     // 版本号
-    public version: string = "2.3";
+    public version: string = "2.4";
 
     // Fetch API
     // 会根据是否启用interconnect模式做出改变
@@ -447,6 +447,30 @@ class BilibiliClient {
         result.videos = result.videos.slice(0, vidcount)
 
         return result;
+    }
+
+    // 全站搜索，但是按类型细分
+    /* SearchType可取：
+        视频：video
+        番剧：media_bangumi
+        影视：media_ft
+        直播间及主播：live
+        直播间：live_room
+        主播：live_user
+        专栏：article
+        话题：topic
+        用户：bili_user
+        相簿：photo
+    */
+    async searchContentWithType(keyword: string, search_type: string){
+        console.log("[searchContentWithType] keyword=" + keyword+ " type=" + search_type)
+        const url = "https://api.bilibili.com/x/web-interface/wbi/search/type"
+        const response = await this.getRequestWbi(url, {
+            keyword,
+            search_type
+        })
+
+        return response.data.data;
     }
 
     // 获取通知信息数量 （例如回复我的、at我的、点赞数量）
