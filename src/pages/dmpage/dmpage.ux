@@ -4,7 +4,7 @@
 <template>
   <div class="page">
     <image style="position: absolute; margin-top: 233px" if="{{show_loading}}" src="{{anims.loading_src.value}}"></image>
-    <scroll class="scroll" scroll-y="true" id="mainscroll">
+    <scroll class="scroll" scroll-y="true" id="mainscroll" bounces="true">
       <div for="{{messages}}">
         <div class="targetmsg-container" if="{{$item.receiver_id == myId}}">
           <div class="targetmsg"

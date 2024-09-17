@@ -3,7 +3,7 @@
 
 <template>
   <div class="page">
-    <scroll scroll-y="true" class="maindiv">
+    <scroll scroll-y="true" class="maindiv" bounces="true">
       <title-bar title="视频"></title-bar>
       <image src="{{vid.pic}}@319w_150h" alt="/common/grayloading_cn.png" class="vidpic"></image>
       <text class="vidtitle">{{ vid.title }}</text>
@@ -18,7 +18,7 @@
           <text class="statext">{{ vid.owner.name }}</text>
         </div>
       </div>
-      <scroll scroll-x="true" class="vidtoolbar" style="margin-top: 25px">
+      <scroll scroll-x="true" class="vidtoolbar" style="margin-top: 25px" bounces="true">
         <div class="vidtool" style="margin-left: 0px" @click="LikeClick()" @longpress="PowerIt()">
           <image class="vidtoolimg" src="{{likesrc}}"></image>
           <text class="vidtooltext">{{ this.$app.$def.tools.formatNumber(vid.stat.like) }}</text>

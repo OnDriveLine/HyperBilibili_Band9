@@ -6,7 +6,7 @@
     <image src="/common/rounddevices_bg.png"
       style="position: absolute; transform: rotate({{ambientlight.rotatedeg}}); transform-origin: {{ambientlight.transform_origin}}; left: 0px">
     </image>
-    <scroll scroll-y="true" class="scroll">
+    <scroll scroll-y="true" class="scroll" bounces="true">
       <switch-bar title="首页"></switch-bar>
       <text class="tip">{{ funnytip }}</text>
       <image style="position: absolute; margin-top: 265px" if="{{show_loading}}" src="{{anims.loading_src.value}}">

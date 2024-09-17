@@ -1,6 +1,6 @@
 <template>
     <div class="page">
-        <scroll class="scroll" scroll-y="true" @scrollbottom="DoScrollTip">
+        <scroll class="scroll" scroll-y="true" @scrollbottom="DoScrollTip" bounces="true">
             <text class="time">{{time}}</text>
             <div class="btnline" style="margin-top: 15px;">
                 <div class="btn" onclick="GoPage({{pages[0]}})">
