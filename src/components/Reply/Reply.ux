@@ -74,9 +74,8 @@ export default {
 .username {
   font-size: 20px;
   font-weight: 600;
-  width: 160px;
+  max-width: 160px;
   max-height: 25px;
-  text-overflow: ellipsis;
 }
 
 .replycontentdiv {

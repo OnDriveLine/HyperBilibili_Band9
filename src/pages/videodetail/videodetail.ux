@@ -80,6 +80,7 @@ export default {
     input_text: {content: ""}
   },
   onInit() {
+    console.log("[videodetail] load bvid: " + this.bvid);
     this.GetVideoDetail()
     this.UpdateVideoToolbarStatus()
   },

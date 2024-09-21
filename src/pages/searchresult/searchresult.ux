@@ -62,7 +62,7 @@
           </scroll>
         </div>
         <div class="swiper_box">
-          <text style="margin-top: -155px; font-weight: 600">暂不支持</text>
+          <text style="margin-top: -155px; font-weight: 600; width: 100%; text-align: center">暂不支持</text>
         </div>
       </swiper>
     </scroll>
@@ -131,6 +131,8 @@ export default {
     }
   },
   OpenVideo(bvid) {
+    global.runGC()
+    console.log("[searchresult -> videodetail] open bvid: " + bvid);
     router.push({
       uri: "pages/videodetail",
       params: {bvid}
@@ -149,7 +151,8 @@ export default {
         },
         stat: {
           view: video.play
-        }
+        },
+        bvid: video.bvid
       })
     })
     this.search.comprehensive_videos.forEach((video) => {
@@ -161,7 +164,8 @@ export default {
         },
         stat: {
           view: video.play
-        }
+        },
+        bvid: video.bvid
       })
     })
     this.search.videos = videos

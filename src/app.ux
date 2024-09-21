@@ -2,11 +2,13 @@
 import * as animengine from "./animengine"
 import { BilibiliClient }  from "./bilibiliclient"
 import * as tools from "./tools"
+import * as articletools from "./articletools"
 import * as funnytips from "./funnytips"
 import * as settings from "./settings"
 import * as ambientlight from "./ambientlight"
 import * as jumpcheck from "./jumpcheck"
 import * as interconnecter from "./interconnecter"
+import * as htmlparser from "./htmlparser"
 export default {
   animengine: animengine,
   biliclient: null,
@@ -16,6 +18,8 @@ export default {
   ambientlight: ambientlight,
   jumpcheck: jumpcheck,
   interconnecter: interconnecter,
+  articletools: articletools,
+  htmlparser: htmlparser,
   onCreate() {
     console.log("app created")
     settings.loadSettings()

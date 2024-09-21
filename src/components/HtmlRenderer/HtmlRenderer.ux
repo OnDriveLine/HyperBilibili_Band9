@@ -1,0 +1,120 @@
+<import name="html-renderer" src="./HtmlRenderer.ux"></import>
+
+<template>
+  <div class="compbase">
+    <div for="{{doms}}" style="justify-content: center">
+      <!-- 段落 p -->
+      <text class="p" if="{{$item.type === 'p' ? true : false}}" style="{{$item.style}}">
+        {{ $item.text }}
+      </text>
+
+      <!-- 标题 h1 -->
+      <text class="h1" if="{{$item.type === 'h1' ? true : false}}" style="{{$item.style}}">
+        {{ $item.text }}
+      </text>
+
+      <!-- 标题 h2 -->
+      <text class="h2" if="{{$item.type === 'h2' ? true : false}}" style="{{$item.style}}">
+        {{ $item.text }}
+      </text>
+
+      <!-- span 标签 -->
+      <text class="span" if="{{$item.type === 'span' ? true : false}}" style="{{$item.style}}">
+        {{ $item.text }}
+      </text>
+
+      <!-- strong 标签（加粗） -->
+      <text class="strong" if="{{$item.type === 'strong' ? true : false}}" style="{{$item.style}}">
+        {{ $item.text }}
+      </text>
+
+      <!-- blockquote 标签 -->
+      <text class="blockquote" if="{{$item.type === 'blockquote' ? true : false}}" style="{{$item.style}}">
+        {{ $item.text }}
+      </text>
+
+      <!-- 换行 br -->
+      <div class="br" if="{{$item.type === 'br' ? true : false}}" style="{{$item.style}}"></div>
+
+      <!-- img图片 -->
+      <image class="img" if="{{$item.type === 'img' ? true : false}}" style="{{$item.style}}"
+        src="{{$item.attributes.src}}" onclick="openImage({{$item.attributes.src}})"></image>
+
+      <!-- 一些renderer专有元素 -->
+      <!-- 不支持显示的图片的文字提示 -->
+      <text style="font-size: 16px; color: gray" if="{{$item.type === 'hbhtmlrenderer-notsupportimage-tip' ? true : false}}" style="{{$item.style}}">
+        {{ $item.text }}
+      </text>
+
+      <!-- 递归渲染子元素 -->
+      <html-renderer if="{{$item.children.length > 0}}" doms="{{$item.children}}"></html-renderer>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: ["doms"],
+  onInit() {
+    if (this.doms) {
+      console.log("[html-renderer] doms存在且有效，开始渲染")
+    } else {
+      console.log("[html-renderer] doms无效，拒绝渲染")
+    }
+  },
+  openImage(src){
+    console.log("[html-renderer] image clicked. openImage src=" + src)
+    this.$emit("openImage", {
+      src: src
+    })
+  }
+}
+</script>
+
+<style>
+.compbase {
+  flex-direction: column;
+}
+
+.h1 {
+  font-size: 34px;
+  font-weight: 600;
+}
+
+.h2 {
+  font-size: 30px;
+  font-weight: 500;
+}
+
+.p {
+  font-size: 26px;
+}
+
+.span {
+  font-size: 24px;
+}
+
+.strong {
+  font-weight: bold;
+  font-size: 26px;
+}
+
+.blockquote {
+  font-style: italic;
+  margin-left: 10px;
+  border-left: 3px solid #ccc;
+  padding-left: 10px;
+}
+
+.br {
+  margin-top: 2px;
+}
+
+.img {
+  width: 100%;
+  height: 250px;
+  object-fit: contain;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+</style>

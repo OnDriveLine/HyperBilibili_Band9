@@ -110,12 +110,12 @@ class BilibiliClient {
     }
 
     // 发送GET请求
-    private async getRequest(url: string): Promise<any> {
+    private async getRequest(url: string, responseType: string = "json"): Promise<any> {
         console.log("getRequest: " + url);
         try {
             const response = await this.fetch.fetch({
                 url,
-                responseType: 'json',
+                responseType: responseType,
                 header: this.getHeaders()
             });
             return response.data;
@@ -562,6 +562,14 @@ class BilibiliClient {
 
         console.log(response)
         return response.data.data
+    }
+
+    // 获取专栏网页HTML（需要过parser才能使用）
+    async getArticle(cvid: string): Promise<any>{
+        const url = `https://www.bilibili.com/read/${cvid}`;
+        const response = await this.getRequest(url, "text");
+
+        return response.data;
     }
 
     // 退出登录（删除本地存储的账号数据）

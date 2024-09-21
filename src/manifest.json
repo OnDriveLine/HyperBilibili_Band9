@@ -94,6 +94,9 @@
       },
       "pages/interconnecthelper": {
         "component": "interconnecthelper"
+      },
+      "pages/articleshow": {
+        "component": "articleshow"
       }
     }
   }

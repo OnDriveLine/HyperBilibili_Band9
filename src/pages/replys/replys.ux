@@ -32,7 +32,9 @@ export default {
     type: 1,
     oid: "",
     replycount: 0,
+    // 仅二级评论需要提供
     rootrpid: "",
+    // 是否处在二级评论中
     secmode: false
   },
   private: {

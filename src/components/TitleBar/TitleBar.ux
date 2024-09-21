@@ -24,4 +24,10 @@ export default {
   align-items: center;
   justify-content: center;
 }
+
+@media (width: 336) {
+  .titlebar {
+    width: 90%;
+  }
+}
 </style>

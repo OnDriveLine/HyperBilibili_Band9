@@ -65,8 +65,7 @@ export default {
     }
   },
   OpenVideo(bvid) {
-    console.log("openvid: " + bvid)
-    router.push({
+    router.replace({
       uri: "pages/videodetail",
       params: {bvid}
     })
