@@ -62,7 +62,15 @@
           </scroll>
         </div>
         <div class="swiper_box">
-          <text style="margin-top: -155px; font-weight: 600; width: 100%; text-align: center">暂不支持</text>
+          <scroll if="{{typebar_if.c4}}"  class="swiper_container" scroll-y="true"
+          @scroll="ScrollOverviewCheck">
+            <div class="articlebg"
+              for="{{search.articles}}" onclick="OpenArticle({{$item.id}})">
+              <text class="articletitle" style="margin-left: 18px">{{$item.title}}</text>
+              <text style="font-size: 20px; font-weight: 600; color: #9E9E9E; margin-top: 6px; margin-left: 18px">类型：{{$item.category_name}}</text>
+            </div>
+            <text style="margin-top: 30px"></text>
+          </scroll>
         </div>
       </swiper>
     </scroll>
@@ -130,6 +138,15 @@ export default {
       this.overview_mode = false
     }
   },
+  OpenArticle(id){
+    global.runGC()
+    router.push({
+      uri: "pages/articleshow",
+      params: {
+        cvid: "cv" + id
+      }
+    })
+  },
   OpenVideo(bvid) {
     global.runGC()
     console.log("[searchresult -> videodetail] open bvid: " + bvid);
@@ -140,54 +157,75 @@ export default {
   },
   // 搜索结果返回的信息烂到不能用，进行一个patch操作
   async PatchSearchResult() {
-    var videos = []
-    var comprehensive_videos = []
-    this.search.videos.forEach((video) => {
-      videos.push({
-        pic: video.pic,
-        title: video.title.replace('<em class="keyword">', "").replace("</em>", ""),
-        owner: {
-          name: video.author
-        },
-        stat: {
-          view: video.play
-        },
-        bvid: video.bvid
+    try{
+      var videos = []
+      var comprehensive_videos = []
+      var articles = []
+      this.search.videos.forEach((video) => {
+        videos.push({
+          pic: video.pic,
+          title: video.title.replace(/<\/?[^>]+(>|$)/g, "").trim(),
+          owner: {
+            name: video.author
+          },
+          stat: {
+            view: video.play
+          },
+          bvid: video.bvid
+        })
       })
-    })
-    this.search.comprehensive_videos.forEach((video) => {
-      comprehensive_videos.push({
-        pic: video.pic,
-        title: video.title.replace('<em class="keyword">', "").replace("</em>", ""),
-        owner: {
-          name: video.author
-        },
-        stat: {
-          view: video.play
-        },
-        bvid: video.bvid
+      console.log("[searchresult.PatchSearchResult] Patched Videos")
+      this.search.comprehensive_videos.forEach((video) => {
+        comprehensive_videos.push({
+          pic: video.pic,
+          title: video.title.replace(/<\/?[^>]+(>|$)/g, "").trim(),
+          owner: {
+            name: video.author
+          },
+          stat: {
+            view: video.play
+          },
+          bvid: video.bvid
+        })
       })
-    })
-    this.search.videos = videos
-    this.search.comprehensive_videos = comprehensive_videos
+      console.log("[searchresult.PatchSearchResult] Patched Comprehensive Videos")
+      this.search.articles.forEach((article) => {
+        article.title = article.title.replace(/<\/?[^>]+(>|$)/g, "").trim()
+        articles.push(article)
+      });
+      console.log("[searchresult.PatchSearchResult] Patched Articles")
 
-    if (this.search.users.length < 1) {
-      this.comprehensive_status.has_users_result = false
+      this.search.videos = videos
+      this.search.comprehensive_videos = comprehensive_videos
+      this.search.articles = articles
+
+      if (this.search.users.length < 1) {
+        this.comprehensive_status.has_users_result = false
+      }
+      if (this.search.videos.length < 1) {
+        this.comprehensive_status.has_video_result = false
+      }
     }
-    if (this.search.videos.length < 1) {
-      this.comprehensive_status.has_video_result = false
+    catch(e){
+      console.error("[searchresult.PatchSearchResult] Patch Error: " + e.toString())
     }
   },
   async DoSearch() {
     this.show_loading = true
     this.anims.loading.start()
 
+    // 搜视频+推荐用户
     this.search = await this.$app.$def.biliclient.searchContents(this.keyword, 10)
-    await this.PatchSearchResult()
-
     // 深度搜索用户
     var users = await this.$app.$def.biliclient.searchContentWithType(this.keyword, "bili_user")
     this.search.users = users.result
+    // 搜索专栏
+    var articles = await this.$app.$def.biliclient.searchContentWithType(this.keyword, "article")
+    this.search.articles = articles.result
+
+    await this.PatchSearchResult()
+
+    console.log(this.search.articles)
 
     this.show_loading = false
     this.anims.loading.stop()
@@ -274,5 +312,25 @@ export default {
 .swiper_box {
   width: 100%;
   height: 100%;
+}
+
+.articlebg {
+  width: 72%; 
+  min-height: 120px; 
+  max-height: 120px; 
+  justify-content: center; 
+  margin-top: 5px; 
+  background-color: #262626af;
+  flex-direction: column;
+  border-radius: 24px;
+}
+
+.articletitle {
+  font-size: 24px;
+  font-weight: 600;
+  margin-top: 13px;
+  width: 89%;
+  max-height: 70px;
+  text-overflow: ellipsis;
 }
 </style>

@@ -29,6 +29,9 @@
 <script>
 import router from "@system.router"
 export default {
+  public: {
+    cvid: ""
+  },
   private: {
     article_html: "",
     article: {},
@@ -52,7 +55,7 @@ export default {
     this.show_loading = true
     this.anims.loading.start()
 
-    this.article_html = await this.$app.$def.biliclient.getArticle("cv821389")
+    this.article_html = await this.$app.$def.biliclient.getArticle(this.cvid)
     this.article = this.$app.$def.articletools.parseArticlePageHtml(this.article_html)
     console.log(this.article)
     this.article_content = this.$app.$def.htmlparser.parseContentHtml(this.article.readInfo.content)
