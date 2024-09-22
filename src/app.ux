@@ -9,6 +9,7 @@ import * as ambientlight from "./ambientlight"
 import * as jumpcheck from "./jumpcheck"
 import * as interconnecter from "./interconnecter"
 import * as htmlparser from "./htmlparser"
+import * as savedcontent from "./savedcontent"
 export default {
   animengine: animengine,
   biliclient: null,
@@ -20,10 +21,11 @@ export default {
   interconnecter: interconnecter,
   articletools: articletools,
   htmlparser: htmlparser,
-  onCreate() {
+  savedcontent: savedcontent,
+  async onCreate() {
     console.log("app created")
     settings.loadSettings()
-    
+    await this.savedcontent.SavedContentManager.initialize()
     this.biliclient = new BilibiliClient(this.settings.SETTINGS.enableInterconnectMode, this.interconnecter)
   },
   onDestroy() {

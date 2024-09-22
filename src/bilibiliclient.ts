@@ -394,7 +394,6 @@ class BilibiliClient {
     async getSearchHotwords(): Promise<any> {
         const url = "https://s.search.bilibili.com/main/hotword";
         const response = await this.getRequest(url);
-        console.log(response);
         return response.data.list;
     }
 

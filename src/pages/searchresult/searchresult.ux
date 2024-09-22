@@ -1,6 +1,7 @@
 <import name="switch-bar" src="../../components/SwitchBar/SwitchBar.ux"></import>
 <import name="user" src="../../components/User/User.ux"></import>
 <import name="videoshow" src="../../components/Video/Video.ux"></import>
+<import name="articleshow" src="../../components/Article/Article.ux"></import>
 
 <template>
   <div class="page">
@@ -64,10 +65,8 @@
         <div class="swiper_box">
           <scroll if="{{typebar_if.c4}}"  class="swiper_container" scroll-y="true"
           @scroll="ScrollOverviewCheck">
-            <div class="articlebg"
-              for="{{search.articles}}" onclick="OpenArticle({{$item.id}})">
-              <text class="articletitle" style="margin-left: 18px">{{$item.title}}</text>
-              <text style="font-size: 20px; font-weight: 600; color: #9E9E9E; margin-top: 6px; margin-left: 18px">类型：{{$item.category_name}}</text>
+            <div style="flex-direction: column; align-items: center; width: 100%" for="{{search.articles}}" onclick="OpenArticle('{{$item.title}}', {{$item.id}})">
+              <articleshow article="{{$item}}"></articleshow>
             </div>
             <text style="margin-top: 30px"></text>
           </scroll>
@@ -138,12 +137,13 @@ export default {
       this.overview_mode = false
     }
   },
-  OpenArticle(id){
+  OpenArticle(title, id){
     global.runGC()
     router.push({
-      uri: "pages/articleshow",
+      uri: "pages/articlesave",
       params: {
-        cvid: "cv" + id
+        cvid: "cv" + id,
+        cvtitie: title
       }
     })
   },
@@ -155,60 +155,47 @@ export default {
       params: {bvid}
     })
   },
-  // 搜索结果返回的信息烂到不能用，进行一个patch操作
   async PatchSearchResult() {
-    try{
-      var videos = []
-      var comprehensive_videos = []
-      var articles = []
-      this.search.videos.forEach((video) => {
-        videos.push({
-          pic: video.pic,
-          title: video.title.replace(/<\/?[^>]+(>|$)/g, "").trim(),
-          owner: {
-            name: video.author
-          },
-          stat: {
-            view: video.play
-          },
-          bvid: video.bvid
-        })
-      })
-      console.log("[searchresult.PatchSearchResult] Patched Videos")
-      this.search.comprehensive_videos.forEach((video) => {
-        comprehensive_videos.push({
-          pic: video.pic,
-          title: video.title.replace(/<\/?[^>]+(>|$)/g, "").trim(),
-          owner: {
-            name: video.author
-          },
-          stat: {
-            view: video.play
-          },
-          bvid: video.bvid
-        })
-      })
-      console.log("[searchresult.PatchSearchResult] Patched Comprehensive Videos")
-      this.search.articles.forEach((article) => {
-        article.title = article.title.replace(/<\/?[^>]+(>|$)/g, "").trim()
-        articles.push(article)
-      });
-      console.log("[searchresult.PatchSearchResult] Patched Articles")
+   // 使用局部变量来减少内存占用
+   let videos = []
+   let comprehensive_videos = []
+   let articles = []
 
-      this.search.videos = videos
-      this.search.comprehensive_videos = comprehensive_videos
-      this.search.articles = articles
+   this.search.videos.forEach((video) => {
+      videos.push({
+         pic: video.pic,
+         title: video.title.replace(/<\/?[^>]+(>|$)/g, "").trim(),
+         owner: { name: video.author },
+         stat: { view: video.play },
+         bvid: video.bvid
+      })
+   })
+   console.log("[searchresult.PatchSearchResult] Patched Videos")
 
-      if (this.search.users.length < 1) {
-        this.comprehensive_status.has_users_result = false
-      }
-      if (this.search.videos.length < 1) {
-        this.comprehensive_status.has_video_result = false
-      }
-    }
-    catch(e){
-      console.error("[searchresult.PatchSearchResult] Patch Error: " + e.toString())
-    }
+   this.search.comprehensive_videos.forEach((video) => {
+      comprehensive_videos.push({
+         pic: video.pic,
+         title: video.title.replace(/<\/?[^>]+(>|$)/g, "").trim(),
+         owner: { name: video.author },
+         stat: { view: video.play },
+         bvid: video.bvid
+      })
+   })
+   console.log("[searchresult.PatchSearchResult] Patched Comprehensive Videos")
+
+   this.search.articles.forEach((article) => {
+      article.title = article.title.replace(/<\/?[^>]+(>|$)/g, "").trim()
+      articles.push(article)
+   })
+   console.log("[searchresult.PatchSearchResult] Patched Articles")
+
+   // 原地更新避免重新开辟内存
+   this.search.videos.splice(0, this.search.videos.length, ...videos)
+   this.search.comprehensive_videos.splice(0, this.search.comprehensive_videos.length, ...comprehensive_videos)
+   this.search.articles.splice(0, this.search.articles.length, ...articles)
+
+   this.comprehensive_status.has_users_result = this.search.users.length > 0
+   this.comprehensive_status.has_video_result = this.search.videos.length > 0
   },
   async DoSearch() {
     this.show_loading = true
@@ -225,12 +212,11 @@ export default {
 
     await this.PatchSearchResult()
 
-    console.log(this.search.articles)
-
     this.show_loading = false
     this.anims.loading.stop()
   },
   onInit() {
+    global.runGC()
     this.UpdateTypeBarColors({index: 0})
 
     this.anims.loading = new this.$app.$def.animengine.SequenceAnim(
@@ -312,25 +298,5 @@ export default {
 .swiper_box {
   width: 100%;
   height: 100%;
-}
-
-.articlebg {
-  width: 72%; 
-  min-height: 120px; 
-  max-height: 120px; 
-  justify-content: center; 
-  margin-top: 5px; 
-  background-color: #262626af;
-  flex-direction: column;
-  border-radius: 24px;
-}
-
-.articletitle {
-  font-size: 24px;
-  font-weight: 600;
-  margin-top: 13px;
-  width: 89%;
-  max-height: 70px;
-  text-overflow: ellipsis;
 }
 </style>

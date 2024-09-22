@@ -3,6 +3,7 @@ import { storage } from "./tsimports"
 interface SettingsInterface {
   fresh_type: number;
   home_vid_count: number;
+  article_split_dom_count: number;
   enableFullAnimation: boolean;
   enableInterconnectMode: boolean;
 }
@@ -10,6 +11,7 @@ interface SettingsInterface {
 export let SETTINGS: SettingsInterface = {
   fresh_type: 3, //视频推荐相关度，范围1-3，根据大数据推送
   home_vid_count: 10,
+  article_split_dom_count: 9999,
   enableFullAnimation: false,
   // 是否启用interconnect联网模式，需要安卓APP能力支持
   // 低人一等环9专用

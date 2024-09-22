@@ -1,5 +1,6 @@
 <import name="title-bar" src="../../components/TitleBar/TitleBar.ux"></import>
 <import name="full-screen-input" src="../../components/FullScreenInput/FullScreenInput.ux"></import>
+<import name="default-button" src="../../components/DefaultButton/DefaultButton.ux"></import>
 
 <template>
   <div class="page">
@@ -50,9 +51,7 @@
           <text class="vidtooltext">手机上看</text>
         </div>
       </scroll>
-      <div class="featurebtn" style="margin-top: 20px" @click="Reply">
-        <text class="featurebtn_text">发送评论</text>
-      </div>
+      <default-button text="发送评论" margin-top="20px" @click="Reply"></default-button>
       <image src="/common/featurebtn_replyarea.png" style="margin-top: 15px" @click="GoReplyArea()"></image>
     </scroll>
     <full-screen-input style="position: absolute" input_text="{{input_text}}" if="{{replymode}}" @complete="InputComplete"
@@ -278,19 +277,5 @@ export default {
 
 .vidtoolimg {
   width: 62px;
-}
-
-.featurebtn {
-  width: 322px;
-  height: 81px;
-  border-radius: 90px;
-  background-color: #262626;
-  justify-content: center;
-  align-items: center;
-}
-
-.featurebtn_text {
-  font-size: 40px;
-  font-weight: 600;
 }
 </style>

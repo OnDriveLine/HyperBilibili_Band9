@@ -7,5 +7,6 @@ import router from "@system.router"
 import interconnect from "@system.interconnect"
 import prompt from "@system.prompt"
 import network from "@system.network"
+import file from "@system.file"
 
-export { fetch, storage, crypto, device, folme, router, interconnect, prompt, network };
+export { fetch, storage, crypto, device, folme, router, interconnect, prompt, network, file };

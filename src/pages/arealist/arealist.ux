@@ -30,6 +30,14 @@
                     <text class="btntext">设置</text>
                 </div>
             </div>
+            <div class="btnline" style="margin-top: 15px;">
+                <div class="btn" onclick="GoPage({{pages[4]}})">
+                    <div class="btnbase">
+                        <image src="/common/arealist_savedcontent.png" class="btnimg"></image>
+                    </div>
+                    <text class="btntext">缓存</text>
+                </div>
+            </div>
             <text style="font-size: 24px; font-weight: 600; margin-top: 50px">上滑进入搜索页</text>
             <text style="margin-top: 450px;"></text>
         </scroll>
@@ -49,7 +57,8 @@ export default {
             "main",
             "dynamic",
             "mypage",
-            "settings"
+            "settings",
+            "savedcontent"
         ],
         anims: {
             ChangePageFX: null,

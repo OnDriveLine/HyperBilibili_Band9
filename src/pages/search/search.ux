@@ -3,16 +3,16 @@
 
 <template>
   <div class="page">
-    <image style="position: absolute" src="/common/rounddevices_searchbg.png"></image>
-    <switch-bar title="搜索"></switch-bar>
+    <image style="position: absolute" src="/common/rounddevices_searchbg.png" static></image>
+    <switch-bar title="搜索" static></switch-bar>
     <div class="searchbtn" style="margin-top: 20px" @click="OpenInput">
-      <image src="/common/searchpage_search.png" style="margin-left: 25px"></image>
-      <text class="searchtip" style="margin-left: 15px">点此搜索</text>
+      <image src="/common/searchpage_search.png" style="margin-left: 25px" static></image>
+      <text class="searchtip" style="margin-left: 15px" static>点此搜索</text>
     </div>
     <div class="hotwords" style="margin-top: 23px">
-      <div style="flex-direction: row; align-items: center">
-        <image src="/common/searchpage_fire.png" style="object-fit: scale-down"></image>
-        <text class="hottitle">热搜榜</text>
+      <div style="flex-direction: row; align-items: center" static>
+        <image src="/common/searchpage_fire.png" style="object-fit: scale-down" static></image>
+        <text class="hottitle" static>热搜榜</text>
       </div>
       <list style="margin-top: 13px" class="hotwordlist" if="{{showHotwordsList}}">
         <list-item type="hotwordlist" style="
@@ -22,7 +22,7 @@
             width: 100%;
             height: 30px;
           " for="{{hotwords}}">
-          <image src="{{$item.icon}}@22w_22h"></image>
+          <image src="{{$item.icon}}@22w_22h" static></image>
           <text style="
               font-size: 22px;
               font-weight: 500;
@@ -46,7 +46,7 @@
 import router from "@system.router"
 export default {
   private: {
-    hotwords: null,
+    hotwords: {},
     showHotwordsList: false,
     show_loading: true,
     input_mode: false,
@@ -66,6 +66,7 @@ export default {
     this.input_text.content = this.input_text.content.slice(0, -1)
   },
   GoSearch() {
+    this.hotwords = null
     router.push({
       uri: "pages/searchresult",
       params: {
@@ -95,8 +96,12 @@ export default {
       1000,
       true
     )
-
+  },
+  onShow(){
     this.GetHotWords()
+  },
+  onDestroy(){
+    this.$app.$def.animengine.clearPageAnims("searchPage")
   }
 }
 </script>
