@@ -68,7 +68,7 @@ export default {
         file.delete({
             uri: this.localsrc,
             success: () => {
-                console.log("[BetterOnlineImage] onDestroy, deleted image in: " + data.uri)
+                console.log("[BetterOnlineImage] onDestroy, deleted image in: " + this.localsrc)
             }
         })
     }
