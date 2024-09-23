@@ -103,6 +103,9 @@
       },
       "pages/savedcontent": {
         "component": "savedcontent"
+      },
+      "pages/componentstest": {
+        "component": "componentstest"
       }
     }
   }

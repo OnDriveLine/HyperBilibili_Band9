@@ -1,0 +1,27 @@
+<import name="title-bar" src="../../components/TitleBar/TitleBar.ux"></import>
+<import name="online-image" src="../../components/BetterOnlineImage/BetterOnlineImage.ux"></import>
+
+<template>
+  <div class="page">
+    <title-bar title="组件测试"></title-bar>
+    <text style="margin-top: 35px">BetterOnlineImage</text>
+    <online-image margin-top="20px" src="https://i.pinimg.com/236x/fd/20/13/fd20135e219e1336b7fdc478dca13d90.jpg"></online-image>
+  </div>
+</template>
+
+<script>
+export default {
+
+}
+</script>
+
+<style>
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  position: absolute;
+  width: 100%;
+}
+</style>

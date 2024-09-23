@@ -65,7 +65,7 @@
         <div class="swiper_box">
           <scroll if="{{typebar_if.c4}}"  class="swiper_container" scroll-y="true"
           @scroll="ScrollOverviewCheck">
-            <div style="flex-direction: column; align-items: center; width: 100%" for="{{search.articles}}" onclick="OpenArticle('{{$item.title}}', {{$item.id}})">
+            <div style="flex-direction: column; align-items: center; width: 100%" for="{{search.articles}}" onclick="OpenArticle({{$item}})">
               <articleshow article="{{$item}}"></articleshow>
             </div>
             <text style="margin-top: 30px"></text>
@@ -137,13 +137,13 @@ export default {
       this.overview_mode = false
     }
   },
-  OpenArticle(title, id){
+  OpenArticle(item){
     global.runGC()
     router.push({
       uri: "pages/articlesave",
       params: {
-        cvid: "cv" + id,
-        cvtitie: title
+        cvid: "cv" + item.id,
+        cvtitie: item.title
       }
     })
   },

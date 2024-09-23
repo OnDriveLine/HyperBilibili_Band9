@@ -84,6 +84,8 @@ export default {
     this.article_content = this.SplitArticle(article_full, this.$app.$def.settings.SETTINGS.article_split_dom_count)
     this.max_page_num = this.article_content.length
 
+    console.log(this.article_content)
+
     this.anims.loading.stop()
     this.show_loading = false
     global.runGC()
