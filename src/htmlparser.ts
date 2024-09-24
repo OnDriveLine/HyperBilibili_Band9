@@ -34,39 +34,41 @@ function stripHtmlTags(html: string): string {
 const selfClosingTags = new Set(['img', 'br', 'hr', 'input', 'meta', 'link', 'area', 'base', 'col', 'command', 'embed', 'keygen', 'param', 'source', 'track', 'wbr']);
 
 // 更新 parseContentHtml 函数
-export function parseContentHtml(html: string): HtmlDocument[] {
+export function parseContentHtml(html: string, processSelfClosingTags: boolean = true): HtmlDocument[] {
     const tagRegex = /<(\w+)([^>]*)>([\s\S]*?)<\/\1>/g; // 匹配 HTML 标签及其内容
     const selfClosingTagRegex = /<(\w+)([^>]*)\/>/g; // 匹配以 /> 结尾的自闭合标签
 
     let elements: HtmlDocument[] = [];
     let lastIndex = 0; // 上一次匹配结束的位置
 
-    // 处理以 /> 结尾的自闭合标签
-    html = html.replace(selfClosingTagRegex, (match, tagName, attributes) => {
-        const element: HtmlDocument = {
-            type: tagName,
-            attributes: parseAttributes(attributes),
-            style: parseStyle(attributes),
-            children: [],
-        };
-        elements.push(element);
-        return ''; // 移除匹配的自闭合标签
-    });
-
-    // 处理固有自闭合标签（不以 /> 结尾）
-    selfClosingTags.forEach(tag => {
-        const regex = new RegExp(`<${tag}([^>]*)>`, 'g');
-        html = html.replace(regex, (match, attributes) => {
+    if(processSelfClosingTags){
+        // 处理以 /> 结尾的自闭合标签
+        html = html.replace(selfClosingTagRegex, (match, tagName, attributes) => {
             const element: HtmlDocument = {
-                type: tag,
+                type: tagName,
                 attributes: parseAttributes(attributes),
                 style: parseStyle(attributes),
                 children: [],
             };
             elements.push(element);
-            return ''; // 移除匹配的标签
+            return ''; // 移除匹配的自闭合标签
         });
-    });
+
+        // 处理固有自闭合标签（不以 /> 结尾）
+        selfClosingTags.forEach(tag => {
+            const regex = new RegExp(`<${tag}([^>]*)>`, 'g');
+            html = html.replace(regex, (match, attributes) => {
+                const element: HtmlDocument = {
+                    type: tag,
+                    attributes: parseAttributes(attributes),
+                    style: parseStyle(attributes),
+                    children: [],
+                };
+                elements.push(element);
+                return ''; // 移除匹配的标签
+            });
+        });
+    }
 
     let match;
     while ((match = tagRegex.exec(html)) !== null) {

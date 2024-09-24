@@ -20,7 +20,7 @@
         </div>
       </div>
       <div style="margin-top: 22px; width: 80%; justify-content: center">
-        <html-renderer doms="{{article_content[current_page_num]}}" @open-image="OpenImage"></html-renderer>
+        <html-renderer doms="{{article_content}}" @open-image="OpenImage"></html-renderer>
       </div>
     </div>
     <text style="margin-top: 25px"></text>
@@ -78,13 +78,15 @@ export default {
     const article = this.$app.$def.articletools.parseArticlePageHtml(article_html)
     this.article.readInfo = article.readInfo // 原地更新 减少开辟内存空间
 
-    let article_full = this.$app.$def.htmlparser.parseContentHtml(article.readInfo.content)
+    let article_full = this.$app.$def.htmlparser.parseContentHtml(article.readInfo.content, false)
     this.$app.$def.articletools.PatchArticleContent(article_full)
 
-    this.article_content = this.SplitArticle(article_full, this.$app.$def.settings.SETTINGS.article_split_dom_count)
+    //this.article_content = this.SplitArticle(article_full, this.$app.$def.settings.SETTINGS.article_split_dom_count)
+    this.article_content = article_full
     this.max_page_num = this.article_content.length
 
-    console.log(this.article_content)
+    console.log(article.readInfo.content)
+    console.log(JSON.stringify(this.article_content))
 
     this.anims.loading.stop()
     this.show_loading = false
