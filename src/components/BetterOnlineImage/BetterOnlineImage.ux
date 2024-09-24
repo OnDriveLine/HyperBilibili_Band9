@@ -73,7 +73,9 @@ export default {
         })
     },
     Click(){
-        this.$emit('click')
+        this.$emit('click', {
+            src: this.localsrc
+        })
     }
 }
 </script>

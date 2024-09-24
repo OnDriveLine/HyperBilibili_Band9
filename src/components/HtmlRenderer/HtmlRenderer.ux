@@ -43,7 +43,7 @@
         if="{{$item.type === 'img'}}" 
         style="{{$item.style}}" 
         src="{{$item.attributes.src}}" 
-        @click="openImage('{{$item.attributes.src}}')" 
+        @click="openImage" 
         margin-top="10px" 
         object-fit="contain" 
         lock-size="true" 
@@ -81,10 +81,10 @@ export default {
       console.log("[html-renderer] doms无效，拒绝渲染")
     }
   },
-  openImage(src) {
-    console.log("[html-renderer] image clicked. openImage src=" + src)
+  openImage(evt) {
+    console.log("[html-renderer] image clicked. openImage src=" + evt.detail.src)
     this.$emit("openImage", {
-      src: src
+      src: evt.detail.src
     })
   }
 }
