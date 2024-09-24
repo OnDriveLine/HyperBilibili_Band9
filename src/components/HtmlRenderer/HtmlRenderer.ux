@@ -43,7 +43,7 @@
         if="{{$item.type === 'img'}}" 
         style="{{$item.style}}" 
         src="{{$item.attributes.src}}" 
-        onclick="openImage('{{$item.attributes.src}}')" 
+        @click="openImage('{{$item.attributes.src}}')" 
         margin-top="10px" 
         object-fit="contain" 
         lock-size="true" 

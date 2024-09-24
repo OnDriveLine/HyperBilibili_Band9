@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top: {{marginTop}}; border-radius: {{borderRadius}}; justify-content: center; align-items: center">
+  <div @click="Click" style="margin-top: {{marginTop}}; border-radius: {{borderRadius}}; justify-content: center; align-items: center">
     <image if="{{show_image}}" src="{{localsrc}}"></image>
     <text if="{{show_loading}}">加载图片中...</text>
   </div>
@@ -71,6 +71,9 @@ export default {
                 console.log("[BetterOnlineImage] onDestroy, deleted image in: " + this.localsrc)
             }
         })
+    },
+    Click(){
+        this.$emit('click')
     }
 }
 </script>
