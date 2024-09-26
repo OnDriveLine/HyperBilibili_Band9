@@ -7,28 +7,29 @@
     <image style="position: absolute; margin-top: 245px" if="{{show_loading}}" src="{{anims.loading_src.value}}"></image>
     <div if="{{showarticle}}" class="articlebox">
       <div class="infobox">
-        <text class="title">{{article.readInfo.title}}</text>
+        <text class="title">{{ article.readInfo.title }}</text>
         <div class="infofield" static>
           <image src="/common/article_up.png" static></image>
-          <text class="infofield_text">{{article.readInfo.author.name}}</text>
+          <text class="infofield_text">{{ article.readInfo.author.name }}</text>
         </div>
         <div class="infofield" static>
           <image src="/common/article_clock.png" static></image>
           <text class="infofield_text" static>预计阅读用时</text>
-          <text class="pinknum" style="margin-left: 5px">{{this.$app.$def.articletools.estimateReadingTime(article.readInfo.content)}}</text>
+          <text class="pinknum" style="margin-left: 5px">
+            {{ this.$app.$def.articletools.estimateReadingTime(article.readInfo.content) }}
+          </text>
           <text class="infofield_text" style="margin-left: 5px" static>分钟</text>
         </div>
       </div>
       <div style="margin-top: 22px; width: 80%; justify-content: center">
-        <html-renderer doms="{{article_content}}" @open-image="OpenImage"></html-renderer>
+        <html-renderer doms="{{article_content}}"></html-renderer>
       </div>
     </div>
-    <text style="margin-top: 25px"></text>
+    <text style="margin-top: 50px"></text>
   </div>
 </template>
 
 <script>
-import router from "@system.router"
 export default {
   public: {
     cvid: "cv1",
@@ -48,14 +49,6 @@ export default {
       loading_src: {value: "/common/seqanims/loadingWhite/icons8-loading_颜色反转-1.png"}
     }
   },
-  OpenImage(evt){
-    router.push({
-      uri: "pages/picturedetail",
-      params: {
-        img_uri: evt.detail.src
-      }
-    })
-  },
   SplitArticle(arr, split_count) {
     let result = [];
     for (let i = 0; i < arr.length; i += split_count) {
@@ -67,31 +60,34 @@ export default {
     this.show_loading = true
     this.anims.loading.start()
 
-    let article_html = ""
-    if(this.offline){
-      article_html = this.article_html
-    }
-    else{
-      article_html = await this.$app.$def.biliclient.getArticle(this.cvid)
-    }
+    // 预留加载delay以避免页面切换的卡顿
+    setTimeout(async() => {
+      let article_html = ""
+      if(this.offline){
+        article_html = this.article_html
+      }
+      else{
+        article_html = await this.$app.$def.biliclient.getArticle(this.cvid)
+      }
 
-    const article = this.$app.$def.articletools.parseArticlePageHtml(article_html)
-    this.article.readInfo = article.readInfo // 原地更新 减少开辟内存空间
+      const article = this.$app.$def.articletools.parseArticlePageHtml(article_html)
+      this.article.readInfo = article.readInfo // 原地更新 减少开辟内存空间
 
-    let article_full = this.$app.$def.htmlparser.parseContentHtml(article.readInfo.content, false)
-    this.$app.$def.articletools.PatchArticleContent(article_full)
+      let article_full = this.$app.$def.htmlparser.parseContentHtml(article.readInfo.content, false)
+      this.$app.$def.articletools.PatchArticleContent(article_full)
 
-    //this.article_content = this.SplitArticle(article_full, this.$app.$def.settings.SETTINGS.article_split_dom_count)
-    this.article_content = article_full
-    this.max_page_num = this.article_content.length
+      //this.article_content = this.SplitArticle(article_full, this.$app.$def.settings.SETTINGS.article_split_dom_count)
+      this.article_content = article_full
+      this.max_page_num = this.article_content.length
 
-    console.log(article.readInfo.content)
-    console.log(JSON.stringify(this.article_content))
+      console.log(article.readInfo.content)
+      console.log(JSON.stringify(this.article_content))
 
-    this.anims.loading.stop()
-    this.show_loading = false
-    global.runGC()
-    this.showarticle = true
+      this.anims.loading.stop()
+      this.show_loading = false
+      global.runGC()
+      this.showarticle = true
+    }, 1000)
   },
   onInit() {
     this.anims.loading = new this.$app.$def.animengine.SequenceAnim(
@@ -119,8 +115,8 @@ export default {
 }
 
 .articlebox {
-  flex-direction: column; 
-  align-items: center; 
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   margin-top: 25px;
 }
@@ -144,12 +140,12 @@ export default {
 .infofield_text {
   font-size: 18px;
   font-weight: 600;
-  color: #9E9E9E;
+  color: #9e9e9e;
   margin-left: 7px;
 }
 
 .pinknum {
-  color: #FF7DA8;
+  color: #ff7da8;
   font-size: 18px;
   font-weight: 600;
 }

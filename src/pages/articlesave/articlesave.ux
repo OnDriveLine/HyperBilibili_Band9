@@ -40,6 +40,9 @@ export default {
       message: "专栏 " + this.cvtitle + " 缓存完毕！存储id=" + id,
       duration: 5000
     })
+  },
+  onInit(){
+    global.runGC()
   }
 }
 </script>

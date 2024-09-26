@@ -72,6 +72,7 @@
 </template>
 
 <script>
+import router from "@system.router"
 export default {
   props: ["doms"],
   onInit() {
@@ -83,8 +84,11 @@ export default {
   },
   openImage(evt) {
     console.log("[html-renderer] image clicked. openImage src=" + evt.detail.src)
-    this.$emit("openImage", {
-      src: evt.detail.src
+    router.push({
+      uri: "pages/picturedetail",
+      params: {
+        img_uri: evt.detail.src
+      }
     })
   }
 }

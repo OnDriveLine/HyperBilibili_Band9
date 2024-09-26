@@ -138,12 +138,11 @@ export default {
     }
   },
   OpenArticle(item){
-    global.runGC()
     router.push({
       uri: "pages/articlesave",
       params: {
         cvid: "cv" + item.id,
-        cvtitie: item.title
+        cvtitle: item.title
       }
     })
   },
