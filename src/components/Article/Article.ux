@@ -1,9 +1,11 @@
 <template>
     <div class="articlebg">
-        <text class="articletitle" style="margin-left: 18px">{{ article.title }}</text>
-        <text if="{{showCategory}}" style="font-size: 20px; font-weight: 600; color: #9e9e9e; margin-top: 6px; margin-left: 18px">
-            类型：{{ article.category_name }}
-        </text>
+        <div style="width: 89%; flex-direction: column; justify-content: center">
+          <text class="articletitle">{{ article.title }}</text>
+          <text if="{{showCategory}}" style="font-size: 20px; font-weight: 600; color: #9e9e9e; margin-top: 6px">
+              类型：{{ article.category_name }}
+          </text>
+        </div>
     </div>
 </template>
 
@@ -33,7 +35,8 @@ export default {
   width: 72%; 
   min-height: 120px; 
   max-height: 120px; 
-  justify-content: center; 
+  justify-content: center;
+  align-items: center;
   margin-top: 5px; 
   background-color: #262626af;
   flex-direction: column;
@@ -43,8 +46,6 @@ export default {
 .articletitle {
   font-size: 24px;
   font-weight: 600;
-  margin-top: 13px;
-  width: 89%;
   max-height: 70px;
   text-overflow: ellipsis;
 }

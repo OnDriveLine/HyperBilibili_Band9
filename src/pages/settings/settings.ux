@@ -38,6 +38,11 @@
       <text class="setext_small">关于应用</text>
       <image src="/common/arrow_right.png"></image>
     </div>
+    <div class="setbase" @click="GoDebug()">
+      <div class="seticon"></div>
+      <text class="setext_small">Debug</text>
+      <image src="/common/arrow_right.png"></image>
+    </div>
     <image style="margin-top: 30px" src="/common/opensource_warning.png"></image>
     <text style="margin-top: 25px"></text>
   </div>
@@ -68,6 +73,11 @@ export default {
   GoAbout() {
     router.push({
       uri: "pages/about"
+    })
+  },
+  GoDebug() {
+    router.push({
+      uri: "pages/componentstest"
     })
   },
   ClearTmp() {

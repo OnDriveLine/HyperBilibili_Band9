@@ -16,6 +16,9 @@ export default {
         primary: {
             default: "" //默认false 即空字符串
         },
+        disabled: {
+            default: ""
+        },
         color_bg: {
             default: "#262626"
         },
@@ -24,11 +27,16 @@ export default {
         }
     },
     Click(){
-        this.$emit('click')
+        if(!this.disabled){
+            this.$emit('click')
+        }
     },
     onInit(){
         if(this.primary){
             this.color_bg = "#FF7DA8"
+        }
+        if(this.disabled){
+            this.color_text = "#5F5F5F"
         }
     }
 }
