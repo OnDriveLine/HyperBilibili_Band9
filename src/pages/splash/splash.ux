@@ -57,6 +57,11 @@ export default {
             this.$app.$def.jumpcheck.Jump()
           }
         }
+        else{
+          router.replace({
+            uri: "pages/networkerror"
+          })
+        }
       }, 500)
     }, 1000)
   },

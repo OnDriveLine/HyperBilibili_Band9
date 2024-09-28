@@ -15,13 +15,19 @@
   ],
   "config": {
     "logLevel": "log",
-    "designWidth": 466
+    "designWidth": 466,
+    "background": {
+      "features": [
+        "system.request",
+        "system.audio"
+      ]
+    }
   },
   "display": {
     "backgroundColor": "#000000"
   },
   "router": {
-    "entry": "pages/splash",
+    "entry": "pages/networkerror",
     "pages": {
       "pages/splash":{
         "component": "splash"
@@ -106,6 +112,9 @@
       },
       "pages/componentstest": {
         "component": "componentstest"
+      },
+      "pages/networkerror": {
+        "component": "networkerror"
       }
     }
   }
