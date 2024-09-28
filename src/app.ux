@@ -10,6 +10,7 @@ import * as jumpcheck from "./jumpcheck"
 import * as interconnecter from "./interconnecter"
 import * as htmlparser from "./htmlparser"
 import * as savedcontent from "./savedcontent"
+import * as buildinfo from "./buildinfo"
 export default {
   animengine: animengine,
   biliclient: null,
@@ -22,6 +23,7 @@ export default {
   articletools: articletools,
   htmlparser: htmlparser,
   savedcontent: savedcontent,
+  buildinfo: buildinfo,
   async onCreate() {
     console.log("app created")
     settings.loadSettings()
