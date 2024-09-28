@@ -54,7 +54,14 @@ export default {
             })
           }
           else{
-            this.$app.$def.jumpcheck.Jump()
+            if(!this.$app.$def.settings.SETTINGS.agreedAllAgreements){
+              router.replace({
+                uri: "pages/eularead"
+              })
+            }
+            else{
+              this.$app.$def.jumpcheck.Jump()
+            }
           }
         }
         else{

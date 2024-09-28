@@ -180,6 +180,14 @@ class BilibiliClient {
         return { update: false, msg: "" };
     }
 
+    async getEulaShowContent(): Promise<any>{
+        const response = (await this.fetch.fetch({
+            url: "http://hbstatics.astralsight.space/eularead-content.txt",
+        })).data;
+
+        return response.data;
+    }
+
     // 获取二维码信息
     async loginQR(): Promise<{ url: string, qrcode_key: string }> {
         console.log("请求登录二维码");

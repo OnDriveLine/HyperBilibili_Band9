@@ -27,7 +27,7 @@
     "backgroundColor": "#000000"
   },
   "router": {
-    "entry": "pages/networkerror",
+    "entry": "pages/splash",
     "pages": {
       "pages/splash":{
         "component": "splash"
@@ -115,6 +115,9 @@
       },
       "pages/networkerror": {
         "component": "networkerror"
+      },
+      "pages/eularead": {
+        "component": "eularead"
       }
     }
   }
