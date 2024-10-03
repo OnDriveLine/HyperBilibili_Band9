@@ -45,7 +45,6 @@ def readFileToJson(path):
     return f
 
 def writeJsonToFile(path, obj):
-    f = open(path, "w+")
-    write_str = json.dumps(obj)
-    f.write(write_str)
-    f.close()
+    with open(path, "w+", encoding="utf-8") as f:
+        write_str = json.dumps(obj, ensure_ascii=False, indent=4)
+        f.write(write_str)

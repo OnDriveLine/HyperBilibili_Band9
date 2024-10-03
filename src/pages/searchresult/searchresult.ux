@@ -21,18 +21,18 @@
       <swiper indicator="false" @change="UpdateTypeBarColors" class="swipermain" style="margin-top: 15px"
         if="{{!show_loading}}" duration="10">
         <div class="swiper_box">
-          <scroll class="swiper_container" scroll-y="true" if="{{typebar_if.c1}}"
-            @scroll="ScrollOverviewCheck">
+          <scroll class="swiper_container" scroll-y="true" if="{{typebar_if.c1}}" @scroll="ScrollOverviewCheck">
             <div class="tiplabel" if="{{comprehensive_status.has_users_result}}">
               <text class="listtip">用户</text>
             </div>
-            <div style="width: 100%; height: 99px; justify-content: center" if="{{comprehensive_status.has_users_result}}">
+            <div style="width: 100%; height: 99px; justify-content: center"
+              if="{{comprehensive_status.has_users_result}}">
               <user user="{{search.users[0]}}"></user>
             </div>
             <div class="tiplabel" style="margin-top: 10px" if="{{comprehensive_status.has_video_result}}">
               <text class="listtip">视频</text>
             </div>
-            <div style="width: 100%; height: 170px; justify-content: center;"
+            <div style="width: 100%; height: 170px; justify-content: center"
               if="{{comprehensive_status.has_video_result}}" for="{{search.comprehensive_videos}}">
               <div style="width: 77%; justify-content: center; margin-top: 5px" onclick="OpenVideo({{$item.bvid}})">
                 <videoshow video="{{$item}}"></videoshow>
@@ -42,8 +42,7 @@
           </scroll>
         </div>
         <div class="swiper_box">
-          <scroll if="{{typebar_if.c2}}" class="swiper_container" scroll-y="true"
-            @scroll="ScrollOverviewCheck">
+          <scroll if="{{typebar_if.c2}}" class="swiper_container" scroll-y="true" @scroll="ScrollOverviewCheck">
             <div style="width: 100%; height: 170px; justify-content: center" for="{{search.videos}}">
               <div style="width: 77%; justify-content: center; margin-top: 5px" onclick="OpenVideo({{$item.bvid}})">
                 <videoshow video="{{$item}}"></videoshow>
@@ -53,20 +52,18 @@
           </scroll>
         </div>
         <div class="swiper_box">
-          <scroll if="{{typebar_if.c3}}"  class="swiper_container" scroll-y="true"
-            @scroll="ScrollOverviewCheck">
-            <div style="width: 100%; height: 99px; justify-content: center; margin-top: 5px"
-              for="{{search.users}}">
+          <scroll if="{{typebar_if.c3}}" class="swiper_container" scroll-y="true" @scroll="ScrollOverviewCheck">
+            <div style="width: 100%; height: 99px; justify-content: center; margin-top: 5px" for="{{search.users}}">
               <user user="{{$item}}"></user>
             </div>
             <text style="margin-top: 30px"></text>
           </scroll>
         </div>
         <div class="swiper_box">
-          <scroll if="{{typebar_if.c4}}"  class="swiper_container" scroll-y="true"
-          @scroll="ScrollOverviewCheck">
-            <div style="flex-direction: column; align-items: center; width: 100%" for="{{search.articles}}" onclick="OpenArticle({{$item}})">
-              <articleshow article="{{$item}}"></articleshow>
+          <scroll if="{{typebar_if.c4}}" class="swiper_container" scroll-y="true" @scroll="ScrollOverviewCheck">
+            <div style="flex-direction: column; align-items: center; width: 100%" for="{{search.articles}}"
+              onclick="OpenArticle({{$item}})">
+              <articleshow article="{{$item}}" show-category="true"></articleshow>
             </div>
             <text style="margin-top: 30px"></text>
           </scroll>
@@ -137,7 +134,7 @@ export default {
       this.overview_mode = false
     }
   },
-  OpenArticle(item){
+  OpenArticle(item) {
     router.push({
       uri: "pages/articlesave",
       params: {
@@ -148,53 +145,106 @@ export default {
   },
   OpenVideo(bvid) {
     global.runGC()
-    console.log("[searchresult -> videodetail] open bvid: " + bvid);
+    console.log("[searchresult -> videodetail] open bvid: " + bvid)
     router.push({
       uri: "pages/videodetail",
       params: {bvid}
     })
   },
   async PatchSearchResult() {
-   // 使用局部变量来减少内存占用
-   let videos = []
-   let comprehensive_videos = []
-   let articles = []
+    try {
+      // 使用局部变量来减少内存占用
+      let videos = []
+      let comprehensive_videos = []
+      let articles = []
 
-   this.search.videos.forEach((video) => {
-      videos.push({
-         pic: video.pic,
-         title: video.title.replace(/<\/?[^>]+(>|$)/g, "").trim(),
-         owner: { name: video.author },
-         stat: { view: video.play },
-         bvid: video.bvid
+      // 确保 this.search 存在
+      const search = this.search || {}
+
+      // 安全地获取数组，如果不存在或不是数组则默认为空数组
+      const videosList = Array.isArray(search.videos) ? search.videos : []
+      const comprehensiveVideosList = Array.isArray(search.comprehensive_videos)
+        ? search.comprehensive_videos
+        : []
+      const articlesList = Array.isArray(search.articles) ? search.articles : []
+      const usersList = Array.isArray(search.users) ? search.users : []
+
+      // 处理 videos
+      videosList.forEach((video) => {
+        // 确保 video 对象的属性存在
+        videos.push({
+          pic: video.pic || "",
+          title: (video.title || "").replace(/<\/?[^>]+(>|$)/g, "").trim(),
+          owner: {name: video.author || "未知"},
+          stat: {view: Number(video.play) || 0},
+          bvid: video.bvid || ""
+        })
       })
-   })
-   console.log("[searchresult.PatchSearchResult] Patched Videos")
+      console.log("[searchresult.PatchSearchResult] 已处理视频")
 
-   this.search.comprehensive_videos.forEach((video) => {
-      comprehensive_videos.push({
-         pic: video.pic,
-         title: video.title.replace(/<\/?[^>]+(>|$)/g, "").trim(),
-         owner: { name: video.author },
-         stat: { view: video.play },
-         bvid: video.bvid
+      // 处理 comprehensive_videos
+      comprehensiveVideosList.forEach((video) => {
+        comprehensive_videos.push({
+          pic: video.pic || "",
+          title: (video.title || "").replace(/<\/?[^>]+(>|$)/g, "").trim(),
+          owner: {name: video.author || "未知"},
+          stat: {view: Number(video.play) || 0},
+          bvid: video.bvid || ""
+        })
       })
-   })
-   console.log("[searchresult.PatchSearchResult] Patched Comprehensive Videos")
+      console.log("[searchresult.PatchSearchResult] 已处理综合视频")
 
-   this.search.articles.forEach((article) => {
-      article.title = article.title.replace(/<\/?[^>]+(>|$)/g, "").trim()
-      articles.push(article)
-   })
-   console.log("[searchresult.PatchSearchResult] Patched Articles")
+      // 处理 articles
+      articlesList.forEach((article) => {
+        // 确保文章标题存在
+        if (article.title) {
+          article.title = article.title.replace(/<\/?[^>]+(>|$)/g, "").trim()
+        } else {
+          article.title = "未命名"
+        }
+        articles.push(article)
+      })
+      console.log("[searchresult.PatchSearchResult] 已处理文章")
 
-   // 原地更新避免重新开辟内存
-   this.search.videos.splice(0, this.search.videos.length, ...videos)
-   this.search.comprehensive_videos.splice(0, this.search.comprehensive_videos.length, ...comprehensive_videos)
-   this.search.articles.splice(0, this.search.articles.length, ...articles)
+      // 原地更新 videos 数组，如果不是数组则直接赋值新的数组并记录警告
+      if (Array.isArray(search.videos)) {
+        search.videos.splice(0, search.videos.length, ...videos)
+      } else {
+        search.videos = videos
+        console.warn("[searchresult.PatchSearchResult] 'videos' 不是数组。已初始化为空数组。")
+      }
 
-   this.comprehensive_status.has_users_result = this.search.users.length > 0
-   this.comprehensive_status.has_video_result = this.search.videos.length > 0
+      // 原地更新 comprehensive_videos 数组，如果不是数组则直接赋值新的数组并记录警告
+      if (Array.isArray(search.comprehensive_videos)) {
+        search.comprehensive_videos.splice(
+          0,
+          search.comprehensive_videos.length,
+          ...comprehensive_videos
+        )
+      } else {
+        search.comprehensive_videos = comprehensive_videos
+        console.warn(
+          "[searchresult.PatchSearchResult] 'comprehensive_videos' 不是数组。已初始化为空数组。"
+        )
+      }
+
+      // 原地更新 articles 数组，如果不是数组则直接赋值新的数组并记录警告
+      if (Array.isArray(search.articles)) {
+        search.articles.splice(0, search.articles.length, ...articles)
+      } else {
+        search.articles = articles
+        console.warn("[searchresult.PatchSearchResult] 'articles' 不是数组。已初始化为空数组。")
+      }
+
+      // 确保 comprehensive_status 存在
+      this.comprehensive_status = this.comprehensive_status || {}
+
+      // 更新 comprehensive_status，确保相关数组存在
+      this.comprehensive_status.has_users_result = usersList.length > 0
+      this.comprehensive_status.has_video_result = videos.length > 0
+    } catch (e) {
+      console.error("[searchresult.PatchSearchResult] 处理错误:", e)
+    }
   },
   async DoSearch() {
     this.show_loading = true

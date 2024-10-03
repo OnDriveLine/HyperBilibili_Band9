@@ -46,8 +46,8 @@ export default {
     this.anims.splash.start()
     setTimeout(() => {
       this.anims.splash_out.start()
-      setTimeout(() => {
-        if(this.$app.$def.jumpcheck.NetworkCheck() || this.$app.$def.settings.SETTINGS.enableInterconnectMode){
+      setTimeout(async() => {
+        if((await this.$app.$def.jumpcheck.NetworkCheck()) || this.$app.$def.settings.SETTINGS.enableInterconnectMode){
           if(this.$app.$def.settings.SETTINGS.enableInterconnectMode){
             router.replace({
               uri: "pages/interconnecthelper"

@@ -30,12 +30,10 @@
                     <text class="btntext">设置</text>
                 </div>
             </div>
-            <div class="btnline" style="margin-top: 15px;">
-                <div class="btn" onclick="GoPage({{pages[4]}})">
-                    <div class="btnbase">
-                        <image src="/common/arealist_savedcontent.png" class="btnimg"></image>
-                    </div>
-                    <text class="btntext">缓存</text>
+            <div class="btnline" style="margin-top: 30px; justify-content: center">
+                <div class="smallbtn" onclick="GoPage({{pages[4]}})">
+                    <image src="/common/arealist_savedcontent.png"></image>
+                    <text class="smallbtntext">缓存</text>
                 </div>
             </div>
             <text style="font-size: 24px; font-weight: 600; margin-top: 50px">上滑进入搜索页</text>
@@ -144,6 +142,12 @@ export default {
     margin-top: 5px;
 }
 
+.smallbtntext {
+    font-size: 25px;
+    font-weight: 600;
+    margin-left: 11px;
+}
+
 .btnimg {
     width: 70px;
     height: 76px;
@@ -152,6 +156,16 @@ export default {
 
 .btn {
     flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.smallbtn {
+    width: 140px;
+    height: 55px;
+    border-radius: 32px;
+    background-color: #222222;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
 }

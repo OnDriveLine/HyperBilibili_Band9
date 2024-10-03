@@ -6,3 +6,4 @@
 /build
 .husky/
 */__pycache__
+src/buildinfo.ts

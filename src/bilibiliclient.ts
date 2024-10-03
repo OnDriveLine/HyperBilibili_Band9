@@ -1,5 +1,6 @@
 import { fetch, storage, crypto, prompt } from './tsimports';
 import * as interconnectfetch from './interconnectfetch'
+import * as eula from './eula'
 
 // Wbi签名混淆表
 const mixinKeyEncTab = [
@@ -58,14 +59,14 @@ class BilibiliClient {
         return ("x" === name ? randomInt : 3 & randomInt | 8).toString(16).toUpperCase()
     }));
 
-    constructor(interconnectMode = false, interconnecter = null){
+    constructor(interconnectMode = false, interconnecter = null) {
         this.updateBUVID();
         this.interconnect_mode = interconnectMode;
-        if(interconnectMode){
+        if (interconnectMode) {
             this.fetch = new interconnectfetch.fetch(interconnecter);
             this.interconnecter = interconnecter
         }
-        else{
+        else {
             this.fetch = fetch;
         }
     }
@@ -86,7 +87,7 @@ class BilibiliClient {
     // 构建Cookie字符串
     private getCookieString(): string {
         var cookies = `buvid3=${this.buvid3}; buvid4=${this.buvid4}; `;
-        if(this.sessData){
+        if (this.sessData) {
             cookies += `SESSDATA=${this.sessData}; bili_jct=${this.biliJct}; DedeUserID=${this.dedeUserID}; sid=${this.sid}; `
         }
         return cookies;
@@ -137,7 +138,7 @@ class BilibiliClient {
     private async postRequest(url: string, data: string, content_type: string, custom_headers: any = null): Promise<any> {
         console.log(`postRequest: ${url}, body: ${data}, contentType: ${content_type}`);
         let headers = { ...this.getHeaders(), "Content-Type": content_type }
-        if(custom_headers){
+        if (custom_headers) {
             headers = custom_headers
         }
         try {
@@ -180,10 +181,12 @@ class BilibiliClient {
         return { update: false, msg: "" };
     }
 
-    async getEulaShowContent(): Promise<any>{
-        const response = (await this.fetch.fetch({
-            url: "http://hbstatics.astralsight.space/eularead-content.txt",
-        })).data;
+    getEulaShowContent(): any {
+        // 使用硬编码的EULA文本
+        // 因为部分地区可能无法访问境外加速CDN
+        const response = {
+            data: eula.eula
+        };
 
         return response.data;
     }
@@ -194,7 +197,7 @@ class BilibiliClient {
         const response = await this.getRequest('https://passport.bilibili.com/x/passport-login/web/qrcode/generate');
         if (response && response.data) {
             this.qrCodeKey = response.data.data.qrcode_key;
-            if(this.interconnect_mode){
+            if (this.interconnect_mode) {
                 await this.interconnecter.sendMessage(JSON.stringify({
                     msgtype: "SHOWQR",
                     message: response.data.data.url
@@ -469,8 +472,8 @@ class BilibiliClient {
         用户：bili_user
         相簿：photo
     */
-    async searchContentWithType(keyword: string, search_type: string){
-        console.log("[searchContentWithType] keyword=" + keyword+ " type=" + search_type)
+    async searchContentWithType(keyword: string, search_type: string) {
+        console.log("[searchContentWithType] keyword=" + keyword + " type=" + search_type)
         const url = "https://api.bilibili.com/x/web-interface/wbi/search/type"
         const response = await this.getRequestWbi(url, {
             keyword,
@@ -524,7 +527,7 @@ class BilibiliClient {
     async SendDMSessionMessage(receiver_id: string, msg_type: number, content: string) {
         const url = "https://api.vc.bilibili.com/web_im/v1/web_im/send_msg";
         const body = `msg[sender_uid]=${this.accountInfo.mid}&msg[receiver_id]=${receiver_id}&msg[receiver_type]=1&msg[msg_type]=${msg_type}&msg[dev_id]=${this.dm_deviceid}&msg[timestamp]=${Number.parseInt(((new Date()).getTime() / 1000).toString())}&msg[content]=${encodeURIComponent(`{"content": "${content}"}`)}&csrf=${this.biliJct}&csrf_token=${this.biliJct}&msg[msg_status]=0&msg[new_face_version]=0&from_firework=0&build=0&mobi_app=web`;
-        
+
         var headers = { ...this.getHeaders(), "Content-Type": "application/x-www-form-urlencoded" }
         headers["Host"] = "api.vc.bilibili.com"
         headers["Origin"] = "https://message.bilibili.com"
@@ -557,7 +560,7 @@ class BilibiliClient {
 
     // 根据BVID与CID获取视频MP4流地址
     // qn: 32=480p 64=720p
-    async getVideoMP4StreamByBVID(cid: string, bvid: string, qn: string = "32"){
+    async getVideoMP4StreamByBVID(cid: string, bvid: string, qn: string = "32") {
         const url = `https://api.bilibili.com/x/player/wbi/playurl`
         const response = await this.getRequestWbi(url, {
             cid,
@@ -572,7 +575,7 @@ class BilibiliClient {
     }
 
     // 获取专栏网页HTML（需要过parser才能使用）
-    async getArticle(cvid: string): Promise<any>{
+    async getArticle(cvid: string): Promise<any> {
         const url = `https://www.bilibili.com/read/${cvid}`;
         const response = await this.getRequest(url, "text");
 
