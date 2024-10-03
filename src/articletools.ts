@@ -74,7 +74,9 @@ export function PatchArticleContent(doms: any) {
 export function estimateReadingTime(htmlContent: string): number {
     const plainText = htmlContent.replace(/<\/?[^>]+(>|$)/g, "").trim();
     const wordCount = plainText.split(/\s+/).length;
-    const averageReadingSpeed = 250; // 字数/分钟
+    // 人类平均阅读速度为250字/分钟
+    // 但在小屏幕上，速度会受限。
+    const averageReadingSpeed = 100; // 字数/分钟
     const estimatedTime = Math.ceil(wordCount / averageReadingSpeed);
 
     return estimatedTime
