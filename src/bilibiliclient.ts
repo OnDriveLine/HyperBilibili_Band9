@@ -175,7 +175,7 @@ class BilibiliClient {
         if (latestVer != this.version) {
             return {
                 update: true,
-                msg: `检查到更新v${latestVer}，请前往bandbbs.cn下载更新`
+                msg: `检查到更新v${latestVer}，请前往hyperbili.astralsight.space下载更新`
             };
         }
         return { update: false, msg: "" };
