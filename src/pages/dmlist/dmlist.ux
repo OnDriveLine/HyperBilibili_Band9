@@ -2,18 +2,18 @@
 
 <template>
   <div class="page">
-    <title-bar title="私信"></title-bar>
+    <title-bar title="dmlist.title"></title-bar>
     <image style="position: absolute; margin-top: 245px" if="{{show_loading}}" src="{{anims.loading_src.value}}"></image>
     <div class="dmlist" for="{{sessions}}" style="margin-top: 18px" if="{{show_dmlist}}">
       <div class="user" onclick="GoDMPage({{$item.talker_id}})">
         <image class="userface" src="{{session_cards[$item.talker_id].face}}@75w_75h" alt="/common/fullgray.png"></image>
         <div class="infoarea">
           <text class="username">{{session_cards[$item.talker_id].name}}</text>
-          <text class="lastmsg">{{JSON.parse($item.last_msg.content).content || JSON.parse($item.last_msg.content).reply_content || JSON.parse($item.last_msg.content).text || "暂无消息"}}</text>
+          <text class="lastmsg">{{JSON.parse($item.last_msg.content).content || JSON.parse($item.last_msg.content).reply_content || JSON.parse($item.last_msg.content).text || $t("dmlist.currentNoMessage")}}</text>
         </div>
       </div>
     </div>
-    <text style="font-size: 18px; margin-top: 15px; font-weight: 600" show="{{Show20UserLimit}}">暂时最多只支持显示20个用户哦~</text>
+    <text style="font-size: 18px; margin-top: 15px; font-weight: 600" show="{{Show20UserLimit}}">{{ $t("dmlist.userCountLimit") }}</text>
     <text style="margin-top: 25px"></text>
   </div>
 </template>

@@ -2,7 +2,7 @@
 
 <template>
     <div class="page">
-      <text style="margin-top: 233px" if="ShowBigPictureTips">图片过大，可能会无法显示</text>
+      <text style="margin-top: 233px" if="ShowBigPictureTips">{{ $t("picturedetail.bigImageTip") }}</text>
       <scroll class="scroll" scroll-x="true" scroll-y="true" @scroll="onScroll" bounces="true" id="scroll">
           <div style="{{container_style}}">
             <image style="{{img_style}}" src="{{img_uri}}" id="img"></image>
@@ -10,7 +10,7 @@
       </scroll>
       <title-bar title="图片预览"></title-bar>
       <div class="scroll_toolbar">
-          <text style="font-size: 24px; font-weight: 600">缩放调整</text>
+          <text style="font-size: 24px; font-weight: 600">{{ $t("picturedetail.scaleTip") }}</text>
           <slider style="margin-top: 5px" min="50" max="500" step="10" value="{{initialSliderValue}}"
               @change="UpdateImageStyle"></slider>
       </div>

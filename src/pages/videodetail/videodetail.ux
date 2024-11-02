@@ -5,7 +5,7 @@
 <template>
   <div class="page">
     <scroll scroll-y="true" class="maindiv" bounces="true">
-      <title-bar title="视频"></title-bar>
+      <title-bar title="video.title"></title-bar>
       <image src="{{vid.pic}}@319w_150h" alt="/common/grayloading_cn.png" class="vidpic"></image>
       <text class="vidtitle">{{ vid.title }}</text>
       <div class="statbar">
@@ -36,22 +36,22 @@
         </div>
         <div class="vidtool" @click="AISummary()">
           <image class="vidtoolimg" src="/common/vidtool_aisummary.png"></image>
-          <text class="vidtooltext">视频总结</text>
+          <text class="vidtooltext">{{ $t("video.aisummary") }}</text>
         </div>
         <div class="vidtool" @click="WIPTips">
           <image class="vidtoolimg" src="/common/vidtool_generatemanifest.png"></image>
-          <text class="vidtooltext">视频清单</text>
+          <text class="vidtooltext">{{ $t("video.manifest") }}</text>
         </div>
         <div class="vidtool" @click="WIPTips">
           <image class="vidtoolimg" src="/common/vidtool_watchlater.png"></image>
-          <text class="vidtooltext">稍后再看</text>
+          <text class="vidtooltext">{{ $t("video.showLater") }}</text>
         </div>
         <div class="vidtool" @click="WIPTips">
           <image class="vidtoolimg" src="/common/vidtool_watchonphone.png"></image>
-          <text class="vidtooltext">手机上看</text>
+          <text class="vidtooltext">{{ $t("video.showOnPhone") }}</text>
         </div>
       </scroll>
-      <default-button text="发送评论" margin-top="20px" @click="Reply"></default-button>
+      <default-button text="video.sendReply" margin-top="20px" @click="Reply"></default-button>
       <image src="/common/featurebtn_replyarea.png" style="margin-top: 15px" @click="GoReplyArea()"></image>
     </scroll>
     <full-screen-input style="position: absolute" input_text="{{input_text}}" if="{{replymode}}" @complete="InputComplete"

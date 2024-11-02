@@ -1,7 +1,7 @@
 <template>
   <div @click="Click" style="margin-top: {{marginTop}}; border-radius: {{borderRadius}}; justify-content: center; align-items: center">
     <image if="{{show_image}}" src="{{localsrc}}" style="border-radius: {{borderRadius}}"></image>
-    <text if="{{show_loading}}">加载图片中...</text>
+    <text if="{{show_loading && loadingAnim}}">加载图片中...</text>
   </div>
 </template>
 
@@ -36,6 +36,9 @@ export default {
         marginTop: {
             default: "0px"
         },
+        loadingAnim: {
+            default: ""
+        },
         // 若lockSize为false（空字符串），width与height不生效
         lockSize: {
             default: ""
@@ -65,10 +68,11 @@ export default {
         })
     },
     onDestroy(){
+        console.log("[BetterOnlineImage] onDestroy, deleting image in: " + this.localsrc)
         file.delete({
             uri: this.localsrc,
             success: () => {
-                console.log("[BetterOnlineImage] onDestroy, deleted image in: " + this.localsrc)
+                console.log("[BetterOnlineImage] Image deleted.")
             }
         })
     },

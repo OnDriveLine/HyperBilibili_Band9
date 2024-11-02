@@ -2,45 +2,45 @@
 
 <template>
   <div class="page">
-    <switch-bar title="设置"></switch-bar>
+    <switch-bar title="settings.title"></switch-bar>
     <div class="setbase" style="margin-top: 45px" onclick="ClickCountSet({{countset_name[0]}})">
       <image class="seticon" src="/common/settings_freshtype.png"></image>
-      <text class="setext_small">视频推荐相关性</text>
+      <text class="setext_small">{{ $t("settings.videoPushRelevance") }}</text>
       <text class="countset_num">{{ fresh_type }}</text>
     </div>
     <div class="setbase" onclick="ClickCountSet({{countset_name[1]}})">
       <image class="seticon" src="/common/settings_homevidcount.png"></image>
-      <text class="setext_small">首页视频推荐数</text>
+      <text class="setext_small">{{ $t("settings.videoPushCount") }}</text>
       <text class="countset_num">{{ home_vid_count }}</text>
     </div>
     <div class="setbase" onclick="SwitchSet({{switchset_name[0]}})">
       <image class="seticon" src="/common/settings_enablefullanim.png"></image>
-      <text class="setext_small">启用完整动画</text>
+      <text class="setext_small">{{ $t("settings.enableFullAnimation") }}</text>
       <text class="countset_num">{{ enableFullAnimation ? "开" : "关" }}</text>
     </div>
     <div class="setbase" @click="ClearTmp()">
       <image class="seticon" src="/common/settings_removetmp.png"></image>
-      <text class="setext_small">清除缓存</text>
+      <text class="setext_small">{{ $t("settings.clearTemp") }}</text>
       <image src="/common/arrow_right.png"></image>
     </div>
     <div class="setbase" @click="logout()">
       <image class="seticon" src="/common/settings_logout.png"></image>
-      <text class="setext_small">退出登录</text>
+      <text class="setext_small">{{ $t("settings.logOut") }}</text>
       <image src="/common/arrow_right.png"></image>
     </div>
     <div class="setbase" @click="GoDonation()">
       <image class="seticon" src="/common/donation.png"></image>
-      <text class="setext_small">捐赠</text>
+      <text class="setext_small">{{ $t("settings.donation") }}</text>
       <image src="/common/arrow_right.png"></image>
     </div>
     <div class="setbase" @click="GoAbout()">
       <image class="seticon" src="/common/settings_about.png"></image>
-      <text class="setext_small">关于应用</text>
+      <text class="setext_small">{{ $t("settings.about") }}</text>
       <image src="/common/arrow_right.png"></image>
     </div>
     <div class="setbase" @click="GoDebug()">
       <div class="seticon"></div>
-      <text class="setext_small">Debug</text>
+      <text class="setext_small">{{ $t("settings.debug") }}</text>
       <image src="/common/arrow_right.png"></image>
     </div>
     <image style="margin-top: 30px" src="/common/opensource_warning.png"></image>

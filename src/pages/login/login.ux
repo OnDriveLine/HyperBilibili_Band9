@@ -2,13 +2,13 @@
   <div>
     <text style="position: absolute; color: rgba(0, 0, 0, 0)">{{ anims.pagediv_mgt.value }}</text>
     <div class="page" style="margin-top: {{ anims.pagediv_mgt.value }}px">
-      <text style="font-weight: bold; margin-top: 35px">扫码登录</text>
+      <text style="font-weight: bold; margin-top: 35px">{{ $t("login.scanToLogin") }}</text>
       <div class="qr_code">
         <qrcode value="{{qr_value}}" show="{{show_qr}}" style="width: 210px; height: 210px"></qrcode>
         <image style="position: absolute" show="{{show_loading}}" src="{{anims.loading_img_src.value}}"></image>
       </div>
-      <text style="margin-top: 20px; font-size: 26px; font-weight: bold">请前往官方客户端</text>
-      <text style="font-size: 20px">进行扫码登录</text>
+      <text style="margin-top: 20px; font-size: 26px; font-weight: bold">{{ $t("login.goToOfficialApp") }}</text>
+      <text style="font-size: 20px">{{ $t("login.doScan") }}</text>
     </div>
   </div>
 </template>

@@ -2,24 +2,24 @@
 
 <template>
   <div class="page">
-    <title-bar title="评论"></title-bar>
+    <title-bar title="replytools.title"></title-bar>
     <div class="toolbtn" style="margin-top: 30px" @click="LikeReply()">
       <div class="dataicon" style="margin-left: 25px">
         <image class="toolicon" src="/common/replytools_like.png"></image>
       </div>
-      <text class="toolname" style="margin-left: 92px; position: absolute">点赞该评论</text>
+      <text class="toolname" style="margin-left: 92px; position: absolute">{{ $t("replytools.like") }}</text>
     </div>
     <div class="toolbtn" style="margin-top: 10px" @click="ShowSecReplies()">
       <div class="dataicon" style="margin-left: 25px">
         <image class="toolicon" src="/common/replytools_showreplies.png"></image>
       </div>
-      <text class="toolname" style="margin-left: 92px; position: absolute">查看回复</text>
+      <text class="toolname" style="margin-left: 92px; position: absolute">{{ $t("replytools.showReply") }}</text>
     </div>
     <div class="toolbtn" style="margin-top: 10px" @click="ShowDetail()">
       <div class="dataicon" style="margin-left: 25px">
         <image class="toolicon" src="/common/replytools_showdetail.png"></image>
       </div>
-      <text class="toolname" style="margin-left: 92px; position: absolute">查看详情</text>
+      <text class="toolname" style="margin-left: 92px; position: absolute">{{ $t("replytools.showDetail") }}</text>
     </div>
   </div>
 </template>

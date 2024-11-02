@@ -3,11 +3,11 @@
 <template>
   <div class="page">
     <image style="margin-top: 44px; width: 63px; height: 54px; object-fit: scale-down" src="/common/warning_icon.png"></image>
-    <text style="font-weight: 600; font-size: 28px; margin-top: 15px;">Hmm...你似乎没有联网哦！</text>
-    <text style="font-weight: 600; font-size: 28px; margin-top: 18px; width: 75%">请检查您的设备是否连接到手机或WLAN，或开启移动数据。</text>
-    <default-button primary="true" margin-top="35px" text="重试" @click="Retry"></default-button>
-    <default-button margin-top="15px" text="我的缓存 >" @click="GoSavedContent"></default-button>
-    <default-button margin-top="15px" text="退出" @click="Exit"></default-button>
+    <text style="font-weight: 600; font-size: 28px; margin-top: 15px;">{{ $t("networkerror.title") }}</text>
+    <text style="font-weight: 600; font-size: 28px; margin-top: 18px; width: 75%">{{ $t("networkerror.sectitle") }}</text>
+    <default-button primary="true" margin-top="35px" text="networkerror.retry" @click="Retry"></default-button>
+    <default-button margin-top="15px" text="networkerror.downloads" @click="GoSavedContent"></default-button>
+    <default-button margin-top="15px" text="networkerror.exit" @click="Exit"></default-button>
     <text style="margin-top: 25px;"></text>
   </div>
 </template>

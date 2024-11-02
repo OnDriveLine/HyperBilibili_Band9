@@ -1,8 +1,10 @@
+<import name="online-image" src="../BetterOnlineImage/BetterOnlineImage.ux"></import>
+
 <template>
     <div class="vid">
         <div class="vidinfo">
             <div class="vidpicture">
-                <image class="vidpicture_img" src="{{video.pic}}@160w_100h" alt="/common/fullgray.png"></image>
+                <online-image class="vidpicture_img" src="{{video.pic}}@160w_100h" alt="/common/fullgray.png"></online-image>
             </div>
             <text class="vidtitle">{{ video.title }}</text>
         </div>

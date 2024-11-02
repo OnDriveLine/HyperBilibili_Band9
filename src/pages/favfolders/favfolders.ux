@@ -2,7 +2,7 @@
 
 <template>
     <div class="page">
-        <title-bar title="收藏"></title-bar>
+        <title-bar title="favfolders.title"></title-bar>
         <image style="position: absolute; margin-top: 245px" if="{{show_loading}}" src="{{anims.loading_src.value}}">
         </image>
         <list style="margin-top: 20px; width: 77%; height: 100%" class="folderlist">
@@ -13,7 +13,7 @@
                     <div class="foldername">
                         <text class="foldername_text">{{ $item.title }}</text>
                     </div>
-                    <text class="foldercount">数量：{{ $item.media_count }}</text>
+                    <text class="foldercount">{{ $t("favfolders.count") }}：{{ $item.media_count }}</text>
                 </div>
                 <image src="/common/arrow_right.png" style="margin-left: 30px"></image>
             </list-item>

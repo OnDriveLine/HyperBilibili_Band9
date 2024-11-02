@@ -4,15 +4,15 @@
 <template>
   <div class="page">
     <image style="position: absolute" src="/common/rounddevices_searchbg.png" static></image>
-    <switch-bar title="搜索" static></switch-bar>
+    <switch-bar title="search.title" static></switch-bar>
     <div class="searchbtn" style="margin-top: 20px" @click="OpenInput">
       <image src="/common/searchpage_search.png" style="margin-left: 25px" static></image>
-      <text class="searchtip" style="margin-left: 15px" static>点此搜索</text>
+      <text class="searchtip" style="margin-left: 15px" static>{{ $t("search.clickToSearch") }}</text>
     </div>
     <div class="hotwords" style="margin-top: 23px">
       <div style="flex-direction: row; align-items: center" static>
         <image src="/common/searchpage_fire.png" style="object-fit: scale-down" static></image>
-        <text class="hottitle" static>热搜榜</text>
+        <text class="hottitle" static>{{ $t("search.hotSearch") }}</text>
       </div>
       <list style="margin-top: 13px" class="hotwordlist" if="{{showHotwordsList}}">
         <list-item type="hotwordlist" style="

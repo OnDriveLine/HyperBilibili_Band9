@@ -2,7 +2,7 @@
 
 <template>
   <div class="page">
-    <switch-bar title="我的"></switch-bar>
+    <switch-bar title="mypage.title"></switch-bar>
     <div class="profdiv" style="margin-top: 20px">
       <image src="{{accountInfo.face}}@106w_106h" alt="/common/fullgray.png" class="profimg"></image>
       <image src="{{accountInfo.pendant.image}}@176w_176h" alt="/common/alphaimg.png" class="profpendantimg"></image>
@@ -17,22 +17,22 @@
     </div>
     <div class="btnbase" style="margin-top: 40px" @click="GoMyFavFolders()">
       <image class="btnimg" src="/common/mypage_star.png"></image>
-      <text class="btntext">我的收藏</text>
+      <text class="btntext">{{ $t("mypage.favourite") }}</text>
       <image src="/common/arrow_right.png"></image>
     </div>
     <div class="btnbase" style="margin-top: 10px" @click="GoHistory()">
       <image class="btnimg" src="/common/mypage_history.png"></image>
-      <text class="btntext">历史记录</text>
+      <text class="btntext">{{ $t("mypage.history") }}</text>
       <image src="/common/arrow_right.png"></image>
     </div>
     <div class="btnbase" style="margin-top: 10px" @click="WIPTips()">
       <image class="btnimg" src="/common/mypage_watchlater.png"></image>
-      <text class="btntext">稍后再看</text>
+      <text class="btntext">{{ $t("mypage.showLater") }}</text>
       <image src="/common/arrow_right.png"></image>
     </div>
     <div class="btnbase" style="margin-top: 10px" @click="GoMessages()">
       <image class="btnimg" src="/common/mypage_messager.png"></image>
-      <text class="btntext">我的消息</text>
+      <text class="btntext">{{ $t("mypage.messages") }}</text>
       <image src="/common/arrow_right.png"></image>
     </div>
     <text style="margin-top: 25px"></text>

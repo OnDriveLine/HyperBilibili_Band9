@@ -1,7 +1,7 @@
 <template>
     <div class="bar" @click="SwitchPage()">
         <image src="/common/switch.png"></image>
-        <text style="font-weight: 600; font-size: 30px; margin-left: 15px">{{ title }}</text>
+        <text style="font-weight: 600; font-size: 30px; margin-left: 15px">{{ _parentVM.$t(title) }}</text>
     </div>
 </template>
 
@@ -13,6 +13,8 @@ export default {
     router.replace({
       uri: "pages/arealist"
     })
+  },
+  onInit(){
   }
 }
 </script>

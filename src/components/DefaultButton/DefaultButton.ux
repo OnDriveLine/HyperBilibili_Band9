@@ -1,6 +1,6 @@
 <template>
     <div class="featurebtn" style="margin-top: {{marginTop}}; background-color: {{color_bg}}" @click="Click">
-        <text class="featurebtn_text" style="color: {{color_text}}">{{text}}</text>
+        <text class="featurebtn_text" style="color: {{color_text}}">{{ _parentVM.$t(text) }}</text>
     </div>
 </template>
 

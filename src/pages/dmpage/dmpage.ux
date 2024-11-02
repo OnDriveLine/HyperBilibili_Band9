@@ -18,13 +18,13 @@
               </text>
               <!-- 已撤回的文本消息 -->
               <text class="msgtext" if="{{$item.msg_type == 5}}">
-                [已撤回] {{ JSON.parse($item.content).content }}
+                {{ $t("dmpage.withdrawn") }} {{ JSON.parse($item.content).content }}
               </text>
               <!-- 图片消息 -->
               <image class="imgmsg" if="{{$item.msg_type == 2}}" src="{{JSON.parse($item.content).url}}@156w_125h" alt="/common/fullgray.png"></image>
               <!-- 不支持显示的消息 -->
               <text class="msgtext" if="{{($item.msg_type != 5) && ($item.msg_type != 2) && ($item.msg_type != 1)}}">
-                该消息暂不支持显示
+                {{ $t("dmpage.withdrawn") }}
               </text>
             </div>
           </div>
@@ -40,13 +40,13 @@
               </text>
               <!-- 已撤回的文本消息 -->
               <text class="msgtext" if="{{$item.msg_type == 5}}">
-                [已撤回] {{ JSON.parse($item.content).content }}
+                {{ $t("dmpage.withdrawn") }} {{ JSON.parse($item.content).content }}
               </text>
               <!-- 图片消息 -->
               <image class="imgmsg" if="{{$item.msg_type == 2}}" src="{{JSON.parse($item.content).url}}@156w_125h" alt="/common/fullgray.png"></image>
               <!-- 不支持显示的消息 -->
               <text class="msgtext" if="{{($item.msg_type != 5) && ($item.msg_type != 2) && ($item.msg_type != 1)}}">
-                该消息暂不支持显示
+                {{ $t("dmpage.withdrawn") }}
               </text>
             </div>
             <image style="margin-left: 5px" class="msgprofpic" src="{{myPic}}@75w_75h" alt="/common/fullgray.png"></image>
