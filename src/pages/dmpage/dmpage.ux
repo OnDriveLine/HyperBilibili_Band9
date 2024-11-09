@@ -54,10 +54,8 @@
         </div>
       </div>
     </scroll>
-    <sendbox input_text="{{input_text}}" @clickinput="OpenInput" @clicksend="SendMsg" style="position: absolute">
-    </sendbox>
-    <full-screen-input style="position: absolute" input_text="{{input_text}}" if="{{inputmode}}" @complete="InputComplete"
-      @delete="InputDelete" @send="FinishInput" @exit="ExitInput"></full-screen-input>
+    <sendbox input_text="{{input_text}}" @clickinput="OpenInput" @clicksend="SendMsg" style="position: absolute"></sendbox>
+    <full-screen-input style="position: absolute" if="{{inputmode}}" @send="FinishInput" @exit="ExitInput"></full-screen-input>
   </div>
 </template>
 
@@ -82,13 +80,11 @@ export default {
     ],
     inputmode: false,
     show_loading: true,
-    input_text: {
-      content: ""
-    },
     anims: {
       loading: null,
       loading_src: {value: "/common/seqanims/loadingWhite/icons8-loading_颜色反转-1.png"}
-    }
+    },
+    input_text: ""
   },
   async SendMsg() {
     // 发送消息
@@ -96,7 +92,7 @@ export default {
       const result = await this.$app.$def.biliclient.SendDMSessionMessage(
         this.targetId,
         1,
-        this.input_text.content
+        this.input_text
       )
       if (result.code !== 0) {
         prompt.showToast({
@@ -104,7 +100,7 @@ export default {
         })
       } else {
         this.UpdateMessages()
-        this.input_text.content = ""
+        this.input_text = ""
       }
     } catch (error) {
       prompt.showToast({
@@ -144,29 +140,21 @@ export default {
     this.messages.push({})
     this.messages.pop()
     // 同时也刷新自定义组件的ViewModel
-    this.input_text.content = "Loading..."
+    this.input_text = "Loading..."
     // 将内容设置为默认为空字符串的input_text_set以适配FinishInput
-    this.input_text.content = input_text_set
+    this.input_text = input_text_set
     setTimeout(() => {
       this.ScrollToEnd()
     }, 500)
   },
-  FinishInput() {
+  FinishInput(evt) {
     this.inputmode = false
-    this.RefreshMessageList(this.input_text.content)
+    this.RefreshMessageList(evt.detail.content)
   },
   ExitInput() {
     this.inputmode = false
-    this.input_text.content = ""
+    this.input_text = ""
     this.RefreshMessageList()
-  },
-  InputComplete(evt) {
-    this.input_text.content += evt.detail.content
-  },
-  InputDelete() {
-    if (this.input_text.content.length > 0) {
-      this.input_text.content = this.input_text.content.slice(0, -1)
-    }
   },
   OpenInput() {
     this.inputmode = true

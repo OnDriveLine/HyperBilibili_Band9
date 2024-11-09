@@ -1,7 +1,7 @@
 <template>
   <div @click="Click" style="margin-top: {{marginTop}}; border-radius: {{borderRadius}}; justify-content: center; align-items: center">
     <image if="{{show_image}}" src="{{localsrc}}" style="border-radius: {{borderRadius}}"></image>
-    <text if="{{show_loading && loadingAnim}}">加载图片中...</text>
+    <image if="{{show_loading && loadingAnim}}" src="{{anims.loading_src.value}}"></image>
   </div>
 </template>
 
@@ -13,7 +13,11 @@ export default {
         show_loading: true,
         show_image: false,
         localsrc: "",
-        image_style: {}
+        image_style: {},
+        anims: {
+            loading: null,
+            loading_src: {value: "/common/seqanims/dotloadingWhite/icons8-dotsloading_颜色反转-1.png"}
+        }
     },
     props: {
         // 注意：width与height仅在lockSize为true（非空字符串）时生效
@@ -45,6 +49,16 @@ export default {
         }
     },
     onInit(){
+        this.anims.loading = new this.$app.$def.animengine.SequenceAnim(
+            "onlineImageComponent",
+            this.anims.loading_src,
+            28,
+            "/common/seqanims/dotloadingWhite/icons8-dotsloading_颜色反转-*.png",
+            1000,
+            true
+        )
+        this.anims.loading.start()
+
         this.image_style = {
             "object-fit": this.objectFit
         }

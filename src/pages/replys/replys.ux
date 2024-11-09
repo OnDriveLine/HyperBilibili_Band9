@@ -18,8 +18,7 @@
       </list-item>
     </list>
     <floating-page-changer current_pn="{{current_pn}}" @backpn="BackPN" @nextpn="NextPN"></floating-page-changer>
-    <full-screen-input input_text="{{input_text}}" if="{{replymode}}" @complete="InputComplete" @delete="InputDelete"
-      @send="SendReply" @exit="ExitInput"></full-screen-input>
+    <full-screen-input if="{{replymode}}" @send="SendReply" @exit="ExitInput"></full-screen-input>
   </div>
 </template>
 
@@ -49,13 +48,10 @@ export default {
     },
     replymode: false,
     reply_target: null,
-    input_text: {
-      content: ""
-    }
   },
-  async SendReply() {
+  async SendReply(evt) {
     this.replymode = false
-    const {content} = this.input_text
+    const content = evt.detail.content
 
     if (content.length === 0) {
       prompt.showToast({message: "评论内容不得为空！", duration: 2000})
@@ -94,12 +90,6 @@ export default {
   },
   ExitInput() {
     this.replymode = false
-  },
-  InputComplete(evt) {
-    this.input_text.content += evt.detail.content
-  },
-  InputDelete() {
-    this.input_text.content = this.input_text.content.slice(0, -1)
   },
   Reply(evt) {
     this.replymode = true

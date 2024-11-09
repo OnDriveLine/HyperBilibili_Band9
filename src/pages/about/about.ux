@@ -91,7 +91,7 @@ export default {
 }
 
 .developer {
-  width: 69%;
+  width: 80%;
   flex-direction: row;
 }
 </style>

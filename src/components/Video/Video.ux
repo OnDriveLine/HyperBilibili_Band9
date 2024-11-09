@@ -4,7 +4,7 @@
     <div class="vid" @click="OpenVideo(video.bvid)">
         <div style="{{vidinfo_style}}" class="vidinfo">
             <div class="vidpicture" style="{{vidpicture_style}}">
-              <online-image width="{{vidpicture_style['max-width']}}" height="{{vidpicture_style['max-height']}}" lock-size="true" border-radius="30px" src="{{video.pic}}@{{onlineimg_width}}w_{{onlineimg_height}}h"></online-image>
+              <online-image width="{{vidpicture_style['max-width']}}" height="{{vidpicture_style['max-height']}}" lock-size="true" border-radius="30px" loading-anim="true" src="{{video.pic}}@{{onlineimg_width}}w_{{onlineimg_height}}h"></online-image>
             </div>
             <text class="vidtitle" if="{{!useColumnTitle}}">{{ video.title }}</text>
         </div>
@@ -87,7 +87,7 @@ export default {
 
 .vidpicture {
   border-radius: 30px;
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: rgba(255, 255, 255, 0);
   justify-content: center;
   align-items: center;
 }

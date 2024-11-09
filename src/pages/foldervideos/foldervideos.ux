@@ -22,14 +22,9 @@
       </div>
     </div>
     <div class="foldervid_div">
-      <list class="foldervid_list">
-        <list-item type="foldervid_videos" for="{{foldervid_vids}}" class="foldervid_listitem"
-          style="height: {{calcSpace($item.title, true)}}" onclick="OpenVideo({{$item.bvid}})">
-          <videoshow video="{{$item}}"></videoshow>
-          <text style="margin-top: {{calcSpace($item.title, false)}}; height: 0px"></text>
-        </list-item>
-      </list>
+        <videoshow video="{{$item}}" for="{{foldervid_vids}}"></videoshow>
     </div>
+    <text style="margin-top: 25px"></text>
     <image style="position: absolute; margin-top: 265px" if="{{show_loading}}" src="{{anims.loading_src.value}}"></image>
   </div>
 </template>
@@ -130,12 +125,11 @@ export default {
 }
 
 .foldervid_div {
-  margin-top: 15px;
-  display: flex;
-  flex-direction: column;
+  margin-top: 10px;
+  width: 77%;
   align-items: center;
-  height: 100%;
-  width: 100%;
+  justify-content: center;
+  flex-direction: column;
 }
 
 .foldervid_list {

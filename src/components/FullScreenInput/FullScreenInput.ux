@@ -2,17 +2,17 @@
 
 <template>
     <div class="inputpanel">
-        <input-method style="position: absolute" hide={{keyboardHide}} @complete="InputComplete" @delete="InputDelete" @screentype="{{screentype}}" vibratemode="short"></input-method>
+        <input-method style="position: absolute" hide={{keyboardHide}} @complete="InputEvent" @delete="InputDelete" @screentype="{{screentype}}" vibratemode="short"></input-method>
         <div class="inputactions">
             <div style="margin-left: 35px" @click="ExitInput">
                 <image class="inputaction_img" src="/common/textinput_back.png"></image>
             </div>
-            <div style="margin-left: 75px" @click="SendReply">
+            <div style="margin-left: 75px" @click="InputFinish">
                 <image class="inputaction_img" src="/common/textinput_finish.png"></image>
             </div>
         </div>
         <div class="inputshow">
-            <text class="inputshow_text">{{ input_text.content }}</text>
+            <text class="inputshow_text">{{ input_text }}</text>
         </div>
     </div>
 </template>
@@ -20,29 +20,27 @@
 <script>
 export default {
     props: {
-        input_text: {
-            default: null
-        },
         keyboardHide: {
             default: false
-        },
-        screentype: {
-            default: ""
         }
     },
-    InputComplete(evt){
-        this.$emit("complete", {
-            content: evt.detail.content
-        })
+    data: {
+        input_text: "",
+        screentype: "circle"
+    },
+    InputEvent(evt){
+        this.input_text += evt.detail.content
     },
     InputDelete(){
-        this.$emit("delete")
+        this.input_text = this.input_text.slice(0, -1)
     },
     ExitInput(){
         this.$emit("exit")
     },
-    SendReply(){
-        this.$emit("send")
+    InputFinish(){
+        this.$emit("send", {
+            content: this.input_text
+        })
     },
     async InitScreenType(){
         if(!this.screentype){

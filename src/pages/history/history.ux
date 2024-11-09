@@ -6,15 +6,10 @@
         <title-bar title="history.title"></title-bar>
         <image style="position: absolute; margin-top: 245px" if="{{show_loading}}" src="{{anims.loading_src.value}}">
         </image>
-        <list style="margin-top: 15px" class="historylist">
-            <list-item type="history"
-                class="historyvid_listitem"
-                style="height: {{calcSpace($item.title, true)}}"
-                for="{{history}}" onclick="OpenVideo({{$item.bvid}})">
-                <videoshow video={{$item}}></videoshow>
-                <text style="margin-top: {{calcSpace($item.title, false)}}; height: 0px"></text>
-            </list-item>
-        </list>
+        <div class="historylist">
+          <videoshow for="{{history}}" video="{{$item}}"></videoshow>
+        </div>
+        <text style="margin-top: 25px"></text>
     </div>
 </template>
 
@@ -28,13 +23,6 @@ export default {
       loading: null,
       loading_src: {value: "/common/seqanims/loadingWhite/icons8-loading_颜色反转-1.png"}
     }
-  },
-  calcSpace(vid_title, isListItem) {
-    const isLastItem = vid_title === this.history[this.history.length - 1]?.title
-    if (isListItem) {
-      return isLastItem ? "270px" : "170px"
-    }
-    return isLastItem ? "80px" : "0px"
   },
   async LoadHistory(){
     this.show_loading = true
@@ -89,19 +77,10 @@ export default {
 }
 
 .historylist {
+  margin-top: 10px;
   width: 77%;
-  height: 75%;
   align-items: center;
   justify-content: center;
-}
-
-.historyvid_listitem {
-  height: 170px;
-  width: 100%;
-  margin-top: 5px;
-  display: flex;
   flex-direction: column;
-  align-items: center;
-  position: absolute;
 }
 </style>

@@ -37,8 +37,7 @@
       </list>
     </div>
     <image style="position: absolute; margin-top: 305px" if="{{show_loading}}" src="{{anims.loading_src.value}}"></image>
-    <full-screen-input style="position: absolute" input_text="{{input_text}}" if="{{input_mode}}"
-      @complete="InputComplete" @delete="InputDelete" @send="GoSearch" @exit="ExitInput"></full-screen-input>
+    <full-screen-input style="position: absolute" if="{{input_mode}}" @send="GoSearch" @exit="ExitInput"></full-screen-input>
   </div>
 </template>
 
@@ -54,23 +53,16 @@ export default {
       loading: null,
       loading_src: {value: "/common/seqanims/loadingWhite/icons8-loading_颜色反转-1.png"}
     },
-    input_text: {content: ""}
   },
   ExitInput() {
     this.input_mode = false
   },
-  InputComplete(evt) {
-    this.input_text.content += evt.detail.content
-  },
-  InputDelete() {
-    this.input_text.content = this.input_text.content.slice(0, -1)
-  },
-  GoSearch() {
+  GoSearch(evt) {
     this.hotwords = null
     router.push({
       uri: "pages/searchresult",
       params: {
-        keyword: this.input_text.content
+        keyword: evt.detail.content
       }
     })
   },
