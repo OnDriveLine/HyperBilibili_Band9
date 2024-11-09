@@ -2,11 +2,11 @@
 在Vela嵌入式设备上基于QuickApp实现的第三方B站客户端
 
 ## 子项目 / 分支:
-1. 澎湃哔哩“米粒版”：[https://github.com/OnDriveLine/HyperBilibili_Band9](https://github.com/OnDriveLine/HyperBilibili_Band9)
+1. 澎湃哔哩“米粒版”：[https://github.com/OnDriveLine/HyperBilibili_Band/tree/band9](https://github.com/OnDriveLine/HyperBilibili_Band/tree/band9)
     - 专为 `小米手环 9` 等胶囊屏设备移植的澎湃哔哩客户端
     - 目前为v2.3版本的分支，并砍掉了一些功能
     - 默认启用interconnect联网
-2. 澎湃哔哩“手环方屏版”：[https://github.com/OnDriveLine/HyperBilibili_Band9](https://github.com/OnDriveLine/HyperBilibili_Band9)
+2. 澎湃哔哩“手环方屏版”：[https://github.com/OnDriveLine/HyperBilibili_Band/tree/MB9P](https://github.com/OnDriveLine/HyperBilibili_Band/tree/MB9P)
     - 专为 `小米手环 9 Pro` 等胶囊屏设备移植的澎湃哔哩客户端
     - 目前为v2.4版本的分支
 
