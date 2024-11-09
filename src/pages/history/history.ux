@@ -73,12 +73,12 @@ export default {
   align-items: center;
   height: 100%;
   position: absolute;
-  width: 100%;
+  width: 336px;
 }
 
 .historylist {
   margin-top: 10px;
-  width: 77%;
+  width: 336px;
   align-items: center;
   justify-content: center;
   flex-direction: column;

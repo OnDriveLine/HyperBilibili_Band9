@@ -4,7 +4,7 @@
     <div class="page">
         <title-bar title="messages.title"></title-bar>
         <div class="featurebox" style="margin-top: 25px" @click="ShowOnPhoneTips()">
-            <div class="boxline" style="margin-top: 20px">
+            <div class="boxline" style="margin-top: 25px">
                 <div class="feature" style="margin-left: 17px">
                     <image class="featureimg" src="/common/messages_replyme.png"></image>
                     <text class="featuretext">{{ $t("messages.replyMe") }}</text>
@@ -20,7 +20,7 @@
                     </div>
                 </div>
             </div>
-            <div class="boxline" style="margin-top: 15px">
+            <div class="boxline" style="margin-top: 25px">
                 <div class="feature" style="margin-left: 30px">
                     <image class="featureimg" src="/common/messages_atme.png"></image>
                     <text class="featuretext">{{ $t("messages.atMe") }}</text>
@@ -37,7 +37,7 @@
                 </div>
             </div>
         </div>
-        <image src="/common/dm_icon.png" style="margin-top: 8px" @click="GoDM()"></image>
+        <image src="/common/dm_icon.png" style="margin-top: 20px" @click="GoDM()"></image>
     </div>
 </template>
 
@@ -74,12 +74,12 @@ export default {
     align-items: center;
     height: 100%;
     position: absolute;
-    width: 100%;
+    width: 336px;
 }
 
 .featurebox {
     width: 321px;
-    height: 222px;
+    height: 252px;
     border-radius: 33px;
     background-color: #222222;
     flex-direction: column;
@@ -88,7 +88,7 @@ export default {
 .boxline {
     flex-direction: row;
     align-items: center;
-    width: 100%;
+    width: 336px;
 }
 
 .feature {
@@ -101,6 +101,7 @@ export default {
     font-size: 25px;
     font-weight: 600;
     margin-top: 5px;
+    color: white;
 }
 
 .featureimg {

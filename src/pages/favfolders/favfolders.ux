@@ -5,7 +5,7 @@
         <title-bar title="favfolders.title"></title-bar>
         <image style="position: absolute; margin-top: 245px" if="{{show_loading}}" src="{{anims.loading_src.value}}">
         </image>
-        <list style="margin-top: 20px; width: 77%; height: 100%" class="folderlist">
+        <list style="margin-top: 20px; width: 310px; height: 100%" class="folderlist">
             <list-item type="folders" class="folder" for="{{folders}}"
                 onclick="GoFolderVideosPage({{$item.id}}, {{$item.media_count}})">
                 <image src="{{$item.cover}}@121w_68h" alt="/common/fullblack.png" class="folderimg"></image>
@@ -15,7 +15,6 @@
                     </div>
                     <text class="foldercount">{{ $t("favfolders.count") }}：{{ $item.media_count }}</text>
                 </div>
-                <image src="/common/arrow_right.png" style="margin-left: 30px"></image>
             </list-item>
         </list>
     </div>
@@ -84,15 +83,15 @@ export default {
   align-items: center;
   height: 100%;
   position: absolute;
-  width: 100%;
+  width: 336px;
 }
 
 .folder {
   margin-top: 10px;
-  width: 340px;
+  width: 310px;
   height: 120px;
-  background-color: #262626;
-  border-radius: 40px;
+  background-color: #222222;
+  border-radius: 24px;
   flex-direction: row;
   align-items: center;
 }
@@ -124,6 +123,7 @@ export default {
   text-overflow: ellipsis;
   font-weight: 600;
   font-size: 24px;
+  color:white;
 }
 
 .foldercount {
