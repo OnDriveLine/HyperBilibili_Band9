@@ -1,0 +1,59 @@
+<template>
+    <div class="featurebtn" style="margin-top: {{marginTop}}; background-color: {{color_bg}}" @click="Click">
+        <text class="featurebtn_text" style="color: {{color_text}}">{{ _parentVM.$t(text) }}</text>
+    </div>
+</template>
+
+<script>
+export default {
+    props: {
+        text: {
+            default: ""
+        },
+        marginTop: {
+            default: ""
+        },
+        primary: {
+            default: "" //默认false 即空字符串
+        },
+        disabled: {
+            default: ""
+        },
+        color_bg: {
+            default: "#262626"
+        },
+        color_text: {
+            default: "#ffffff"
+        }
+    },
+    Click(){
+        if(!this.disabled){
+            this.$emit('click')
+        }
+    },
+    onInit(){
+        if(this.primary){
+            this.color_bg = "#FF7DA8"
+        }
+        if(this.disabled){
+            this.color_text = "#5F5F5F"
+        }
+    }
+}
+</script>
+
+<style>
+.featurebtn {
+  width: 324px;
+  height: 80px;
+  border-radius: 90px;
+  background-color: #262626;
+  justify-content: center;
+  align-items: center;
+}
+
+.featurebtn_text {
+  font-size: 40px;
+  font-weight: 600;
+}
+</style>

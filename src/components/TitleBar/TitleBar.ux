@@ -1,0 +1,24 @@
+<template>
+  <div class="titlebar" @click="RouterBack()">
+    <image src="/common/icons8-back-100.png" style="width: 30px; height: 30px; margin-right: 5px"></image>
+    <text style="font-size: 40px; font-weight: bold">{{ _parentVM.$t(title) }}</text>
+  </div>
+</template>
+
+<script>
+import router from "@system.router"
+export default {
+  props: ["title"],
+  RouterBack() {
+    router.back()
+  }
+}
+</script>
+
+<style>
+.titlebar {
+  margin-top: 45px;
+  align-items: center;
+  justify-content: center;
+}
+</style>

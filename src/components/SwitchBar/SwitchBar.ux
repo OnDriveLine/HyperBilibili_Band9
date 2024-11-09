@@ -1,0 +1,27 @@
+<template>
+    <div class="bar" @click="SwitchPage()">
+        <image src="/common/switch.png"></image>
+        <text style="font-weight: 600; font-size: 30px; margin-left: 15px">{{ _parentVM.$t(title) }}</text>
+    </div>
+</template>
+
+<script>
+import router from "@system.router"
+export default {
+  props: ["title"],
+  SwitchPage() {
+    router.replace({
+      uri: "pages/arealist"
+    })
+  },
+  onInit(){
+  }
+}
+</script>
+
+<style>
+.bar {
+    flex-direction: row;
+    margin-top: 30px;
+}
+</style>

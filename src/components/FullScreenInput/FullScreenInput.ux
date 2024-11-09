@@ -1,0 +1,90 @@
+<import name="input-method" src="../InputMethod/InputMethod.ux"></import>
+
+<template>
+    <div class="inputpanel">
+        <input-method style="position: absolute" hide={{keyboardHide}} @complete="InputEvent" @delete="InputDelete" @screentype="{{screentype}}" vibratemode="short"></input-method>
+        <div class="inputactions">
+            <div style="margin-left: 25px" @click="ExitInput">
+                <image class="inputaction_img" src="/common/textinput_back.png"></image>
+            </div>
+            <div style="margin-left: 45px" @click="InputFinish">
+                <image class="inputaction_img" src="/common/textinput_finish.png"></image>
+            </div>
+        </div>
+        <div class="inputshow">
+            <text class="inputshow_text">{{ input_text }}</text>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+    props: {
+        keyboardHide: {
+            default: false
+        }
+    },
+    data: {
+        input_text: "",
+        screentype: "circle"
+    },
+    InputEvent(evt){
+        this.input_text += evt.detail.content
+    },
+    InputDelete(){
+        this.input_text = this.input_text.slice(0, -1)
+    },
+    ExitInput(){
+        this.$emit("exit")
+    },
+    InputFinish(){
+        this.$emit("send", {
+            content: this.input_text
+        })
+    },
+    async InitScreenType(){
+        if(!this.screentype){
+            this.screentype = this.$app.$def.DEVICE_INFO.screenShape
+        }
+    },
+    onInit(){
+        this.InitScreenType()
+    }
+}
+</script>
+
+<style>
+.inputpanel {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  justify-content: center;
+}
+
+.inputactions {
+  flex-direction: row;
+  align-items: center;
+  width: 50%;
+  position: absolute;
+  margin-top: 30px;
+  height: 65px;
+  align-items: center;
+}
+
+.inputaction_img {
+  width: 35px;
+  height: 35px;
+  object-fit: scale-down;
+}
+
+.inputshow {
+  width: 65%;
+  position: absolute;
+  margin-top: 100px;
+}
+
+.inputshow_text {
+  font-size: 24px;
+}
+</style>

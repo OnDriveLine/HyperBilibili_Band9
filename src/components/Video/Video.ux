@@ -1,0 +1,138 @@
+<import name="online-image" src="../BetterOnlineImage/BetterOnlineImage.ux"></import>
+
+<template>
+    <div class="vid" @click="OpenVideo(video.bvid)">
+        <div style="{{vidinfo_style}}" class="vidinfo">
+            <div class="vidpicture" style="{{vidpicture_style}}">
+              <online-image width="{{vidpicture_style['width']}}" height="{{vidpicture_style['height']}}" lock-size="true" border-radius="25px" loading-anim="true" src="{{video.pic}}@{{onlineimg_width}}w_{{onlineimg_height}}h"></online-image>
+            </div>
+            <text class="vidtitle" if="{{!useColumnTitle}}">{{ video.title }}</text>
+        </div>
+        <text class="vidtitle_column" if="{{useColumnTitle}}">{{ video.title }}</text>
+        <div class="vidstat">
+            <text class="upinfo">UP：{{ video.owner.name }}</text>
+            <div class="stat_view">
+                <image class="stat_view_img" src="/common/playcounticon.png"></image>
+                <text class="stat_view_text">
+                    {{ this.$app.$def.tools.formatNumber(video.stat.view) }}
+                </text>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+import router from "@system.router"
+
+export default {
+  props: ["video"],
+  data: {
+    useColumnTitle: false,
+    vidpicture_style: {
+      "width": "310px",
+      "height": "195px"
+    },
+    onlineimg_width: "310",
+    onlineimg_height: "195"
+  },
+  OpenVideo(bvid) {
+    router.push({
+      uri: "pages/videodetail",
+      params: {bvid}
+    })
+  },
+  SetOnlineImageSize(width, height){
+    this.vidpicture_style["width"] = width + "px";
+    this.vidpicture_style["height"] = height + "px";
+    this.onlineimg_width = width;
+    this.onlineimg_height = height;
+  },
+  onInit(){
+    if(!(this.video.pic.includes("http://") || this.video.pic.includes("https://"))){
+      this.video.pic = "https:" + this.video.pic
+    }
+    
+    const deviceInfo = this.$app.$def.DEVICE_INFO;
+    if (deviceInfo.screenWidth <= 336 || this.video.title.length > 25){
+      this.useColumnTitle = true;
+      if (deviceInfo.screenWidth <= 336)
+        this.SetOnlineImageSize(300, 195);
+      else
+        this.SetOnlineImageSize(300, 150);
+    }
+  }
+}
+</script>
+
+<style>
+.vid {
+  margin-top: 8px;
+  padding: 13px 13px;
+  border-radius: 43px;
+  background-color: #262626af;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.vidinfo {
+  width: 300px;
+  justify-content: center;
+  flex-direction: row;
+}
+
+.vidpicture {
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0);
+  justify-content: center;
+  align-items: center;
+}
+
+.vidtitle {
+  padding-left: 20px;
+  width: 145px;
+  font-size: 20px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+}
+
+.vidtitle_column {
+  margin-top: 10px;
+  font-size: 20px;
+  font-weight: 600;
+  text-overflow: ellipsis;
+}
+
+.vidstat {
+  padding: 4px 4px;
+  margin-top: 5px;
+  flex-direction: row;
+  align-items: flex-start;
+  width: 306px;
+}
+
+.upinfo {
+  font-size: 14px;
+  font-weight: 600;
+  width: 200px;
+  text-overflow: ellipsis;
+}
+
+.stat_view {
+  position: absolute;
+  right: 2px;
+  align-items: center;
+}
+
+.stat_view_img {
+  width: 20px;
+  height: 15px;
+  object-fit: scale-down;
+}
+
+.stat_view_text {
+  font-size: 14px;
+  font-weight: 600;
+  margin-left: 5px;
+}
+</style>
