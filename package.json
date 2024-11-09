@@ -7,8 +7,8 @@
   },
   "scripts": {
     "start": "aiot server --watch --open-nuttx --enable-custom-component true --enable-protobuf true",
-    "build": "aiot build --enable-custom-component --enable-jsc --enable-protobuf",
-    "release": "aiot release --enable-custom-component --enable-jsc --enable-protobuf",
+    "build": "aiot build --enable-custom-component --enable-jsc --enable-protobuf --enable-image-png8",
+    "release": "aiot release --enable-custom-component --enable-jsc --enable-protobuf --enable-image-png8",
     "watch": "aiot watch --open-nuttx",
     "lint": "eslint --format codeframe --fix --ext .ux,.js src/"
   },
@@ -25,11 +25,11 @@
     ]
   },
   "devDependencies": {
-    "@aiot-toolkit/jsc": "^1.0.3",
+    "@aiot-toolkit/jsc": "^1.0.7",
     "@aiot-toolkit/velasim": "^0.1.26-beta.3",
     "@commitlint/cli": "^17.3.0",
     "@commitlint/config-conventional": "^17.3.0",
-    "aiot-toolkit": "1.1.3",
+    "aiot-toolkit": "1.1.4",
     "babel-eslint": "^10.0.1",
     "eslint": "^6.0.0",
     "eslint-config-prettier": "^6.0.0",

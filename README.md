@@ -1,17 +1,27 @@
 # HyperBilibili （澎湃哔哩）
 在Vela嵌入式设备上基于QuickApp实现的第三方B站客户端
 
-# 前情提要
-本项目基于SearchStars [HyperBilibili](https://github.com/Searchstars/HyperBilibili)项目v2.2版本编写，为GPL-3.0项目开源
+## 子项目 / 分支:
+1. 澎湃哔哩“米粒版”：[https://github.com/OnDriveLine/HyperBilibili_Band9](https://github.com/OnDriveLine/HyperBilibili_Band9)
+    - 专为 `小米手环 9` 等胶囊屏设备移植的澎湃哔哩客户端
+    - 目前为v2.3版本的分支，并砍掉了一些功能
+    - 默认启用interconnect联网
+2. 澎湃哔哩“手环方屏版”：[https://github.com/OnDriveLine/HyperBilibili_Band9](https://github.com/OnDriveLine/HyperBilibili_Band9)
+    - 专为 `小米手环 9 Pro` 等胶囊屏设备移植的澎湃哔哩客户端
+    - 目前为v2.4版本的分支
 
 ## 使用
-对于普通用户而非开发者，你只需要下载本应用的release版本（RPK文件）然后安装到你的设备上就行了。目前，我只会在米坛社区和Github上发布release版本，如果你想获得经过测试的稳定版本，请前往[米坛社区发布页](https://www.bandbbs.cn/threads/13155/)获取。如果你想紧跟代码提交的步伐，在手表上运行本项目最新且未经测试的不稳定开发版代码，请从本仓库的dist文件夹中直接下载rpk
+对于普通用户而非开发者，你只需要下载本应用的release版本（RPK文件）然后安装到你的设备上就行了。目前，我只会在米坛社区上发布release版本，如果你想获得经过测试的稳定版本，请前往[米坛社区发布页](https://www.bandbbs.cn/threads/12443/)获取。如果你想紧跟代码提交的步伐，在手表上运行本项目最新且未经测试的不稳定开发版代码，请从本仓库的actions中直接下载实时构建的rpk
 
 ## 搭建开发环境
 
 克隆此仓库，然后在`Aiot IDE`中打开它
 
+随后执行以下命令，安装typescript支持：
+
 `npm i -D typescript ts-loader`
+
+然后像普通快应用一样进行开发即可
 
 ## 开发文档
 
