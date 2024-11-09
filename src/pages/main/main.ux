@@ -12,7 +12,7 @@
       <image style="position: absolute; margin-top: 265px" if="{{show_loading}}" src="{{anims.loading_src.value}}">
       </image>
       <div class="recommend_div" if="{{show_recommend_div}}">
-        <videoshow for="{{recommend_vids}}" video="{{$item}}" onclick="OpenVideo({{$item.bvid}})"></videoshow>
+        <videoshow for="{{recommend_vids}}" video="{{$item}}"></videoshow>
         <text style="margin-top: 25px"></text>
       </div>
     </scroll>
@@ -31,7 +31,6 @@
 </template>
 
 <script>
-import router from "@system.router"
 import prompt from "@system.prompt"
 
 export default {
@@ -52,13 +51,6 @@ export default {
       rotatedeg: "0deg"
     },
     ambientlightObj: null
-  },
-  OpenVideo(bvid) {
-    console.log("openvid:", bvid)
-    router.push({
-      uri: "pages/videodetail",
-      params: {bvid}
-    })
   },
   async Refresh() {
     if (!this.anims.showRefreshFX) {

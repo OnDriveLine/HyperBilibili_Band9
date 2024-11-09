@@ -25,7 +25,7 @@
     ]
   },
   "devDependencies": {
-    "@aiot-toolkit/jsc": "^1.0.3",
+    "@aiot-toolkit/jsc": "^1.0.7",
     "@aiot-toolkit/velasim": "^0.1.26-beta.3",
     "@commitlint/cli": "^17.3.0",
     "@commitlint/config-conventional": "^17.3.0",
