@@ -74,7 +74,7 @@ export default {
 }
 
 .appbar {
-  width: 376px;
+  width: 81%;
   height: 84px;
   border-radius: 60px;
   background-color: #262626;
@@ -83,7 +83,7 @@ export default {
 }
 
 .developersbar {
-  width: 376px;
+  width: 81%;
   height: 155px;
   border-radius: 50px;
   background-color: #262626;
@@ -91,7 +91,7 @@ export default {
 }
 
 .developer {
-  width: 320px;
+  width: 69%;
   flex-direction: row;
 }
 </style>

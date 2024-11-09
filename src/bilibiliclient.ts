@@ -1,5 +1,4 @@
 import { fetch, storage, crypto, prompt } from './tsimports';
-import * as interconnectfetch from './interconnectfetch'
 import * as eula from './eula'
 
 // Wbi签名混淆表
@@ -59,16 +58,9 @@ class BilibiliClient {
         return ("x" === name ? randomInt : 3 & randomInt | 8).toString(16).toUpperCase()
     }));
 
-    constructor(interconnectMode = false, interconnecter = null) {
+    constructor() {
         this.updateBUVID();
-        this.interconnect_mode = interconnectMode;
-        if (interconnectMode) {
-            this.fetch = new interconnectfetch.fetch(interconnecter);
-            this.interconnecter = interconnecter
-        }
-        else {
-            this.fetch = fetch;
-        }
+        this.fetch = fetch;
     }
 
     // 获取请求头，用于模拟正常浏览器环境，降低风控概率

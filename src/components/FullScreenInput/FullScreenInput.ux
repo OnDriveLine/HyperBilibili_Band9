@@ -46,7 +46,7 @@ export default {
     },
     async InitScreenType(){
         if(!this.screentype){
-            this.screentype = (await this.$app.$def.tools.getDeviceInformation).screenShape
+            this.screentype = this.$app.$def.DEVICE_INFO.screenShape
         }
     },
     onInit(){

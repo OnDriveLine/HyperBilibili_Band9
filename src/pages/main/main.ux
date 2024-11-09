@@ -3,7 +3,7 @@
 
 <template>
   <div class="page">
-    <image src="/common/rounddevices_bg.png"
+    <image if="{{this.$app.$def.DEVICE_INFO.screenShape == 'circle'}}" src="/common/rounddevices_bg.png"
       style="position: absolute; transform: rotate({{ambientlight.rotatedeg}}); transform-origin: {{ambientlight.transform_origin}}; left: 0px">
     </image>
     <scroll scroll-y="true" class="scroll" bounces="true">
@@ -12,13 +12,8 @@
       <image style="position: absolute; margin-top: 265px" if="{{show_loading}}" src="{{anims.loading_src.value}}">
       </image>
       <div class="recommend_div" if="{{show_recommend_div}}">
-        <list class="recommend_list">
-          <list-item type="recommend_videos" for="{{recommend_vids}}" class="recommend_listitem"
-            style="height: {{calcSpace($item.title, true)}}" onclick="OpenVideo({{$item.bvid}})">
-            <videoshow video="{{$item}}"></videoshow>
-            <text style="margin-top: {{calcSpace($item.title, false)}}; height: 0px"></text>
-          </list-item>
-        </list>
+        <videoshow for="{{recommend_vids}}" video="{{$item}}" onclick="OpenVideo({{$item.bvid}})"></videoshow>
+        <text style="margin-top: 25px"></text>
       </div>
     </scroll>
     <div style="position: absolute; bottom: 0px" @click="Refresh()">
@@ -102,13 +97,6 @@ export default {
       this.show_recommend_div = true
     }
   },
-  calcSpace(vid_title, isListItem) {
-    const isLastItem = vid_title === this.recommend_vids[this.recommend_vids.length - 1]?.title
-    if (isListItem) {
-      return isLastItem ? "270px" : "170px"
-    }
-    return isLastItem ? "80px" : "0px"
-  },
   async checkUpdates() {
     try {
       const result = await this.$app.$def.biliclient.checkHyperbilibiliUpdates()
@@ -188,22 +176,11 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%;
-  width: 100%;
+  max-width: 76%;
+  min-width: 76%;
 }
 
-.recommend_list {
-  width: 77%;
-  height: 100%;
-}
-
-.recommend_listitem {
-  height: 170px;
-  width: 100%;
-  margin-top: 5px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  position: absolute;
+.recommend_item {
+  width: 300px;
 }
 </style>

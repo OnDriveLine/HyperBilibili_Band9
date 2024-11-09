@@ -39,7 +39,7 @@ export default {
         }
     },
     async UpdateImage(){
-        const deviceinfo = await this.$app.$def.tools.getDeviceInformation();
+        const deviceinfo = this.$app.$def.DEVICE_INFO;
         const shape = deviceinfo.screenShape;
         
         this.steps = this.steps_map[shape] || [];

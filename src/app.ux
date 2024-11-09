@@ -7,7 +7,6 @@ import * as funnytips from "./funnytips"
 import * as settings from "./settings"
 import * as ambientlight from "./ambientlight"
 import * as jumpcheck from "./jumpcheck"
-import * as interconnecter from "./interconnecter"
 import * as htmlparser from "./htmlparser"
 import * as savedcontent from "./savedcontent"
 import * as buildinfo from "./buildinfo"
@@ -19,16 +18,21 @@ export default {
   settings: settings,
   ambientlight: ambientlight,
   jumpcheck: jumpcheck,
-  interconnecter: interconnecter,
   articletools: articletools,
   htmlparser: htmlparser,
   savedcontent: savedcontent,
   buildinfo: buildinfo,
+  DEVICE_INFO: null,
   async onCreate() {
     console.log("app created")
+    console.log("appinit > loadSettings")
     settings.loadSettings()
+    console.log("appinit > initSavedContentManager")
     await this.savedcontent.SavedContentManager.initialize()
-    this.biliclient = new BilibiliClient(this.settings.SETTINGS.enableInterconnectMode, this.interconnecter)
+    console.log("appinit > initDeviceInfo")
+    this.DEVICE_INFO = await this.tools.getDeviceInformation()
+    console.log("appinit > createBiliClient")
+    this.biliclient = new BilibiliClient()
   },
   onDestroy() {
     console.log("app destroyed")
