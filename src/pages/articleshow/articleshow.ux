@@ -21,7 +21,7 @@
           <text class="infofield_text" style="margin-left: 5px" static>分钟</text>
         </div>
       </div>
-      <div style="margin-top: 22px; width: 80%; justify-content: center">
+      <div style="margin-top: 22px; width: 336px; justify-content: center">
         <html-renderer doms="{{article_content}}"></html-renderer>
       </div>
     </div>
@@ -111,18 +111,18 @@ export default {
   align-items: center;
   height: 100%;
   position: absolute;
-  width: 100%;
+  width: 336px;
 }
 
 .articlebox {
   flex-direction: column;
   align-items: center;
-  width: 100%;
+  width: 336px;
   margin-top: 25px;
 }
 
 .infobox {
-  width: 75%;
+  width: 336px;
   flex-direction: column;
   justify-content: flex-start;
 }
