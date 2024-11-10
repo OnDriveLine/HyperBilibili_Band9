@@ -2,13 +2,15 @@
 在Vela嵌入式设备上基于QuickApp实现的第三方B站客户端
 
 ## 子项目 / 分支:
-1. 澎湃哔哩“米粒版”：[https://github.com/OnDriveLine/HyperBilibili_Band9](https://github.com/OnDriveLine/HyperBilibili_Band9)
-    - 专为 `小米手环 9` 等胶囊屏设备移植的澎湃哔哩客户端
-    - 目前为v2.3版本的分支，并砍掉了一些功能
-    - 默认启用interconnect联网
+1. 澎湃哔哩“米环版”：[https://github.com/OnDriveLine/HyperBilibili_Band](https://github.com/OnDriveLine/HyperBilibili_Band)
+    - 专为 `小米手环9`（band9分支） `小米手环9 Pro`（MB9P分支） 等设备移植的澎湃哔哩客户端
+    - MB9P分支基于v2.4版本修改，具有完整的功能并引入了部分v2.5版本的特性
+    - band9分支基于v2.3版本修改，砍掉了绝大多数功能
+    - band9分支默认启用interconnect联网，MB9P使用fetch
+
 
 ## 使用
-对于普通用户而非开发者，你只需要下载本应用的release版本（RPK文件）然后安装到你的设备上就行了。目前，我只会在米坛社区上发布release版本，如果你想获得经过测试的稳定版本，请前往[米坛社区发布页](https://www.bandbbs.cn/threads/12443/)获取。如果你想紧跟代码提交的步伐，在手表上运行本项目最新且未经测试的不稳定开发版代码，请从本仓库的actions中直接下载实时构建的rpk
+对于普通用户而非开发者，你只需要下载本应用的release版本（RPK文件）然后安装到你的设备上就行了。目前，官方版本只会在官网发布，如果你想获得经过测试的稳定版本，请前往[官网](https://hyperbili.astralsight.space)获取。如果你想紧跟代码提交的步伐，在手表上运行本项目最新且未经测试的不稳定开发版代码，请从本仓库的actions中直接下载实时构建的rpk
 
 ## 搭建开发环境
 

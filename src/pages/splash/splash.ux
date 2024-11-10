@@ -47,21 +47,14 @@ export default {
     setTimeout(() => {
       this.anims.splash_out.start()
       setTimeout(async() => {
-        if((await this.$app.$def.jumpcheck.NetworkCheck()) || this.$app.$def.settings.SETTINGS.enableInterconnectMode){
-          if(this.$app.$def.settings.SETTINGS.enableInterconnectMode){
+        if((await this.$app.$def.jumpcheck.NetworkCheck())){
+          if(!this.$app.$def.settings.SETTINGS.agreedAllAgreements){
             router.replace({
-              uri: "pages/interconnecthelper"
+              uri: "pages/eularead"
             })
           }
           else{
-            if(!this.$app.$def.settings.SETTINGS.agreedAllAgreements){
-              router.replace({
-                uri: "pages/eularead"
-              })
-            }
-            else{
-              this.$app.$def.jumpcheck.Jump()
-            }
+            this.$app.$def.jumpcheck.Jump()
           }
         }
         else{

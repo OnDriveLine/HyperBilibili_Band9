@@ -98,9 +98,6 @@
             "pages/donation": {
                 "component": "donation"
             },
-            "pages/interconnecthelper": {
-                "component": "interconnecthelper"
-            },
             "pages/articleshow": {
                 "component": "articleshow"
             },
